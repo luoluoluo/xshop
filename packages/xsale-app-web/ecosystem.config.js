@@ -3,7 +3,7 @@ const port = nextPortIndex !== -1 ? process.argv[nextPortIndex + 1] : 3000;
 module.exports = {
   apps: [
     {
-      name: "xsale-web",
+      name: "xsale-app-web",
       script: "node_modules/next/dist/bin/next",
       max_memory_restart: "800M",
       args: `start -p ${port}`,
