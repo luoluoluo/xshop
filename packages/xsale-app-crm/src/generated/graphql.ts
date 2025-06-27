@@ -134,6 +134,7 @@ export type Merchant = {
   address?: Maybe<Scalars['String']['output']>;
   affiliate?: Maybe<Affiliate>;
   affiliateId?: Maybe<Scalars['String']['output']>;
+  businessScope?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];

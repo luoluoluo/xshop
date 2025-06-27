@@ -41,6 +41,9 @@ export const BusinessCard = function ({
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState<"hire" | "download">();
 
+  const businessCardWidth = 1440;
+  const businessCardHeight = 864;
+
   useEffect(() => {
     if (!merchant) {
       return;
@@ -57,71 +60,81 @@ export const BusinessCard = function ({
     backgroundImg.src = "/images/business-card.jpg";
     backgroundImg.onload = () => {
       // 绘制背景图，覆盖整个画布
-      ctx.drawImage(backgroundImg, 0, 0, 1800, 1080);
+      ctx.drawImage(backgroundImg, 0, 0, businessCardWidth, businessCardHeight);
 
       // 可选：添加半透明遮罩层以确保文字可读性
-      ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-      ctx.fillRect(0, 0, 1800, 1080);
+      ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+      ctx.fillRect(0, 0, businessCardWidth, businessCardHeight);
       onSuccess();
     };
   }, []);
 
   const drawContent = useCallback(
     (ctx: CanvasRenderingContext2D) => {
+      const logoX = 64, logoY = 64, logoW = 64, logoH = 64;
       const logoImg = new Image();
       logoImg.crossOrigin = "anonymous";
       logoImg.src = `${merchant?.logo}?w=64&h=64`; // 图片路径
       logoImg.onload = () => {
         ctx.strokeStyle = "white";
         ctx.beginPath();
-        ctx.roundRect(64, 64, 64, 64, [8]);
+        ctx.roundRect(logoX, logoY, logoW, logoH, [8]);
         ctx.stroke();
         const pattern = ctx.createPattern(logoImg, "no-repeat");
         if (pattern) {
-          ctx.translate(64, 64);
+          ctx.translate(logoX, logoY);
           ctx.fillStyle = pattern;
           ctx.fill();
           ctx.setTransform(1, 0, 0, 1, 0, 0);
         }
       };
 
+      const nameX = 144, nameY = 118;
       ctx.fillStyle = "#18181b";
       ctx.font = "64px Microsoft YaHei";
-      ctx.fillText(`${merchant?.name || ""}`, 160, 112);
+      ctx.fillText(`${merchant?.name || ""}`, nameX, nameY);
 
+      const affiliateNameX = 64, affiliateNameY = nameY + 256;
       ctx.fillStyle = "#18181b";
-      ctx.font = "bold 96px Microsoft YaHei";
-      ctx.fillText(merchant?.affiliate?.name || "", 64, 548);
+      ctx.font = "96px Microsoft YaHei";
+      ctx.fillText(merchant?.affiliate?.name || "", affiliateNameX, affiliateNameY);
 
+      let phoneX = 64, phoneY = affiliateNameY + 128;
       ctx.fillStyle = "#18181b";
       ctx.font = "bold 64px Microsoft YaHei";
-      ctx.fillText("电话：", 64, 740);
-
+      ctx.fillText("电话：", phoneX, phoneY);
       ctx.fillStyle = "#18181b";
       ctx.font = "64px Microsoft YaHei";
-      ctx.fillText(merchant?.affiliate?.phone || "", 256, 740);
+      ctx.fillText(merchant?.affiliate?.phone || "", phoneX + 192, phoneY);
 
+      let addressX = 64, addressY = phoneY + 96;
       ctx.fillStyle = "#18181b";
       ctx.font = "bold 64px Microsoft YaHei";
-      ctx.fillText("地址：", 64, 836);
+      ctx.fillText("地址：", addressX, addressY);
       ctx.fillStyle = "#18181b";
       ctx.font = "64px Microsoft YaHei";
-      ctx.fillText(sliceText(ctx, merchant?.address || "", 1172).text, 256, 836);
+      ctx.fillText(sliceText(ctx, merchant?.address || "", businessCardWidth - 320).text, addressX + 192, addressY);
 
+      let businessX = 64, businessY = 800;
+      ctx.fillStyle = "#18181b";
+      ctx.font = "bold 64px Microsoft YaHei";
+      ctx.fillText(sliceText(ctx, merchant?.businessScope || "", businessCardWidth - 128).text, businessX, businessY);
+
+      const qrcodeX = 1176, qrcodeY = 64, qrcodeW = 200, qrcodeH = 200;
       // 二维码
       QRCode.toCanvas(url, {
         width: 200,
         margin: 0
       })
         .then(res => {
-          ctx.drawImage(res, 1236, 64, 200, 200);
+          ctx.drawImage(res, qrcodeX, qrcodeY, qrcodeW, qrcodeH);
         })
         .catch(e => {
           console.log(e, 111);
         });
       ctx.fillStyle = "#18181b";
       ctx.font = "22px Microsoft YaHei";
-      ctx.fillText("微信扫码，查看更多", 1236, 294);
+      ctx.fillText("微信扫码，查看更多", qrcodeX, qrcodeY + qrcodeH + 32);
     },
     [merchant, url]
   );
@@ -137,7 +150,7 @@ export const BusinessCard = function ({
     // ctx.reset();
 
     ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, 1800, 1080);
+    ctx.fillRect(0, 0, businessCardWidth, businessCardHeight);
     drawBackground(ctx, () => {
       drawContent(ctx);
     });
@@ -155,7 +168,7 @@ export const BusinessCard = function ({
         }}
       /> */}
       {/* <QRCodeCanvas ref={qrcodeCanvas} value="2222"  size={256} className=" hidden" /> */}
-      <canvas ref={canvasRef} width={1500} height={900} className="w-full h-auto shadow rounded"></canvas>
+      <canvas ref={canvasRef} width={businessCardWidth} height={businessCardHeight} className="w-full h-auto shadow rounded"></canvas>
       {showAction && url ? (
         <>
           <div className="mt-4 flex justify-between gap-4">

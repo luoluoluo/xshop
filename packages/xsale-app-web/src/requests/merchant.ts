@@ -16,6 +16,7 @@ export const getMerchant = /* GraphQL */ `
         name
         phone
       }
+      businessScope
     }
   }
 `;
@@ -39,6 +40,7 @@ export const getMerchants = /* GraphQL */ `
           name
           phone
         }
+        businessScope
       }
       total
     }

@@ -29,6 +29,9 @@ export class CreateMerchantInput {
 
   @Field()
   password: string;
+
+  @Field({ nullable: true })
+  businessScope?: string;
 }
 
 @InputType()
@@ -63,6 +66,9 @@ export class UpdateMerchantInput {
 
   @Field({ nullable: true })
   password?: string;
+
+  @Field({ nullable: true })
+  businessScope?: string;
 }
 
 @InputType()

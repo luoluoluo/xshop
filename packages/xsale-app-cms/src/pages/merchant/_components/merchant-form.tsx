@@ -85,6 +85,14 @@ export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
       </Form.Item>
 
       <Form.Item
+        label={t("merchant.fields.businessScope")}
+        name={["businessScope"]}
+        rules={[{ required: true }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
         label={t("merchant.fields.description")}
         name={["description"]}
         rules={[{ required: true }]}

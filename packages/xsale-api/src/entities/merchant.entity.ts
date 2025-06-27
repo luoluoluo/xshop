@@ -58,4 +58,8 @@ export class Merchant extends Base {
   @ManyToOne(() => Affiliate, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'affiliate_id' })
   affiliate: Affiliate;
+
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'business_scope', nullable: true })
+  businessScope: string;
 }

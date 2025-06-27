@@ -19,4 +19,7 @@ export class UpdateMerchantInput {
 
   @Field({ nullable: true })
   password?: string;
+
+  @Field({ nullable: true })
+  businessScope?: string;
 }

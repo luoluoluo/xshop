@@ -168,6 +168,7 @@ export type Merchant = {
   affiliate?: Maybe<Affiliate>;
   affiliateId?: Maybe<Scalars['String']['output']>;
   balance?: Maybe<Scalars['Float']['output']>;
+  businessScope?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
