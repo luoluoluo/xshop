@@ -2,7 +2,7 @@ import * as x509 from '@fidm/x509';
 import { Logger, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import { PaymentSuccessEvent } from '@/events/payment-success.event';
 
 const baseUrl = 'https://api.mch.weixin.qq.com';
