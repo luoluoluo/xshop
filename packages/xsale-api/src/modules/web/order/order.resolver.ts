@@ -140,6 +140,7 @@ export class OrderResolver {
 
   @Mutation(() => Payment)
   async createOrderPayment(
+    @Context() context: WebContext,
     @Args('data') data: CreatePaymentInput,
   ): Promise<Payment> {
     // 验证订单
@@ -148,6 +149,15 @@ export class OrderResolver {
     if (order.status !== OrderStatus.CREATED) {
       throw new Error('Only created orders can be paid');
     }
+    /** notify url  */
+    const { req } = context;
+    const host = req.get('host');
+    const isLocalhost =
+      host?.includes('localhost') || host?.includes('127.0.0.1');
+    const protocol = isLocalhost ? 'http' : 'https';
+    const baseUrl = `${protocol}://${host}`;
+    const notifyUrl = `${baseUrl}/wechat-pay/notify`;
+    /** notify url end */
 
     // 构建支付参数
     const paymentParams: TransactionRequest = {
@@ -160,6 +170,7 @@ export class OrderResolver {
       payer: {
         openid: data.openId,
       },
+      notify_url: notifyUrl,
     };
 
     // 调用微信支付接口
