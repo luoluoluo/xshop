@@ -71,7 +71,10 @@ export const BusinessCard = function ({
 
   const drawContent = useCallback(
     (ctx: CanvasRenderingContext2D) => {
-      const logoX = 64, logoY = 64, logoW = 64, logoH = 64;
+      const logoX = 64,
+        logoY = 64,
+        logoW = 64,
+        logoH = 64;
       const logoImg = new Image();
       logoImg.crossOrigin = "anonymous";
       logoImg.src = `${merchant?.logo}?w=64&h=64`; // 图片路径
@@ -89,17 +92,20 @@ export const BusinessCard = function ({
         }
       };
 
-      const nameX = 144, nameY = 118;
+      const nameX = 144,
+        nameY = 118;
       ctx.fillStyle = "#18181b";
       ctx.font = "64px Microsoft YaHei";
       ctx.fillText(`${merchant?.name || ""}`, nameX, nameY);
 
-      const affiliateNameX = 64, affiliateNameY = nameY + 256;
+      const affiliateNameX = 64,
+        affiliateNameY = nameY + 256;
       ctx.fillStyle = "#18181b";
       ctx.font = "96px Microsoft YaHei";
       ctx.fillText(merchant?.affiliate?.name || "", affiliateNameX, affiliateNameY);
 
-      let phoneX = 64, phoneY = affiliateNameY + 128;
+      let phoneX = 64,
+        phoneY = affiliateNameY + 128;
       ctx.fillStyle = "#18181b";
       ctx.font = "bold 64px Microsoft YaHei";
       ctx.fillText("电话：", phoneX, phoneY);
@@ -107,7 +113,8 @@ export const BusinessCard = function ({
       ctx.font = "64px Microsoft YaHei";
       ctx.fillText(merchant?.affiliate?.phone || "", phoneX + 192, phoneY);
 
-      let addressX = 64, addressY = phoneY + 96;
+      let addressX = 64,
+        addressY = phoneY + 96;
       ctx.fillStyle = "#18181b";
       ctx.font = "bold 64px Microsoft YaHei";
       ctx.fillText("地址：", addressX, addressY);
@@ -115,12 +122,16 @@ export const BusinessCard = function ({
       ctx.font = "64px Microsoft YaHei";
       ctx.fillText(sliceText(ctx, merchant?.address || "", businessCardWidth - 320).text, addressX + 192, addressY);
 
-      let businessX = 64, businessY = 800;
+      let businessX = 64,
+        businessY = 800;
       ctx.fillStyle = "#18181b";
       ctx.font = "bold 64px Microsoft YaHei";
       ctx.fillText(sliceText(ctx, merchant?.businessScope || "", businessCardWidth - 128).text, businessX, businessY);
 
-      const qrcodeX = 1176, qrcodeY = 64, qrcodeW = 200, qrcodeH = 200;
+      const qrcodeX = 1176,
+        qrcodeY = 64,
+        qrcodeW = 200,
+        qrcodeH = 200;
       // 二维码
       QRCode.toCanvas(url, {
         width: 200,
@@ -168,7 +179,12 @@ export const BusinessCard = function ({
         }}
       /> */}
       {/* <QRCodeCanvas ref={qrcodeCanvas} value="2222"  size={256} className=" hidden" /> */}
-      <canvas ref={canvasRef} width={businessCardWidth} height={businessCardHeight} className="w-full h-auto shadow rounded"></canvas>
+      <canvas
+        ref={canvasRef}
+        width={businessCardWidth}
+        height={businessCardHeight}
+        className="w-full h-auto shadow rounded"
+      ></canvas>
       {showAction && url ? (
         <>
           <div className="mt-4 flex justify-between gap-4">

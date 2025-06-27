@@ -47,9 +47,9 @@ export const OrderItem = ({ order, link, className }: { order: Order; link?: boo
     <>
       <div
         className={cn(`px-4 border border-gray-100 shadow-sm rounded`, link ? " cursor-pointer" : "", className)}
-      // onClick={() => {
-      //   if (link) router.push(`/order/${order.id}`);
-      // }}
+        // onClick={() => {
+        //   if (link) router.push(`/order/${order.id}`);
+        // }}
       >
         <div className="flex justify-between mt-4 items-center text-black font-bold">
           <div className="text-black font-bold flex items-center gap-2">
@@ -61,28 +61,16 @@ export const OrderItem = ({ order, link, className }: { order: Order; link?: boo
           <CardMeta name="编号" value={order.id!} link={link ? `/order/${order.id}` : undefined}></CardMeta>
           <CardMeta name="下单时间" value={dayjs(order.createdAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}></CardMeta>
           {order.cancelledAt ? (
-            <CardMeta
-              name="取消时间"
-              value={dayjs(order.cancelledAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}
-            ></CardMeta>
+            <CardMeta name="取消时间" value={dayjs(order.cancelledAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}></CardMeta>
           ) : null}
           {order.paidAt ? (
-            <CardMeta
-              name="支付时间"
-              value={dayjs(order.paidAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}
-            ></CardMeta>
+            <CardMeta name="支付时间" value={dayjs(order.paidAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}></CardMeta>
           ) : null}
           {order.refundedAt ? (
-            <CardMeta
-              name="退款时间"
-              value={dayjs(order.refundedAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}
-            ></CardMeta>
+            <CardMeta name="退款时间" value={dayjs(order.refundedAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}></CardMeta>
           ) : null}
           {order.completedAt ? (
-            <CardMeta
-              name="完成时间"
-              value={dayjs(order.completedAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}
-            ></CardMeta>
+            <CardMeta name="完成时间" value={dayjs(order.completedAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}></CardMeta>
           ) : null}
           {order.note ? <CardMeta name="备注" value={order.note || ""}></CardMeta> : null}
         </div>
@@ -137,39 +125,39 @@ export const OrderItem = ({ order, link, className }: { order: Order; link?: boo
           actions={[
             ...(order.status === OrderStatus.Created
               ? [
-                <Button
-                  key="pay"
-                  size="sm"
-                  disabled={loading === "pay"}
-                  onClick={async () => {
-                    if (loading === "pay") return;
-                    setLoading("pay");
-                    await onPay();
-                    setLoading(undefined);
-                  }}
-                >
-                  立即支付
-                </Button>
-              ]
+                  <Button
+                    key="pay"
+                    size="sm"
+                    disabled={loading === "pay"}
+                    onClick={async () => {
+                      if (loading === "pay") return;
+                      setLoading("pay");
+                      await onPay();
+                      setLoading(undefined);
+                    }}
+                  >
+                    立即支付
+                  </Button>
+                ]
               : []),
             ...([OrderStatus.Paid].includes(order.status!)
               ? [
-                <Button
-                  key="refund"
-                  size="sm"
-                  disabled={loading === "refund"}
-                  variant="destructive"
-                  onClick={async () => {
-                    toast({
-                      title: "订单处理中，请联系商家申请退款",
-                      variant: "destructive"
-                    });
-                    return;
-                  }}
-                >
-                  申请退款
-                </Button>
-              ]
+                  <Button
+                    key="refund"
+                    size="sm"
+                    disabled={loading === "refund"}
+                    variant="destructive"
+                    onClick={async () => {
+                      toast({
+                        title: "订单处理中，请联系商家申请退款",
+                        variant: "destructive"
+                      });
+                      return;
+                    }}
+                  >
+                    申请退款
+                  </Button>
+                ]
               : [])
           ]}
         ></CardFooter>
