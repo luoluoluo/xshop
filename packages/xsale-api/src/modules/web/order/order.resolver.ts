@@ -164,7 +164,7 @@ export class OrderResolver {
       description: `Order payment for ${order.id}`,
       out_trade_no: order.id,
       amount: {
-        total: order.amount,
+        total: Math.floor(order.amount * 100),
         currency: 'CNY',
       },
       payer: {

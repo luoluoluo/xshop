@@ -192,6 +192,7 @@ export interface WechatPayRefundResult {
 @Injectable()
 export class WechatPayService {
   private readonly logger = new Logger(WechatPayService.name);
+  private certificateCache = new Map<string, string>();
   private config: {
     key: string;
     privateKey: string;
@@ -213,7 +214,66 @@ export class WechatPayService {
       appId: this.configService.get('WECHAT_APP_ID') || '',
       notifyUrl: this.configService.get('WECHAT_PAY_NOTIFY_URL') || '',
     };
+
+    // 验证必要配置
+    this.validateConfig();
   }
+
+  private validateConfig() {
+    const requiredFields = ['key', 'privateKey', 'mchId'];
+    const missingFields = requiredFields.filter((field) => !this.config[field]);
+
+    if (missingFields.length > 0) {
+      const error = `微信支付配置缺失: ${missingFields.join(', ')}`;
+      this.logger.error(error);
+      throw new Error(error);
+    }
+
+    // 验证私钥格式
+    try {
+      if (this.config.privateKey) {
+        crypto
+          .createSign('RSA-SHA256')
+          .update('test')
+          .sign(this.config.privateKey, 'base64');
+      }
+    } catch (error) {
+      const errorMsg = '微信支付私钥格式错误';
+      this.logger.error(errorMsg, { error: error.message });
+      throw new Error(errorMsg);
+    }
+
+    // 验证商户证书格式（如果配置了的话）
+    try {
+      if (this.config.publicKey) {
+        const certificate = x509.Certificate.fromPEM(
+          Buffer.from(this.config.publicKey),
+        );
+        this.logger.log('商户证书信息', {
+          serialNumber: certificate.serialNumber,
+          subject: certificate.subject,
+          issuer: certificate.issuer,
+        });
+      }
+    } catch (error) {
+      this.logger.warn('商户公钥证书格式可能有问题', { error: error.message });
+    }
+
+    this.logger.log('微信支付配置验证通过', {
+      mchId: this.config.mchId,
+      appId: this.config.appId,
+      hasPrivateKey: !!this.config.privateKey,
+      hasPublicKey: !!this.config.publicKey,
+      hasKey: !!this.config.key,
+    });
+  }
+
+  // 添加初始化方法
+  async initialize() {
+    this.logger.log('初始化微信支付服务');
+    await this.preloadCertificates();
+  }
+
   decipherGcm = <T>({
     ciphertext,
     associated_data,
@@ -260,42 +320,123 @@ export class WechatPayService {
 
   request = async <T>(url: string, init?: RequestInit) => {
     const method = init?.method || 'GET';
-    const body = init?.body as string;
+    const body = (init?.body as string) || '';
     const nonceStr = Math.random().toString(36).slice(2, 17);
     const timestamp = String(Math.round(new Date().getTime() / 1000));
     const str = `${method}\n${url.replace(baseUrl, '')}\n${timestamp}\n${nonceStr}\n${body}\n`;
+
+    this.logger.log('签名字符串', { str, method, url });
+
     const signature = this.sha256WithRsa(str);
     const sn = this.getSN();
     const authorization = `${authType} mchid="${this.config.mchId}",nonce_str="${nonceStr}",timestamp="${timestamp}",serial_no="${sn}",signature="${signature}"`;
-    if (init) {
-      init.headers = {
-        ...init.headers,
-        Authorization: authorization,
-        'Accept-Language': 'zh-CN',
-        'Content-Type': 'application/json',
-      };
+
+    const headers = {
+      Authorization: authorization,
+      'Accept-Language': 'zh-CN',
+      'Content-Type': 'application/json',
+      'User-Agent': 'WechatPay-APIv3-NodeJS-SDK',
+      ...(init?.headers || {}),
+    };
+
+    try {
+      const response = await fetch(url, {
+        ...init,
+        headers,
+      });
+
+      this.logger.log('API请求', {
+        url,
+        method,
+        status: response.status,
+        mchId: this.config.mchId,
+        serialNo: sn,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        this.logger.error('API请求失败', {
+          url,
+          method,
+          status: response.status,
+          statusText: response.statusText,
+          errorText,
+          authorization: authorization.substring(0, 50) + '...',
+        });
+        throw new Error(
+          `API请求失败: ${response.status} ${response.statusText} - ${errorText}`,
+        );
+      }
+
+      const result = (await response.json()) as T;
+      this.logger.log('API响应成功', { url, method, hasData: !!result });
+      return result;
+    } catch (error) {
+      this.logger.error('API请求异常', {
+        url,
+        method,
+        error: error.message,
+        mchId: this.config.mchId,
+      });
+      throw error;
     }
-    return fetch(url, init).then((res) => {
-      return res.json() as T;
-    });
   };
 
   getCertificate = async (serial: string) => {
-    const result = await this.request<{ data: Certificate[] }>(
-      getCertificatesUrl,
-      { method: 'GET' },
-    );
-    const certificates = {} as { [key in string]: string };
-    result.data.forEach((item) => {
-      const decryptCertificate = this.decipherGcm<string>({
-        ...item.encrypt_certificate,
+    // 检查缓存
+    if (this.certificateCache.has(serial)) {
+      this.logger.log('从缓存获取证书', { serial });
+      return this.certificateCache.get(serial);
+    }
+
+    try {
+      this.logger.log('从API获取证书', { serial });
+      const result = await this.request<{ data: Certificate[] }>(
+        getCertificatesUrl,
+        { method: 'GET' },
+      );
+
+      this.logger.log('获取证书API响应', { result, serial });
+
+      // 检查响应是否包含期望的数据结构
+      if (!result || !result.data || !Array.isArray(result.data)) {
+        this.logger.error('获取证书API响应格式错误', { result, serial });
+        throw new Error('获取证书API响应格式错误或data字段缺失');
+      }
+
+      // 处理所有证书并缓存
+      result.data.forEach((item) => {
+        try {
+          const decryptCertificate = this.decipherGcm<string>({
+            ...item.encrypt_certificate,
+          });
+          const publicKey = x509.Certificate.fromPEM(
+            Buffer.from(decryptCertificate),
+          ).publicKey.toPEM();
+
+          // 缓存证书
+          this.certificateCache.set(item.serial_no, publicKey);
+          this.logger.log('证书已缓存', { serial: item.serial_no });
+        } catch (error) {
+          this.logger.error('解密证书失败', {
+            serial: item.serial_no,
+            error: error.message,
+          });
+        }
       });
-      certificates[item.serial_no] = x509.Certificate.fromPEM(
-        Buffer.from(decryptCertificate),
-      ).publicKey.toPEM();
-    });
-    return certificates[serial];
+
+      const certificate = this.certificateCache.get(serial);
+      if (!certificate) {
+        throw new Error(`未找到序列号为 ${serial} 的证书`);
+      }
+
+      return certificate;
+    } catch (error) {
+      this.logger.error('获取证书失败', { error: error.message, serial });
+      throw error;
+    }
   };
+
   verifySign = async (params: {
     timestamp: string | number;
     nonce: string;
@@ -502,4 +643,41 @@ export class WechatPayService {
       this.logger.error('处理支付成功业务逻辑失败', error);
     }
   };
+
+  // 添加预加载证书的方法
+  private async preloadCertificates() {
+    try {
+      this.logger.log('开始预加载证书');
+      const result = await this.request<{ data: Certificate[] }>(
+        getCertificatesUrl,
+        { method: 'GET' },
+      );
+
+      if (result?.data?.length) {
+        result.data.forEach((item) => {
+          try {
+            const decryptCertificate = this.decipherGcm<string>({
+              ...item.encrypt_certificate,
+            });
+            const publicKey = x509.Certificate.fromPEM(
+              Buffer.from(decryptCertificate),
+            ).publicKey.toPEM();
+            this.certificateCache.set(item.serial_no, publicKey);
+          } catch (error) {
+            this.logger.error('预加载证书失败', {
+              serial: item.serial_no,
+              error: error.message,
+            });
+          }
+        });
+        this.logger.log('证书预加载完成', {
+          count: this.certificateCache.size,
+        });
+      }
+    } catch (error) {
+      this.logger.warn('证书预加载失败，将在需要时获取', {
+        error: error.message,
+      });
+    }
+  }
 }
