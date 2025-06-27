@@ -17,7 +17,7 @@ i18n
     lng: "zh-CN",
     supportedLngs: languages.map((lng) => lng.value),
     backend: {
-      loadPath: "./locales/{{lng}}.json", // locale files path
+      loadPath: "/app-cms/locales/{{lng}}.json", // locale files path
     },
     // ns: ["common"],
     // defaultNS: "common",

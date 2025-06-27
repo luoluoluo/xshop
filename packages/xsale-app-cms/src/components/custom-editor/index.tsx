@@ -16,7 +16,7 @@ export const CustomEditor = ({
   return (
     <>
       <Editor
-        tinymceScriptSrc="./tinymce/tinymce.min.js"
+        tinymceScriptSrc="/app-cms/tinymce/tinymce.min.js"
         onInit={(_evt: any, editor: any) => (editorRef.current = editor)}
         // onChange={() => {
         //   console.log(editorRef.current.getContent());
