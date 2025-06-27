@@ -19,7 +19,6 @@ export type Affiliate = {
   __typename?: 'Affiliate';
   balance: Scalars['Float']['output'];
   createdAt: Scalars['DateTime']['output'];
-  email?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   isActive: Scalars['Boolean']['output'];
   name?: Maybe<Scalars['String']['output']>;
@@ -157,11 +156,7 @@ export type BannerWhereInput = {
 };
 
 export type CreateAffiliateInput = {
-  address: Scalars['String']['input'];
-  affiliateId: Scalars['String']['input'];
-  description: Scalars['String']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  logo: Scalars['String']['input'];
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
@@ -235,7 +230,6 @@ export type CreateRoleInput = {
 export type CreateUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
@@ -552,13 +546,12 @@ export type Order = {
   affiliateId?: Maybe<Scalars['String']['output']>;
   amount: Scalars['Float']['output'];
   cancelledAt?: Maybe<Scalars['DateTime']['output']>;
-  code: Scalars['String']['output'];
   completedAt?: Maybe<Scalars['DateTime']['output']>;
   createdAt: Scalars['DateTime']['output'];
   customer: Customer;
   id: Scalars['String']['output'];
   merchant?: Maybe<Merchant>;
-  merchantAffiliate?: Maybe<User>;
+  merchantAffiliate?: Maybe<Affiliate>;
   merchantAffiliateAmount?: Maybe<Scalars['Float']['output']>;
   merchantAffiliateId?: Maybe<Scalars['String']['output']>;
   merchantAmount?: Maybe<Scalars['Float']['output']>;
@@ -567,8 +560,14 @@ export type Order = {
   paidAt?: Maybe<Scalars['DateTime']['output']>;
   platformAmount?: Maybe<Scalars['Float']['output']>;
   product: Array<Product>;
+  productContent?: Maybe<Scalars['String']['output']>;
   productId: Scalars['String']['output'];
+  productImage?: Maybe<Scalars['String']['output']>;
+  productPrice: Scalars['Float']['output'];
+  productTitle?: Maybe<Scalars['String']['output']>;
   quantity: Scalars['Int']['output'];
+  receiverName?: Maybe<Scalars['String']['output']>;
+  receiverPhone?: Maybe<Scalars['String']['output']>;
   refundedAt?: Maybe<Scalars['DateTime']['output']>;
   status: OrderStatus;
   updatedAt: Scalars['DateTime']['output'];
@@ -888,11 +887,7 @@ export type SignedFileUrl = {
 };
 
 export type UpdateAffiliateInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  affiliateId?: InputMaybe<Scalars['String']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  logo?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
@@ -965,8 +960,6 @@ export type UpdateRoleInput = {
 
 export type UpdateUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
@@ -996,5 +989,4 @@ export type UserWhereInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
 };

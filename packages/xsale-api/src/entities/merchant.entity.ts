@@ -37,7 +37,7 @@ export class Merchant extends Base {
   @OneToMany(() => Order, (order) => order.merchant)
   orders: Order[];
 
-  @Client(['cms', 'pms'])
+  @Client(['cms'])
   @Field(() => Boolean, { defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;

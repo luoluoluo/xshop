@@ -22,6 +22,11 @@ const getServers = () => {
       port: process.env.PMS_PORT || 3002,
       name: 'pms',
     },
+    {
+      module: PmsModule,
+      port: process.env.CRM_PORT || 3003,
+      name: 'crm',
+    },
   ];
 };
 

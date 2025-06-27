@@ -531,17 +531,6 @@ export type UpdateMeInput = {
   phone?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type User = {
-  __typename?: 'User';
-  balance: Scalars['Float']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  email?: Maybe<Scalars['String']['output']>;
-  id: Scalars['String']['output'];
-  name?: Maybe<Scalars['String']['output']>;
-  phone?: Maybe<Scalars['String']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
 export type WechatAccessToken = {
   __typename?: 'WechatAccessToken';
   accessToken: Scalars['String']['output'];

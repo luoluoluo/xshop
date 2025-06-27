@@ -4,6 +4,7 @@ import { Role } from './role.entity';
 import { Base } from './base.entity';
 import { Client } from '@/decorators/client.decorator';
 
+@Client(['cms'])
 @ObjectType()
 @Entity('user')
 export class User extends Base {
@@ -19,7 +20,6 @@ export class User extends Base {
   password?: string;
 
   @Field(() => [Role], { nullable: true })
-  @Client('cms')
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable({
     name: 'user_role', // 指定中间表名称
@@ -38,7 +38,6 @@ export class User extends Base {
   @Column({ nullable: true })
   phone?: string;
 
-  @Client(['cms'])
   @Field(() => Boolean, { defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
