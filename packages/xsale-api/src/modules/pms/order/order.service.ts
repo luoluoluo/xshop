@@ -122,16 +122,27 @@ export class OrderService {
       order.completedAt = new Date();
       const savedOrder = await queryRunner.manager.save(order);
 
-      // 更新推广员余额
-      affiliate.balance =
-        Number(affiliate.balance) + Number(order.affiliateAmount || 0);
-      await queryRunner.manager.save(affiliate);
+      // 检查推广员和招商经理是否是同一个人
+      if (affiliate.id === merchantAffiliate.id) {
+        // 同一个人，累加两个金额一次性更新
+        affiliate.balance =
+          Number(affiliate.balance) +
+          Number(order.affiliateAmount || 0) +
+          Number(order.merchantAffiliateAmount || 0);
+        await queryRunner.manager.save(affiliate);
+      } else {
+        // 不同的人，分别更新余额
+        // 更新推广员余额
+        affiliate.balance =
+          Number(affiliate.balance) + Number(order.affiliateAmount || 0);
+        await queryRunner.manager.save(affiliate);
 
-      // 更新商户客户经理余额
-      merchantAffiliate.balance =
-        Number(merchantAffiliate.balance) +
-        Number(order.merchantAffiliateAmount || 0);
-      await queryRunner.manager.save(merchantAffiliate);
+        // 更新商户客户经理余额
+        merchantAffiliate.balance =
+          Number(merchantAffiliate.balance) +
+          Number(order.merchantAffiliateAmount || 0);
+        await queryRunner.manager.save(merchantAffiliate);
+      }
 
       if (order.merchantId) {
         // 更新商户余额
