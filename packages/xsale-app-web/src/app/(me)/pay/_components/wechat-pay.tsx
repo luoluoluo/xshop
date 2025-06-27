@@ -72,7 +72,7 @@ export const WechatPay = ({ orderId, title, amount }: { orderId: string; title: 
           query: createOrderPayment,
           variables: {
             data: {
-              id: orderId,
+              orderId,
               openId
             }
           }
