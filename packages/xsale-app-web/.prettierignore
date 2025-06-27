@@ -1,0 +1,10 @@
+/dist/*
+.local
+/node_modules/**
+
+**/*.svg
+**/*.sh
+/src/components/ui/
+/src/generated/
+
+/public/

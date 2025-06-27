@@ -1,0 +1,21 @@
+import { ObjectType, Field } from '@nestjs/graphql';
+import { Entity, Column } from 'typeorm';
+import { Base } from './base.entity';
+import { Client } from '@/decorators/client.decorator';
+
+@ObjectType()
+@Entity('customer')
+export class Customer extends Base {
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  name?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  phone?: string;
+
+  @Client(['cms'])
+  @Field(() => Boolean, { defaultValue: true })
+  @Column({ name: 'is_active', default: true })
+  isActive: boolean;
+}

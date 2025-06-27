@@ -1,0 +1,21 @@
+import { SiteFooter } from "@/components/layouts/site-footer";
+import { SiteHeader } from "@/components/layouts/site-header";
+import { WechatPay } from "./_components/wechat-pay";
+
+export async function generateMetadata() {
+  return {
+    title: `微信支付`
+  };
+}
+
+export default async function Page({ searchParams }: { searchParams: { orderId: string; title: string; amount: string } }) {
+  return (
+    <div className="relative flex min-h-screen flex-col">
+      <SiteHeader />
+      <main className="container my-4 lg:my-20">
+        <WechatPay orderId={searchParams.orderId} title={searchParams.title} amount={searchParams.amount} />
+      </main>
+      <SiteFooter />
+    </div>
+  );
+}

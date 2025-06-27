@@ -1,0 +1,236 @@
+import { Authenticated, CanAccess, Refine } from "@refinedev/core";
+import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
+
+import {
+  ErrorComponent,
+  ThemedLayoutV2,
+  ThemedSiderV2,
+  useNotificationProvider,
+} from "@refinedev/antd";
+import "@refinedev/antd/dist/reset.css";
+
+import routerBindings, {
+  CatchAllNavigate,
+  DocumentTitleHandler,
+  NavigateToResource,
+  UnsavedChangesNotifier,
+} from "@refinedev/react-router-v6";
+import { ConfigProvider as AntdConfigProvider, App as AntdApp } from "antd";
+import zhCN from "antd/es/locale/zh_CN"; // 中文
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import { authProvider } from "./providers/auth";
+import { AppIcon } from "./components/app-icon";
+import { Header } from "./components/header";
+import { ColorModeContextProvider } from "./contexts/color-mode";
+
+import { UpdatePassword } from "./pages/update-password";
+import { ForgotPassword } from "./pages/forgot-password";
+import { Login } from "./pages/login";
+// import { Register } from "./pages/register";
+import { UserCreate, UserEdit, UserList, UserShow } from "./pages/user";
+import { RoleCreate, RoleEdit, RoleList, RoleShow } from "./pages/role";
+
+import { accessControlProvider } from "./providers/acl";
+
+import { dataProvider } from "./providers/data";
+import type { I18nProvider } from "@refinedev/core";
+import { useTranslation } from "react-i18next";
+import { Title } from "./components/title";
+
+import {
+  ProductCreate,
+  ProductEdit,
+  ProductList,
+  ProductShow,
+} from "./pages/product";
+import {
+  ProductCategoryCreate,
+  ProductCategoryEdit,
+  ProductCategoryList,
+  ProductCategoryShow,
+} from "./pages/product-category";
+
+import { getResources } from "./config/app";
+import {
+  ArticleCategoryCreate,
+  ArticleCategoryEdit,
+  ArticleCategoryList,
+} from "./pages/article-category";
+import { ArticleCreate, ArticleEdit, ArticleList } from "./pages/article";
+import { BannerCreate, BannerEdit, BannerList } from "./pages/banner";
+import { MerchantCreate, MerchantEdit, MerchantList } from "./pages/merchant";
+import { OrderList, OrderShow } from "./pages/order";
+import { AffiliateWithdrawalList } from "./pages/affiliate-withdrawal";
+import { MerchantWithdrawalList } from "./pages/merchant-withdrawal";
+import {
+  AffiliateCreate,
+  AffiliateEdit,
+  AffiliateList,
+} from "./pages/affiliate";
+
+function App() {
+  const { t, i18n } = useTranslation();
+
+  const i18nProvider: I18nProvider = {
+    translate: (key: string, options?: any) => String(t(key, options) as any),
+    changeLocale: (lang: string) => i18n.changeLanguage(lang),
+    getLocale: () => i18n.language,
+  };
+  return (
+    <BrowserRouter basename="/app-cms">
+      <RefineKbarProvider>
+        <ColorModeContextProvider>
+          <AntdConfigProvider locale={zhCN}>
+            <AntdApp>
+              <Refine
+                i18nProvider={i18nProvider}
+                dataProvider={dataProvider()}
+                notificationProvider={useNotificationProvider}
+                authProvider={authProvider}
+                accessControlProvider={accessControlProvider}
+                routerProvider={routerBindings}
+                resources={getResources()}
+                options={{
+                  syncWithLocation: true,
+                  warnWhenUnsavedChanges: true,
+                  useNewQueryKeys: true,
+                  title: { text: t("title"), icon: <AppIcon /> },
+                  disableTelemetry: true,
+                }}
+              >
+                <Routes>
+                  <Route
+                    element={
+                      <Authenticated
+                        key="authenticated-inner"
+                        fallback={<CatchAllNavigate to="/login" />}
+                      >
+                        <ThemedLayoutV2
+                          Header={Header}
+                          Sider={(props) => (
+                            <ThemedSiderV2 {...props} Title={Title} fixed />
+                          )}
+                        >
+                          <CanAccess
+                            fallback={<NavigateToResource resource="user" />}
+                          >
+                            <Outlet />
+                          </CanAccess>
+                        </ThemedLayoutV2>
+                      </Authenticated>
+                    }
+                  >
+                    <Route
+                      index
+                      element={<NavigateToResource resource="user" />}
+                    />
+                    <Route path="/product-category">
+                      <Route index element={<ProductCategoryList />} />
+                      <Route path="new" element={<ProductCategoryCreate />} />
+                      <Route
+                        path=":id/edit"
+                        element={<ProductCategoryEdit />}
+                      />
+                      <Route path=":id" element={<ProductCategoryShow />} />
+                    </Route>
+                    <Route path="/product">
+                      <Route index element={<ProductList />} />
+                      <Route path="new" element={<ProductCreate />} />
+                      <Route path=":id/edit" element={<ProductEdit />} />
+                      <Route path=":id" element={<ProductShow />} />
+                    </Route>
+                    <Route path="/user">
+                      <Route index element={<UserList />} />
+                      <Route path="new" element={<UserCreate />} />
+                      <Route path=":id/edit" element={<UserEdit />} />
+                      <Route path=":id" element={<UserShow />} />
+                    </Route>
+                    <Route path="/role">
+                      <Route index element={<RoleList />} />
+                      <Route path="new" element={<RoleCreate />} />
+                      <Route path=":id/edit" element={<RoleEdit />} />
+                      <Route path=":id" element={<RoleShow />} />
+                    </Route>
+
+                    <Route path="/article-category">
+                      <Route index element={<ArticleCategoryList />} />
+                      <Route path="new" element={<ArticleCategoryCreate />} />
+                      <Route
+                        path=":id/edit"
+                        element={<ArticleCategoryEdit />}
+                      />
+                    </Route>
+                    <Route path="/article">
+                      <Route index element={<ArticleList />} />
+                      <Route path="new" element={<ArticleCreate />} />
+                      <Route path=":id/edit" element={<ArticleEdit />} />
+                    </Route>
+
+                    <Route path="/banner">
+                      <Route index element={<BannerList />} />
+                      <Route path="new" element={<BannerCreate />} />
+                      <Route path=":id/edit" element={<BannerEdit />} />
+                    </Route>
+
+                    <Route path="/merchant">
+                      <Route index element={<MerchantList />} />
+                      <Route path="new" element={<MerchantCreate />} />
+                      <Route path=":id/edit" element={<MerchantEdit />} />
+                    </Route>
+
+                    <Route path="/order">
+                      <Route index element={<OrderList />} />
+                      <Route path=":id" element={<OrderShow />} />
+                    </Route>
+
+                    <Route path="/affiliate">
+                      <Route index element={<AffiliateList />} />
+                      <Route path="new" element={<AffiliateCreate />} />
+                      <Route path=":id/edit" element={<AffiliateEdit />} />
+                    </Route>
+
+                    <Route path="/affiliate-withdrawal">
+                      <Route index element={<AffiliateWithdrawalList />} />
+                    </Route>
+                    <Route path="/merchant-withdrawal">
+                      <Route index element={<MerchantWithdrawalList />} />
+                    </Route>
+
+                    <Route path="*" element={<ErrorComponent />} />
+                  </Route>
+                  <Route
+                    element={
+                      <Authenticated
+                        key="authenticated-outer"
+                        fallback={<Outlet />}
+                      >
+                        <NavigateToResource />
+                      </Authenticated>
+                    }
+                  >
+                    <Route path="/login" element={<Login />} />
+                    {/* <Route path="/register" element={<Register />} /> */}
+                    <Route
+                      path="/forgot-password"
+                      element={<ForgotPassword />}
+                    />
+                    <Route
+                      path="/update-password"
+                      element={<UpdatePassword />}
+                    />
+                  </Route>
+                </Routes>
+
+                <RefineKbar />
+                <UnsavedChangesNotifier />
+                <DocumentTitleHandler handler={() => t("title")} />
+              </Refine>
+            </AntdApp>
+          </AntdConfigProvider>
+        </ColorModeContextProvider>
+      </RefineKbarProvider>
+    </BrowserRouter>
+  );
+}
+
+export default App;
