@@ -41,8 +41,4 @@ export class User extends Base {
   @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
-
-  @Field(() => Float, { nullable: true, defaultValue: 0 })
-  @Column({ type: 'float', precision: 10, scale: 2, default: 0 })
-  balance: number;
 }
