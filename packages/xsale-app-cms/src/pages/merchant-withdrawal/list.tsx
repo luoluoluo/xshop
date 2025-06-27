@@ -20,6 +20,7 @@ import {
 } from "../../requests/merchant-withdrawal";
 import { Merchant, MerchantWithdrawalStatus } from "../../generated/graphql";
 import { request } from "../../utils/request";
+import dayjs from "dayjs";
 
 const { TextArea } = Input;
 
@@ -32,7 +33,7 @@ export const MerchantWithdrawalList = () => {
   const [rejectReason, setRejectReason] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { tableProps } = useTable({
+  const { tableProps, tableQuery } = useTable({
     meta: {
       gqlQuery: parse(getMerchantWithdrawals),
     },
@@ -40,8 +41,8 @@ export const MerchantWithdrawalList = () => {
 
   const handleApprove = (id: string) => {
     Modal.confirm({
-      title: t("merchantWithdrawal.confirm.approve.title"),
-      content: t("merchantWithdrawal.confirm.approve.content"),
+      title: "审批通过",
+      content: "确定要审批通过吗？",
       onOk: () => {
         setLoading(true);
         request({
@@ -59,9 +60,10 @@ export const MerchantWithdrawalList = () => {
               return;
             }
             open?.({
-              message: t("merchantWithdrawal.messages.approve.success"),
+              message: "审批通过成功",
               type: "success",
             });
+            tableQuery?.refetch();
           })
           .finally(() => {
             setLoading(false);
@@ -85,7 +87,7 @@ export const MerchantWithdrawalList = () => {
       query: rejectMerchantWithdrawal,
       variables: {
         id: selectedMerchantWithdrawal.id,
-        reason: rejectReason,
+        rejectReason,
       },
     })
       .then((res) => {
@@ -97,9 +99,12 @@ export const MerchantWithdrawalList = () => {
           return;
         }
         open?.({
-          message: t("merchantWithdrawal.messages.reject.success"),
+          message: "审批拒绝成功",
           type: "success",
         });
+        setRejectModalVisible(false);
+        setRejectReason("");
+        tableQuery?.refetch();
       })
       .finally(() => {
         setLoading(false);
@@ -108,8 +113,8 @@ export const MerchantWithdrawalList = () => {
 
   const handleComplete = (id: string) => {
     Modal.confirm({
-      title: t("merchantWithdrawal.confirm.complete.title"),
-      content: t("merchantWithdrawal.confirm.complete.content"),
+      title: "打款完成",
+      content: "确定要打款完成吗？",
       onOk: () => {
         setLoading(true);
         request({
@@ -127,9 +132,10 @@ export const MerchantWithdrawalList = () => {
               return;
             }
             open?.({
-              message: t("merchantWithdrawal.messages.complete.success"),
+              message: "打款完成成功",
               type: "success",
             });
+            tableQuery?.refetch();
           })
           .finally(() => {
             setLoading(false);
@@ -156,13 +162,13 @@ export const MerchantWithdrawalList = () => {
   const getStatusText = (status: MerchantWithdrawalStatus) => {
     switch (status) {
       case MerchantWithdrawalStatus.Created:
-        return t("merchantWithdrawal.status.created");
+        return "待审核";
       case MerchantWithdrawalStatus.Approved:
-        return t("merchantWithdrawal.status.approved");
+        return "已审核";
       case MerchantWithdrawalStatus.Completed:
-        return t("merchantWithdrawal.status.completed");
+        return "已打款";
       case MerchantWithdrawalStatus.Rejected:
-        return t("merchantWithdrawal.status.rejected");
+        return "已拒绝";
       default:
         return status;
     }
@@ -181,7 +187,7 @@ export const MerchantWithdrawalList = () => {
               onClick={() => handleApprove(id)}
               loading={loading}
             >
-              {t("merchantWithdrawal.actions.approve")}
+              审批通过
             </Button>
             <Button
               danger
@@ -189,7 +195,7 @@ export const MerchantWithdrawalList = () => {
               onClick={() => handleReject(record)}
               loading={loading}
             >
-              {t("merchantWithdrawal.actions.reject")}
+              审批拒绝
             </Button>
           </>
         )}
@@ -200,7 +206,7 @@ export const MerchantWithdrawalList = () => {
             onClick={() => handleComplete(id)}
             loading={loading}
           >
-            {t("merchantWithdrawal.actions.complete")}
+            打款完成
           </Button>
         )}
       </Space>
@@ -212,7 +218,12 @@ export const MerchantWithdrawalList = () => {
       <List>
         <Table {...tableProps} rowKey="id">
           <Table.Column
-            dataIndex="user"
+            dataIndex="id"
+            title={t("merchantWithdrawal.fields.id")}
+            width={120}
+          />
+          <Table.Column
+            dataIndex="merchant"
             title={t("merchantWithdrawal.fields.merchant")}
             render={(merchant: Merchant) => {
               return (
@@ -240,18 +251,10 @@ export const MerchantWithdrawalList = () => {
                 <div className="text-sm text-gray-500">
                   {record.accountName || "-"}
                 </div>
+                <div className="text-sm text-gray-500">
+                  {record.bankAccount || "-"}
+                </div>
               </div>
-            )}
-          />
-          <Table.Column
-            dataIndex="bankAccount"
-            title={t("merchantWithdrawal.fields.bankAccount")}
-            render={(account: string) => (
-              <Tooltip title={account}>
-                <span className="truncate max-w-32 block">
-                  {account ? `****${account.slice(-4)}` : "-"}
-                </span>
-              </Tooltip>
             )}
           />
           <Table.Column
@@ -273,20 +276,20 @@ export const MerchantWithdrawalList = () => {
           <Table.Column
             dataIndex="createdAt"
             title={t("merchantWithdrawal.fields.createdAt")}
-            render={(date: string) => new Date(date).toLocaleString()}
+            render={(date: string) => dayjs(date).format("YYYY-MM-DD HH:mm:ss")}
           />
           <Table.Column
             dataIndex="approvedAt"
             title={t("merchantWithdrawal.fields.approvedAt")}
             render={(date: string) =>
-              date ? new Date(date).toLocaleString() : "-"
+              date ? dayjs(date).format("YYYY-MM-DD HH:mm:ss") : "-"
             }
           />
           <Table.Column
             dataIndex="completedAt"
             title={t("merchantWithdrawal.fields.completedAt")}
             render={(date: string) =>
-              date ? new Date(date).toLocaleString() : "-"
+              date ? dayjs(date).format("YYYY-MM-DD HH:mm:ss") : "-"
             }
           />
           <Table.Column
@@ -298,7 +301,7 @@ export const MerchantWithdrawalList = () => {
       </List>
 
       <Modal
-        title={t("merchantWithdrawal.modal.reject.title")}
+        title="审批拒绝"
         open={rejectModalVisible}
         onOk={handleRejectConfirm}
         onCancel={() => {
@@ -309,12 +312,12 @@ export const MerchantWithdrawalList = () => {
         confirmLoading={loading}
       >
         <div className="mb-4">
-          <p>{t("merchantWithdrawal.modal.reject.description")}：</p>
+          <p>请输入拒绝原因：</p>
           <TextArea
             rows={4}
             value={rejectReason}
             onChange={(e) => setRejectReason(e.target.value)}
-            placeholder={t("merchantWithdrawal.modal.reject.placeholder")}
+            placeholder="请输入拒绝原因"
           />
         </div>
       </Modal>

@@ -9,16 +9,16 @@ export class ProductAttribute extends Base {
   @Column({ name: 'product_id' })
   productId: string;
 
-  @Field(() => Product)
+  @Field(() => Product, { nullable: true })
   @ManyToOne(() => Product)
   @JoinColumn({ name: 'product_id' })
   product: Product;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 50 })
   name: string;
 
   @Column('simple-array')
-  @Field(() => [String])
+  @Field(() => [String], { nullable: true })
   values: string[];
 }

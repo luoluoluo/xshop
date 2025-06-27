@@ -1,9 +1,15 @@
 import { List, useTable } from "@refinedev/antd";
-import { useTranslate, type BaseRecord } from "@refinedev/core";
-import { Space, Table, Tag, Tooltip } from "antd";
+import { useTranslate } from "@refinedev/core";
+import { Table, Tag, Tooltip } from "antd";
 import { parse } from "graphql";
 import { getOrders } from "../../requests/order";
-import { Merchant, OrderStatus, User } from "../../generated/graphql";
+import {
+  Customer,
+  Merchant,
+  Order,
+  OrderStatus,
+  User,
+} from "../../generated/graphql";
 
 export const OrderList = () => {
   const t = useTranslate();
@@ -50,28 +56,24 @@ export const OrderList = () => {
   return (
     <List>
       <Table {...tableProps} rowKey="id">
-        <Table.Column
-          dataIndex="code"
-          title={t("order.fields.code")}
-          width={120}
-        />
+        <Table.Column dataIndex="id" title={t("order.fields.id")} width={120} />
         <Table.Column
           dataIndex="product"
           title={t("order.fields.product")}
-          render={(product: any) => {
+          render={(_, record: Order) => {
             return (
               <div className="flex items-center space-x-2">
-                {product?.image && (
-                  <img
-                    className="w-12 h-12 object-cover rounded"
-                    src={product.image}
-                    alt={product.title}
-                  />
-                )}
+                <img
+                  className="w-12 h-12 object-cover rounded"
+                  src={record?.productImage || ""}
+                  alt={record?.productTitle || ""}
+                />
                 <div>
-                  <div className="font-medium">{product?.title || "-"}</div>
+                  <div className="font-medium">
+                    {record?.productTitle || "-"}
+                  </div>
                   <div className="text-sm text-gray-500">
-                    ¥{product?.price?.toFixed(2) || "0.00"}
+                    ¥{record?.productPrice?.toFixed(2) || "0.00"}
                   </div>
                 </div>
               </div>
@@ -87,14 +89,7 @@ export const OrderList = () => {
           dataIndex="merchant"
           title={t("order.fields.merchant")}
           render={(merchant: Merchant) => {
-            return (
-              <div>
-                <div className="font-medium">{merchant?.name || "-"}</div>
-                <div className="text-sm text-gray-500">
-                  {merchant?.phone || "-"}
-                </div>
-              </div>
-            );
+            return <div className="font-medium">{merchant?.name || "-"}</div>;
           }}
         />
         <Table.Column
@@ -108,14 +103,7 @@ export const OrderList = () => {
           dataIndex="affiliate"
           title={t("order.fields.affiliate")}
           render={(affiliate: User) => {
-            return (
-              <div>
-                <div className="font-medium">{affiliate?.name || "-"}</div>
-                <div className="text-sm text-gray-500">
-                  {affiliate?.phone || "-"}
-                </div>
-              </div>
-            );
+            return <div className="font-medium">{affiliate?.name || "-"}</div>;
           }}
         />
         <Table.Column
@@ -131,13 +119,8 @@ export const OrderList = () => {
           title={t("order.fields.merchantAffiliate")}
           render={(merchantAffiliate: User) => {
             return (
-              <div>
-                <div className="font-medium">
-                  {merchantAffiliate?.name || "-"}
-                </div>
-                <div className="text-sm text-gray-500">
-                  {merchantAffiliate?.phone || "-"}
-                </div>
+              <div className="font-medium">
+                {merchantAffiliate?.name || "-"}
               </div>
             );
           }}
@@ -156,17 +139,10 @@ export const OrderList = () => {
           width={80}
         />
         <Table.Column
-          dataIndex="user"
+          dataIndex="customer"
           title={t("order.fields.customer")}
-          render={(user: User) => {
-            return (
-              <div>
-                <div className="font-medium">{user?.name || "-"}</div>
-                <div className="text-sm text-gray-500">
-                  {user?.phone || "-"}
-                </div>
-              </div>
-            );
+          render={(customer: Customer) => {
+            return <div className="font-medium">{customer?.name || "-"}</div>;
           }}
         />
         <Table.Column

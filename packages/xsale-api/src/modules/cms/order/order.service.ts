@@ -21,7 +21,10 @@ export class OrderService {
     where?: OrderWhereInput;
   }): Promise<OrderPagination> {
     const [data, total] = await this.orderRepository.findAndCount({
-      where,
+      where: {
+        id: where?.id,
+        status: where?.status,
+      },
       skip,
       take,
       order: { createdAt: 'DESC' },
@@ -30,6 +33,7 @@ export class OrderService {
         merchant: true,
         affiliate: true,
         customer: true,
+        merchantAffiliate: true,
       },
     });
 

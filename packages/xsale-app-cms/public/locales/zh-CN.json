@@ -777,11 +777,11 @@
       "product": "产品",
       "quantity": "数量",
       "affiliate": "推广员",
-      "merchantAffiliate": "商家推广员",
+      "merchantAffiliate": "招商经理",
       "customer": "客户",
       "amount": "金额",
       "affiliateAmount": "推广员佣金",
-      "merchantAffiliateAmount": "商家推广员佣金",
+      "merchantAffiliateAmount": "招商经理佣金",
       "platformAmount": "平台佣金",
       "merchantAmount": "商户收入",
       "status": "状态",
@@ -815,7 +815,7 @@
       "status": "状态",
       "note": "备注",
       "approvedAt": "审批通过时间",
-      "completedAt":"完成时间",
+      "completedAt": "完成时间",
       "createdAt": "创建时间"
     }
   },
@@ -837,7 +837,7 @@
       "status": "状态",
       "note": "备注",
       "approvedAt": "审批通过时间",
-      "completedAt":"完成时间",
+      "completedAt": "完成时间",
       "createdAt": "创建时间"
     }
   },

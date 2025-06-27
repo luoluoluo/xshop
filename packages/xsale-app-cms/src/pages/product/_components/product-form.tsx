@@ -128,11 +128,10 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
           },
         ]}
         extra={`
-          ${
-            commission && price
-              ? `佣金比例：${((commission / price) * 100).toFixed(2)}%`
-              : ""
-          }（包含平台服务费1%，商家专属经理1%）`}
+          ${commission && price
+            ? `佣金比例：${((commission / price) * 100).toFixed(2)}%`
+            : ""
+          }（包含平台服务费1%，商家客户经理1%）`}
       >
         <Input />
       </Form.Item>

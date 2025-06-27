@@ -113,7 +113,7 @@ export class OrderService {
         where: { id: data.affiliateId },
       });
 
-      // 如果推广员为空，默认为商家推广员
+      // 如果推广员为空，默认为招商经理
       if (!data.affiliateId || !affiliate) {
         data.affiliateId = merchant.affiliateId;
       }
@@ -129,16 +129,16 @@ export class OrderService {
       // 平台佣金 = 订单金额 * 平台费用比例
       const platformAmount =
         Math.floor(amount * PLATFORM_FEE_PERCENTAGE * 100) / 100;
-      // 商家推广员佣金 = 订单金额 * 商家推广员佣金比例
+      // 招商经理佣金 = 订单金额 * 招商经理佣金比例
       const merchantAffiliateAmount =
         Math.floor(amount * MERCHANT_AFFILIATE_COMMISSION_PERCENTAGE * 100) /
         100;
 
-      // 推广员佣金 = 总佣金 - 平台佣金 - 商家推广员佣金
+      // 推广员佣金 = 总佣金 - 平台佣金 - 招商经理佣金
       const affiliateAmount =
         commission - platformAmount - merchantAffiliateAmount;
 
-      // 店铺收入 = 订单金额 - 平台佣金 - 推广员佣金 - 商家推广员佣金
+      // 店铺收入 = 订单金额 - 平台佣金 - 推广员佣金 - 招商经理佣金
       const merchantAmount =
         amount - platformAmount - affiliateAmount - merchantAffiliateAmount;
 

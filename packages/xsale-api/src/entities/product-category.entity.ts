@@ -16,7 +16,7 @@ export class ProductCategory extends Base {
   @JoinColumn({ name: 'merchant_id' })
   merchant: Merchant;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 80, unique: true })
   name: string;
 
@@ -24,12 +24,12 @@ export class ProductCategory extends Base {
   @Column({ length: 100, nullable: true })
   image?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'int', default: 0 })
   sort: number;
 
   @Client(['cms', 'pms'])
-  @Field(() => Boolean, { defaultValue: true })
+  @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 }

@@ -70,6 +70,7 @@ export const getOrder = /* GraphQL */ `
   query order($id: String!) {
     order(id: $id) {
       id
+      productId
       merchantId
       amount
       quantity
@@ -99,6 +100,7 @@ export const getOrders = /* GraphQL */ `
       total
       data {
         id
+        productId
         merchantId
         amount
         quantity

@@ -8,18 +8,18 @@ import { Client } from '@/decorators/client.decorator';
 @Client('cms')
 @Entity('role')
 export class Role extends Base {
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 50, unique: true })
   name: string;
 
-  @Field(() => [String])
+  @Field(() => [String], { nullable: true })
   @Column('simple-array')
   permissions: string[];
 
   @ManyToMany(() => User, (user) => user.roles)
   users: User[];
 
-  @Field(() => Boolean, { defaultValue: true })
+  @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 }

@@ -19,18 +19,14 @@ export class MerchantWithdrawalResolver {
   @UseGuards(GqlAuthGuard)
   async createMerchantWithdrawal(
     @Context() ctx: PmsContext,
-    @Args('createMerchantWithdrawalInput')
-    createMerchantWithdrawalInput: CreateMerchantWithdrawalInput,
+    @Args('data') data: CreateMerchantWithdrawalInput,
   ): Promise<MerchantWithdrawal> {
-    return this.withdrawalService.create(
-      createMerchantWithdrawalInput,
-      ctx.req.user!.id,
-    );
+    return this.withdrawalService.create(data, ctx.req.user!.id);
   }
 
   @Query(() => MerchantWithdrawalPagination)
   @UseGuards(GqlAuthGuard)
-  async withdrawals(
+  async merchantWithdrawals(
     @Context() ctx: PmsContext,
     @Args('where', { nullable: true }) where: MerchantWithdrawalWhereInput,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
@@ -45,7 +41,7 @@ export class MerchantWithdrawalResolver {
   }
 
   @Query(() => MerchantWithdrawal)
-  async withdrawal(
+  async merchantWithdrawal(
     @Context() ctx: PmsContext,
     @Args('id', { type: () => String }) id: string,
   ): Promise<MerchantWithdrawal> {

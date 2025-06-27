@@ -4,11 +4,11 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '../auth.service';
-import { WEB_JWT_STRATEGY } from '@/core/constants';
+import { CRM_JWT_STRATEGY } from '@/core/constants';
 import { getPassportJwtOptions } from '../../../../core/auth.config';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, WEB_JWT_STRATEGY) {
+export class JwtStrategy extends PassportStrategy(Strategy, CRM_JWT_STRATEGY) {
   constructor(
     private readonly authService: AuthService,
     configService: ConfigService,
@@ -17,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, WEB_JWT_STRATEGY) {
   }
 
   async validate(payload: any) {
-    console.log('Web JWT Strategy validate called with payload:', payload);
+    console.log('CRM JWT Strategy validate called with payload:', payload);
     try {
       return this.authService.validateAffiliate(payload);
     } catch (e) {

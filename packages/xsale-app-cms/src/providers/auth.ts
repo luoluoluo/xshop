@@ -1,9 +1,9 @@
 // import type { AuthProvider } from "@refinedev/core";
 import { request } from "../utils/request";
 
-export const TOKEN_KEY = "authToken";
-export const TOKEN_EXPIRATION_KEY = "tokenExpiration";
-export const USER_KEY = "authUser";
+export const TOKEN_KEY = "cmsAuthToken";
+export const TOKEN_EXPIRATION_KEY = "cmsTokenExpiration";
+export const USER_KEY = "cmsAuthUser";
 import { User, AuthToken, LoginInput } from "../generated/graphql";
 // import { gql } from "../generated/gql";
 import { AuthProvider } from "@refinedev/core";

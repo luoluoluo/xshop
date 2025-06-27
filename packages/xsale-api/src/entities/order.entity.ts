@@ -27,11 +27,11 @@ registerEnumType(OrderStatus, {
 @ObjectType()
 @Entity('order')
 export class Order extends Base {
-  @Field()
+  @Field({ nullable: true })
   @Column({ name: 'product_id' })
   productId: string;
 
-  @Field(() => [Product])
+  @Field(() => [Product], { nullable: true })
   @ManyToOne(() => Product, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'product_id' })
   product: Product;
@@ -58,13 +58,13 @@ export class Order extends Base {
   @Column({ name: 'merchant_affiliate_id', nullable: true })
   merchantAffiliateId: string;
 
-  // 商家推广者
+  // 招商经理
   @Field(() => Affiliate, { nullable: true })
   @ManyToOne(() => Affiliate, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'merchant_affiliate_id' })
   merchantAffiliate: Affiliate;
 
-  @Field(() => Customer)
+  @Field(() => Customer, { nullable: true })
   @ManyToOne(() => Customer, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'customer_id' })
   customer: Customer;
@@ -72,17 +72,17 @@ export class Order extends Base {
   @Column({ name: 'customer_id' })
   customerId: string;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   @Column({ type: 'int', name: 'quantity' })
   quantity: number;
 
-  @Field(() => Float)
-  @Column({ type: 'decimal', precision: 10, scale: 2, name: 'amount' })
+  @Field(() => Float, { nullable: true })
+  @Column({ type: 'float', precision: 10, scale: 2, name: 'amount' })
   amount: number;
 
   @Field(() => Float, { nullable: true })
   @Column({
-    type: 'decimal',
+    type: 'float',
     precision: 10,
     scale: 2,
     nullable: true,
@@ -90,10 +90,10 @@ export class Order extends Base {
   })
   affiliateAmount?: number;
 
-  // 商家推广者佣金
+  // 招商经理佣金
   @Field(() => Float, { nullable: true })
   @Column({
-    type: 'decimal',
+    type: 'float',
     precision: 10,
     scale: 2,
     nullable: true,
@@ -103,7 +103,7 @@ export class Order extends Base {
 
   @Field(() => Float, { nullable: true })
   @Column({
-    type: 'decimal',
+    type: 'float',
     precision: 10,
     scale: 2,
     nullable: true,
@@ -113,7 +113,7 @@ export class Order extends Base {
 
   @Field(() => Float, { nullable: true })
   @Column({
-    type: 'decimal',
+    type: 'float',
     precision: 10,
     scale: 2,
     nullable: true,
@@ -121,7 +121,7 @@ export class Order extends Base {
   })
   merchantAmount?: number;
 
-  @Field(() => OrderStatus)
+  @Field(() => OrderStatus, { nullable: true })
   @Column({
     type: 'enum',
     enum: OrderStatus,
@@ -170,9 +170,9 @@ export class Order extends Base {
   @Column({ nullable: true, name: 'product_content', type: 'text' })
   productContent?: string;
 
-  @Field(() => Float)
+  @Field(() => Float, { nullable: true })
   @Column({
-    type: 'decimal',
+    type: 'float',
     precision: 10,
     scale: 2,
     nullable: true,

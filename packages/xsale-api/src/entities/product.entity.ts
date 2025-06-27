@@ -29,41 +29,50 @@ export class Product extends Base {
   @JoinColumn({ name: 'merchant_id' })
   merchant: Merchant;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 80 })
   title: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'text' })
   content: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 100 })
   image: string;
 
-  @Field(() => Float)
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Field(() => Float, { nullable: true })
+  @Column({ type: 'float', precision: 10, scale: 2 })
   price: number;
 
-  @Field(() => Float)
+  @Field(() => Float, { nullable: true })
   @Column({
     name: 'commission',
-    type: 'decimal',
+    type: 'float',
     precision: 10,
     scale: 2,
   })
   commission: number;
 
-  @Field(() => Int)
+  @Field(() => Float, { nullable: true })
+  platformCommission?: number;
+
+  @Field(() => Float, { nullable: true })
+  merchantAffiliateCommission?: number;
+
+  @Field(() => Float, { nullable: true })
+  affiliateCommission?: number;
+
+  @Field(() => Int, { nullable: true })
   @Column({ type: 'int', default: 0, nullable: true })
   stock: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   @Column({ type: 'int', default: 0, name: 'sort' })
   sort: number;
 
   @Client(['cms', 'pms'])
-  @Field(() => Boolean, { defaultValue: true })
+  @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 

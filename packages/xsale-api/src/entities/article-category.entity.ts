@@ -15,16 +15,16 @@ export class ArticleCategory extends Base {
   @JoinColumn({ name: 'parent_id', referencedColumnName: 'id' })
   parent?: ArticleCategory;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 80, unique: true })
   name: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'int', default: 0 })
   sort: number;
 
   @Client(['cms'])
-  @Field(() => Boolean, { defaultValue: true })
+  @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 }

@@ -7,10 +7,10 @@ import {
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
-import { WEB_JWT_STRATEGY } from '@/core/constants';
+import { CRM_JWT_STRATEGY } from '@/core/constants';
 
 @Injectable()
-export class GqlAuthGuard extends AuthGuard(WEB_JWT_STRATEGY) {
+export class GqlAuthGuard extends AuthGuard(CRM_JWT_STRATEGY) {
   constructor(private reflector: Reflector) {
     super();
   }

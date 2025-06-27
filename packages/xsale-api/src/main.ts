@@ -4,6 +4,7 @@ import { CmsModule } from './modules/cms/cms.module';
 import { WebModule } from './modules/web/web.module';
 import { PmsModule } from './modules/pms/pms.module';
 import { TaskAppModule } from './modules/_common/task/task-app.module';
+import { CrmModule } from './modules/crm/crm.module';
 
 const getServers = () => {
   return [
@@ -23,7 +24,7 @@ const getServers = () => {
       name: 'pms',
     },
     {
-      module: PmsModule,
+      module: CrmModule,
       port: process.env.CRM_PORT || 3003,
       name: 'crm',
     },

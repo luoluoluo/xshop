@@ -1,22 +1,8 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import { Order, OrderStatus } from '@/entities/order.entity';
-import {
-  CreateOrderInput,
-  OrderPagination,
-  OrderWhereInput,
-} from './order.dto';
-import { Product } from '@/entities/product.entity';
-import { Merchant } from '@/entities/merchant.entity';
-import {
-  MERCHANT_AFFILIATE_COMMISSION_PERCENTAGE,
-  PLATFORM_FEE_PERCENTAGE,
-} from '@/core/constants';
+import { Order } from '@/entities/order.entity';
+import { OrderPagination, OrderWhereInput } from './order.dto';
 
 @Injectable()
 export class OrderService {
@@ -29,7 +15,7 @@ export class OrderService {
   async findAll({
     skip,
     take,
-    where = {},
+    where,
     affiliateId,
     merchantAffiliateId,
   }: {
@@ -41,13 +27,21 @@ export class OrderService {
   }): Promise<OrderPagination> {
     const [items, total] = await this.orderRepository.findAndCount({
       where: {
-        ...where,
+        id: where?.id,
+        merchantId: where?.merchantId,
         merchantAffiliateId,
         affiliateId,
+        status: where?.status,
       },
       skip,
       take,
       order: { createdAt: 'DESC' },
+      relations: {
+        merchant: true,
+        customer: true,
+        affiliate: true,
+        merchantAffiliate: true,
+      },
     });
 
     return {

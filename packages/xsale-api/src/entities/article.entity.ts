@@ -7,23 +7,23 @@ import { Client } from '@/decorators/client.decorator';
 @ObjectType()
 @Entity('article')
 export class Article extends Base {
-  @Field()
+  @Field({ nullable: true })
   @Column()
   title: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column()
   description: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column('text')
   content: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true })
   image?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'int', default: 0 })
   sort: number;
 
@@ -37,7 +37,7 @@ export class Article extends Base {
   category: ArticleCategory;
 
   @Client(['cms'])
-  @Field(() => Boolean, { defaultValue: true })
+  @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 }

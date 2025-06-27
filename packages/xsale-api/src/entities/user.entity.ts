@@ -38,11 +38,11 @@ export class User extends Base {
   @Column({ nullable: true })
   phone?: string;
 
-  @Field(() => Boolean, { defaultValue: true })
+  @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 
-  @Field(() => Float, { defaultValue: 0 })
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Field(() => Float, { nullable: true, defaultValue: 0 })
+  @Column({ type: 'float', precision: 10, scale: 2, default: 0 })
   balance: number;
 }

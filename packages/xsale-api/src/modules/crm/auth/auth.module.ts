@@ -7,7 +7,7 @@ import { GqlAuthGuard } from './guards/gql-auth.guard';
 import { AffiliateModule } from '../affiliate/affiliate.module';
 import { AuthResolver } from './auth.resolver';
 import { ConfigService } from '@nestjs/config';
-import { WEB_JWT_STRATEGY } from '@/core/constants';
+import { CRM_JWT_STRATEGY } from '@/core/constants';
 import { getJwtOptions } from '../../../core/auth.config';
 import { SmsModule } from '../../_common/sms/sms.module';
 import { WechatModule } from '@/modules/_common/wechat/wechat.module';
@@ -18,7 +18,7 @@ import { WechatModule } from '@/modules/_common/wechat/wechat.module';
     AffiliateModule,
     SmsModule,
     // TypeOrmModule.forFeature([...CommonEntities]),
-    PassportModule.register({ defaultStrategy: WEB_JWT_STRATEGY }),
+    PassportModule.register({ defaultStrategy: CRM_JWT_STRATEGY }),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) =>
         getJwtOptions(configService),

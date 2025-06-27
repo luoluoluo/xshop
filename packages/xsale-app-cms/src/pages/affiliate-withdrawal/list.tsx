@@ -20,6 +20,7 @@ import {
 } from "../../requests/affiliate-withdrawal";
 import { Affiliate, AffiliateWithdrawalStatus } from "../../generated/graphql";
 import { request } from "../../utils/request";
+import dayjs from "dayjs";
 
 const { TextArea } = Input;
 
@@ -32,7 +33,7 @@ export const AffiliateWithdrawalList = () => {
   const [rejectReason, setRejectReason] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { tableProps } = useTable({
+  const { tableProps, tableQuery } = useTable({
     meta: {
       gqlQuery: parse(getAffiliateWithdrawals),
     },
@@ -40,8 +41,8 @@ export const AffiliateWithdrawalList = () => {
 
   const handleApprove = (id: string) => {
     Modal.confirm({
-      title: t("affiliateWithdrawal.confirm.approve.title"),
-      content: t("affiliateWithdrawal.confirm.approve.content"),
+      title: "审批通过",
+      content: "确定要审批通过吗？",
       onOk: () => {
         setLoading(true);
         request({
@@ -59,9 +60,10 @@ export const AffiliateWithdrawalList = () => {
               return;
             }
             open?.({
-              message: t("affiliateWithdrawal.messages.approve.success"),
+              message: "审批通过成功",
               type: "success",
             });
+            tableQuery?.refetch();
           })
           .finally(() => {
             setLoading(false);
@@ -85,7 +87,7 @@ export const AffiliateWithdrawalList = () => {
       query: rejectAffiliateWithdrawal,
       variables: {
         id: selectedAffiliateWithdrawal.id,
-        reason: rejectReason,
+        rejectReason,
       },
     })
       .then((res) => {
@@ -97,9 +99,12 @@ export const AffiliateWithdrawalList = () => {
           return;
         }
         open?.({
-          message: t("affiliateWithdrawal.messages.reject.success"),
+          message: "审批拒绝成功",
           type: "success",
         });
+        setRejectModalVisible(false);
+        setRejectReason("");
+        tableQuery?.refetch();
       })
       .finally(() => {
         setLoading(false);
@@ -108,8 +113,8 @@ export const AffiliateWithdrawalList = () => {
 
   const handleComplete = (id: string) => {
     Modal.confirm({
-      title: t("affiliateWithdrawal.confirm.complete.title"),
-      content: t("affiliateWithdrawal.confirm.complete.content"),
+      title: "打款完成",
+      content: "确定要打款完成吗？",
       onOk: () => {
         setLoading(true);
         request({
@@ -127,9 +132,10 @@ export const AffiliateWithdrawalList = () => {
               return;
             }
             open?.({
-              message: t("affiliateWithdrawal.messages.complete.success"),
+              message: "打款完成成功",
               type: "success",
             });
+            tableQuery?.refetch();
           })
           .finally(() => {
             setLoading(false);
@@ -156,13 +162,13 @@ export const AffiliateWithdrawalList = () => {
   const getStatusText = (status: AffiliateWithdrawalStatus) => {
     switch (status) {
       case AffiliateWithdrawalStatus.Created:
-        return t("affiliateWithdrawal.status.created");
+        return "待审核";
       case AffiliateWithdrawalStatus.Approved:
-        return t("affiliateWithdrawal.status.approved");
+        return "已审核";
       case AffiliateWithdrawalStatus.Completed:
-        return t("affiliateWithdrawal.status.completed");
+        return "已打款";
       case AffiliateWithdrawalStatus.Rejected:
-        return t("affiliateWithdrawal.status.rejected");
+        return "已拒绝";
       default:
         return status;
     }
@@ -181,7 +187,7 @@ export const AffiliateWithdrawalList = () => {
               onClick={() => handleApprove(id)}
               loading={loading}
             >
-              {t("affiliateWithdrawal.actions.approve")}
+              审批通过
             </Button>
             <Button
               danger
@@ -189,7 +195,7 @@ export const AffiliateWithdrawalList = () => {
               onClick={() => handleReject(record)}
               loading={loading}
             >
-              {t("affiliateWithdrawal.actions.reject")}
+              审批拒绝
             </Button>
           </>
         )}
@@ -200,7 +206,7 @@ export const AffiliateWithdrawalList = () => {
             onClick={() => handleComplete(id)}
             loading={loading}
           >
-            {t("affiliateWithdrawal.actions.complete")}
+            打款完成
           </Button>
         )}
       </Space>
@@ -212,7 +218,12 @@ export const AffiliateWithdrawalList = () => {
       <List>
         <Table {...tableProps} rowKey="id">
           <Table.Column
-            dataIndex="user"
+            dataIndex="id"
+            title={t("affiliateWithdrawal.fields.id")}
+            width={120}
+          />
+          <Table.Column
+            dataIndex="affiliate"
             title={t("affiliateWithdrawal.fields.affiliate")}
             render={(affiliate: Affiliate) => {
               return (
@@ -240,18 +251,10 @@ export const AffiliateWithdrawalList = () => {
                 <div className="text-sm text-gray-500">
                   {record.accountName || "-"}
                 </div>
+                <div className="text-sm text-gray-500">
+                  {record.bankAccount || "-"}
+                </div>
               </div>
-            )}
-          />
-          <Table.Column
-            dataIndex="bankAccount"
-            title={t("affiliateWithdrawal.fields.bankAccount")}
-            render={(account: string) => (
-              <Tooltip title={account}>
-                <span className="truncate max-w-32 block">
-                  {account ? `****${account.slice(-4)}` : "-"}
-                </span>
-              </Tooltip>
             )}
           />
           <Table.Column
@@ -273,20 +276,20 @@ export const AffiliateWithdrawalList = () => {
           <Table.Column
             dataIndex="createdAt"
             title={t("affiliateWithdrawal.fields.createdAt")}
-            render={(date: string) => new Date(date).toLocaleString()}
+            render={(date: string) => dayjs(date).format("YYYY-MM-DD HH:mm:ss")}
           />
           <Table.Column
             dataIndex="approvedAt"
             title={t("affiliateWithdrawal.fields.approvedAt")}
             render={(date: string) =>
-              date ? new Date(date).toLocaleString() : "-"
+              date ? dayjs(date).format("YYYY-MM-DD HH:mm:ss") : "-"
             }
           />
           <Table.Column
             dataIndex="completedAt"
             title={t("affiliateWithdrawal.fields.completedAt")}
             render={(date: string) =>
-              date ? new Date(date).toLocaleString() : "-"
+              date ? dayjs(date).format("YYYY-MM-DD HH:mm:ss") : "-"
             }
           />
           <Table.Column
@@ -298,7 +301,7 @@ export const AffiliateWithdrawalList = () => {
       </List>
 
       <Modal
-        title={t("affiliateWithdrawal.modal.reject.title")}
+        title="审批拒绝"
         open={rejectModalVisible}
         onOk={handleRejectConfirm}
         onCancel={() => {
@@ -309,12 +312,12 @@ export const AffiliateWithdrawalList = () => {
         confirmLoading={loading}
       >
         <div className="mb-4">
-          <p>{t("affiliateWithdrawal.modal.reject.description")}：</p>
+          <p>请输入拒绝原因：</p>
           <TextArea
             rows={4}
             value={rejectReason}
             onChange={(e) => setRejectReason(e.target.value)}
-            placeholder={t("affiliateWithdrawal.modal.reject.placeholder")}
+            placeholder="请输入拒绝原因"
           />
         </div>
       </Modal>

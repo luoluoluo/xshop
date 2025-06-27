@@ -17,20 +17,20 @@ registerEnumType(AffiliateWithdrawalStatus, {
 @ObjectType()
 @Entity('affiliate_withdrawal')
 export class AffiliateWithdrawal extends Base {
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ name: 'affiliate_id' })
   affiliateId: string;
 
-  @Field(() => Affiliate)
+  @Field(() => Affiliate, { nullable: true })
   @ManyToOne(() => Affiliate, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'affiliate_id' })
   affiliate: Affiliate;
 
-  @Field(() => Float)
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Field(() => Float, { nullable: true })
+  @Column({ type: 'float', precision: 10, scale: 2 })
   amount: number;
 
-  @Field(() => AffiliateWithdrawalStatus)
+  @Field(() => AffiliateWithdrawalStatus, { nullable: true })
   @Column({
     type: 'enum',
     enum: AffiliateWithdrawalStatus,
@@ -38,15 +38,15 @@ export class AffiliateWithdrawal extends Base {
   })
   status: AffiliateWithdrawalStatus;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 100 })
   bankName: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 50 })
   bankAccount: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 50 })
   accountName: string;
 

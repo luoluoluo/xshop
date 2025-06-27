@@ -19,18 +19,14 @@ export class AffiliateWithdrawalResolver {
   @UseGuards(GqlAuthGuard)
   async createAffiliateWithdrawal(
     @Context() ctx: CrmContext,
-    @Args('createAffiliateWithdrawalInput')
-    createAffiliateWithdrawalInput: CreateAffiliateWithdrawalInput,
+    @Args('data') data: CreateAffiliateWithdrawalInput,
   ): Promise<AffiliateWithdrawal> {
-    return this.withdrawalService.create(
-      createAffiliateWithdrawalInput,
-      ctx.req.user!.id,
-    );
+    return this.withdrawalService.create(data, ctx.req.user!.id);
   }
 
   @Query(() => AffiliateWithdrawalPagination)
   @UseGuards(GqlAuthGuard)
-  async withdrawals(
+  async affiliateWithdrawals(
     @Context() ctx: CrmContext,
     @Args('where', { nullable: true }) where: AffiliateWithdrawalWhereInput,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
@@ -45,7 +41,8 @@ export class AffiliateWithdrawalResolver {
   }
 
   @Query(() => AffiliateWithdrawal)
-  async withdrawal(
+  @UseGuards(GqlAuthGuard)
+  async affiliateWithdrawal(
     @Context() ctx: CrmContext,
     @Args('id', { type: () => String }) id: string,
   ): Promise<AffiliateWithdrawal> {

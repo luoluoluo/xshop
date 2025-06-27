@@ -1,4 +1,4 @@
-import { Order } from '@/entities/order.entity';
+import { Order, OrderStatus } from '@/entities/order.entity';
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import {
   IsNotEmpty,
@@ -55,6 +55,12 @@ export class OrderWhereInput {
 
   @Field({ nullable: true })
   merchantId?: string;
+
+  @Field({ nullable: true })
+  isMerchantAffiliate?: boolean;
+
+  @Field(() => OrderStatus, { nullable: true })
+  status?: OrderStatus;
 }
 
 @InputType()

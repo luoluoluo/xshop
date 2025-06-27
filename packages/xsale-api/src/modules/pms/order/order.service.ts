@@ -9,6 +9,7 @@ import { Order, OrderStatus } from '@/entities/order.entity';
 import { OrderPagination, OrderWhereInput } from './order.dto';
 import { User } from '@/entities/user.entity';
 import { Merchant } from '@/entities/merchant.entity';
+import { Affiliate } from '@/entities/affiliate.entity';
 
 @Injectable()
 export class OrderService {
@@ -35,7 +36,8 @@ export class OrderService {
   }): Promise<OrderPagination> {
     const [data, total] = await this.orderRepository.findAndCount({
       where: {
-        ...where,
+        id: where?.id,
+        status: where?.status,
         merchantId,
       },
       skip,
@@ -46,6 +48,7 @@ export class OrderService {
         merchant: true,
         affiliate: true,
         customer: true,
+        merchantAffiliate: true,
       },
     });
 
@@ -92,7 +95,15 @@ export class OrderService {
         throw new BadRequestException('只有已支付的订单才能完成');
       }
 
-      const affiliate = await queryRunner.manager.findOne(User, {
+      const merchantAffiliate = await queryRunner.manager.findOne(Affiliate, {
+        where: { id: order.merchantAffiliateId },
+      });
+
+      if (!merchantAffiliate) {
+        throw new BadRequestException('商户客户经理不存在');
+      }
+
+      const affiliate = await queryRunner.manager.findOne(Affiliate, {
         where: { id: order.affiliateId },
       });
       if (!affiliate) {
@@ -115,6 +126,12 @@ export class OrderService {
       affiliate.balance =
         Number(affiliate.balance) + Number(order.affiliateAmount || 0);
       await queryRunner.manager.save(affiliate);
+
+      // 更新商户客户经理余额
+      merchantAffiliate.balance =
+        Number(merchantAffiliate.balance) +
+        Number(order.merchantAffiliateAmount || 0);
+      await queryRunner.manager.save(merchantAffiliate);
 
       if (order.merchantId) {
         // 更新商户余额

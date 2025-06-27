@@ -17,20 +17,20 @@ registerEnumType(MerchantWithdrawalStatus, {
 @ObjectType()
 @Entity('merchant_withdrawal')
 export class MerchantWithdrawal extends Base {
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ name: 'merchant_id' })
   merchantId: string;
 
-  @Field(() => Merchant)
+  @Field(() => Merchant, { nullable: true })
   @ManyToOne(() => Merchant, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'merchant_id' })
   merchant: Merchant;
 
-  @Field(() => Float)
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Field(() => Float, { nullable: true })
+  @Column({ type: 'float', precision: 10, scale: 2 })
   amount: number;
 
-  @Field(() => MerchantWithdrawalStatus)
+  @Field(() => MerchantWithdrawalStatus, { nullable: true })
   @Column({
     type: 'enum',
     enum: MerchantWithdrawalStatus,
@@ -38,15 +38,15 @@ export class MerchantWithdrawal extends Base {
   })
   status: MerchantWithdrawalStatus;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 100 })
   bankName: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 50 })
   bankAccount: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 50 })
   accountName: string;
 

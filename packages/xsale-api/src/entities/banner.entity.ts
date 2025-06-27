@@ -16,15 +16,15 @@ export class Banner extends Base {
   @JoinColumn({ name: 'merchant_id' })
   merchant: Merchant;
 
-  @Field()
+  @Field({ nullable: true })
   @Column()
   title: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column()
   image: string;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ default: 0 })
   sort: number;
 
@@ -33,7 +33,7 @@ export class Banner extends Base {
   link: string;
 
   @Client(['cms', 'pms'])
-  @Field(() => Boolean, { defaultValue: true })
+  @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 }

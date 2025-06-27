@@ -45,11 +45,11 @@ export class MerchantWithdrawalService {
       });
 
       if (!merchant) {
-        throw new NotFoundException('Merchant not found');
+        throw new NotFoundException('商家不存在');
       }
 
       if (merchant.balance < createMerchantWithdrawalInput.amount) {
-        throw new BadRequestException('Insufficient balance');
+        throw new BadRequestException('余额不足');
       }
 
       merchant.balance -= createMerchantWithdrawalInput.amount;

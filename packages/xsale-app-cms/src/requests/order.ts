@@ -33,6 +33,9 @@ export const getOrders = /* GraphQL */ `
           id
           name
         }
+        productTitle
+        productImage
+        productPrice
       }
       total
     }

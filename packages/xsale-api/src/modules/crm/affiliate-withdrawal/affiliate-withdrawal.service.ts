@@ -25,8 +25,6 @@ export class AffiliateWithdrawalService {
   constructor(
     @InjectRepository(AffiliateWithdrawal)
     private withdrawalRepository: Repository<AffiliateWithdrawal>,
-    @InjectRepository(Affiliate)
-    private affiliateRepository: Repository<Affiliate>,
     private dataSource: DataSource,
   ) {}
 
@@ -47,11 +45,11 @@ export class AffiliateWithdrawalService {
       });
 
       if (!affiliate) {
-        throw new NotFoundException('Affiliate not found');
+        throw new NotFoundException('推广员不存在');
       }
 
       if (affiliate.balance < createAffiliateWithdrawalInput.amount) {
-        throw new BadRequestException('Insufficient balance');
+        throw new BadRequestException('余额不足');
       }
 
       affiliate.balance -= createAffiliateWithdrawalInput.amount;

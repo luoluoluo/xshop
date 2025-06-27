@@ -9,23 +9,23 @@ import { Client } from '@/decorators/client.decorator';
 @ObjectType()
 @Entity('merchant')
 export class Merchant extends Base {
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 100 })
   name: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 200 })
   description: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 100 })
   logo: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 100 })
   address: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ length: 20 })
   phone: string;
 
@@ -38,13 +38,13 @@ export class Merchant extends Base {
   orders: Order[];
 
   @Client(['cms'])
-  @Field(() => Boolean, { defaultValue: true })
+  @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 
   @Client(['cms', 'pms'])
-  @Field(() => Float, { defaultValue: 0 })
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Field(() => Float, { nullable: true, defaultValue: 0 })
+  @Column({ type: 'float', precision: 10, scale: 2, default: 0 })
   balance: number;
 
   @Column({ nullable: true })

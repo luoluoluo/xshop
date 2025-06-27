@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int, Context } from '@nestjs/graphql';
+import { Resolver, Query, Args, Int, Context } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { MerchantService } from './merchant.service';
 import { Merchant } from '@/entities/merchant.entity';
@@ -9,6 +9,7 @@ import { CrmContext } from '@/types/graphql-context';
 import { AffiliateService } from '../affiliate/affiliate.service';
 
 @Resolver(() => Merchant)
+@UseGuards(GqlAuthGuard)
 export class MerchantResolver {
   constructor(
     private readonly merchantService: MerchantService,
@@ -29,6 +30,7 @@ export class MerchantResolver {
   }
 
   @Query(() => Merchant)
+  @UseGuards(GqlAuthGuard)
   async merchant(
     @Context() ctx: CrmContext,
     @Args('id', { type: () => String }) id: string,

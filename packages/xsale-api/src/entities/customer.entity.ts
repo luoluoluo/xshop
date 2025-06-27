@@ -15,7 +15,7 @@ export class Customer extends Base {
   phone?: string;
 
   @Client(['cms'])
-  @Field(() => Boolean, { defaultValue: true })
+  @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 }
