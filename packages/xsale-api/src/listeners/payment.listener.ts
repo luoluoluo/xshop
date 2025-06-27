@@ -47,15 +47,6 @@ export class PaymentListener {
       this.logger.log('订单状态更新成功', {
         outTradeNo: event.outTradeNo,
       });
-
-      if (order.affiliateId) {
-        this.logger.log('订单有推广员，准备处理分佣', {
-          orderId: order.id,
-          affiliateId: order.affiliateId,
-        });
-        // 注意：这里只是记录日志，实际的分佣处理会在订单完成时进行
-        // 因为微信支付分账需要在订单完成后才能进行
-      }
     } catch (error) {
       this.logger.error('处理支付成功事件失败', error);
       throw error;
