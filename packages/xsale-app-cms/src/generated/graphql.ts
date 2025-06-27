@@ -968,7 +968,6 @@ export type UpdateUserInput = {
 
 export type User = {
   __typename?: 'User';
-  balance?: Maybe<Scalars['Float']['output']>;
   createdAt: Scalars['DateTime']['output'];
   email?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
