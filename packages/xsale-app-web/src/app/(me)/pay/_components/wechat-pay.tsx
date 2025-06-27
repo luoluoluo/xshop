@@ -71,8 +71,10 @@ export const WechatPay = ({ orderId, title, amount }: { orderId: string; title: 
         request<{ createOrderPayment: Payment }>({
           query: createOrderPayment,
           variables: {
-            id: orderId,
-            openId
+            data: {
+              id: orderId,
+              openId
+            }
           }
         }).then(res => {
           if (res.errors) {
