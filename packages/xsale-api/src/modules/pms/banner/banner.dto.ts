@@ -13,9 +13,6 @@ export class BannerPagination {
 @InputType()
 export class CreateBannerInput {
   @Field()
-  merchantId: string;
-
-  @Field()
   title: string;
 
   @Field({ nullable: true })

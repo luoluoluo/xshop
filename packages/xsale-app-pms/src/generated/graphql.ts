@@ -114,7 +114,6 @@ export type CreateBannerInput = {
   image: Scalars['String']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   link?: InputMaybe<Scalars['String']['input']>;
-  merchantId: Scalars['String']['input'];
   sort: Scalars['Int']['input'];
   title: Scalars['String']['input'];
 };
