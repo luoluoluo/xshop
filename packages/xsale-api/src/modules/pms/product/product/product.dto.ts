@@ -4,9 +4,6 @@ import { Product } from '@/entities/product.entity';
 @InputType()
 export class CreateProductInput {
   @Field()
-  merchantId: string;
-
-  @Field()
   title: string;
 
   @Field()
@@ -51,9 +48,6 @@ class ProductAttributeInput {
 
 @InputType()
 export class UpdateProductInput {
-  @Field({ nullable: true })
-  merchantId?: string;
-
   @Field({ nullable: true })
   title?: string;
 
