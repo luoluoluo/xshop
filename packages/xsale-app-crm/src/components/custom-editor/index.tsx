@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 
-import { message } from "antd";
 import { upload } from "../../utils/request";
 
 export const CustomEditor = ({
@@ -16,7 +15,7 @@ export const CustomEditor = ({
   return (
     <>
       <Editor
-        tinymceScriptSrc="/app-crm/tinymce/tinymce.min.js"
+        tinymceScriptSrc="/app-pms/tinymce/tinymce.min.js"
         onInit={(_evt: any, editor: any) => (editorRef.current = editor)}
         // onChange={() => {
         //   console.log(editorRef.current.getContent());
@@ -72,7 +71,7 @@ export const CustomEditor = ({
             "removeformat | help |" +
             "table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol",
           content_style:
-            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px } img { max-width: 100%; height: auto; }",
         }}
       />
     </>
