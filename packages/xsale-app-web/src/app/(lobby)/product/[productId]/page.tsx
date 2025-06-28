@@ -50,7 +50,7 @@ export default async function Page({ params }: { params: { productId: string } }
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <SiteHeader name={merchant?.name || undefined} logo={merchant?.logo || undefined} />
+      <SiteHeader logoAttributes={{ name: merchant?.name || undefined, logo: merchant?.logo || undefined, link: "#" }} />
       <main className="flex-1">
         <div className="container lg:flex lg:gap-8">
           <div className="w-full mt-4 lg:mt-8 lg:p-4 lg:rounded lg:shadow">

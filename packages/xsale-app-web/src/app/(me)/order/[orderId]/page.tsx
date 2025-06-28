@@ -45,7 +45,7 @@ export default async function Page({ params }: { params: { orderId: string } }) 
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <SiteHeader name={merchant?.name || undefined} logo={merchant?.logo || undefined} />
+      <SiteHeader logoAttributes={{ name: merchant?.name || undefined, logo: merchant?.logo || undefined, link: "#" }} />
       <main className="container lg:flex lg:gap-8">
         <OrderItem order={order} className="mt-4 lg:mt-8 w-full"></OrderItem>
         <div className="w-full lg:w-[375px] flex-shrink-0 border-t mt-4 lg:mt-0 lg:border-none">
