@@ -1,6 +1,6 @@
-import { DeleteButton, EditButton, List, useTable } from "@refinedev/antd";
+import { List, useTable } from "@refinedev/antd";
 import { useGetIdentity, useTranslate, type BaseRecord } from "@refinedev/core";
-import { Button, Space, Table, Tooltip } from "antd";
+import { Button, QRCode, Space, Table, Tooltip } from "antd";
 import { parse } from "graphql";
 import { getProducts } from "../../requests/product";
 import { Affiliate, Merchant, Product } from "../../generated/graphql";
@@ -14,6 +14,10 @@ export const ProductList = () => {
       gqlQuery: parse(getProducts),
     },
   });
+
+  const getAffiliateLink = (id: string) => {
+    return `${window.location.origin}/product/${id}?affiliateId=${me?.id}`;
+  };
 
   return (
     <List>
@@ -61,20 +65,18 @@ export const ProductList = () => {
           }}
         />
         <Table.Column
-          title={t("table.actions")}
-          dataIndex="actions"
-          render={(_, record: BaseRecord) => (
-            <Space>
-              <Button
-                type="link"
-                size="small"
-                target="_blank"
-                href={`/product/${record.id}?affiliateId=${me?.id}`}
-              >
-                分佣链接
-              </Button>
-            </Space>
-          )}
+          dataIndex="affiliateLink"
+          title={"分佣链接"}
+          render={(_, record: Product) => {
+            return <span>{getAffiliateLink(record.id)}</span>;
+          }}
+        />
+        <Table.Column
+          dataIndex="affiliateQRCode"
+          title={"分佣二维码"}
+          render={(_, record: Product) => {
+            return <QRCode value={getAffiliateLink(record.id)} />;
+          }}
         />
       </Table>
     </List>

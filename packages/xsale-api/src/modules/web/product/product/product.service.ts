@@ -24,7 +24,6 @@ export class ProductService {
       where,
       skip,
       take,
-      relations: ['category', 'attributes'],
     });
 
     return {
@@ -36,7 +35,6 @@ export class ProductService {
   async findOne(id: string): Promise<Product> {
     const product = await this.productRepository.findOne({
       where: { id },
-      relations: ['category', 'attributes'],
     });
     if (!product) {
       throw new NotFoundException(`產品ID ${id} 未找到`);

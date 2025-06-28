@@ -12,15 +12,12 @@ import {
   ProductWhereInput,
   UpdateProductInput,
 } from './product.dto';
-import { ProductAttribute } from '@/entities/product-attribute.entity';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-    @InjectRepository(ProductAttribute)
-    private readonly attributeRepository: Repository<ProductAttribute>,
   ) {}
 
   async findAll({
@@ -37,8 +34,6 @@ export class ProductService {
       skip,
       take,
       relations: {
-        category: true,
-        attributes: true,
         merchant: true,
       },
     });
@@ -53,8 +48,6 @@ export class ProductService {
     const product = await this.productRepository.findOne({
       where: { id },
       relations: {
-        category: true,
-        attributes: true,
         merchant: true,
       },
     });
@@ -66,24 +59,9 @@ export class ProductService {
 
   async create(createProductDto: CreateProductInput): Promise<Product> {
     try {
-      const { attributes, ...productData } = createProductDto;
-
       // 创建产品
-      const product = this.productRepository.create(productData);
-      await this.productRepository.save(product);
-
-      // 创建属性
-      if (attributes?.length) {
-        const productAttributes = attributes.map((attribute) =>
-          this.attributeRepository.create({
-            ...attribute,
-            productId: product.id,
-          }),
-        );
-        await this.attributeRepository.save(productAttributes);
-      }
-
-      return this.findOne(product.id);
+      const product = this.productRepository.create(createProductDto);
+      return this.productRepository.save(product);
     } catch (err) {
       console.error(err);
       throw new InternalServerErrorException('創建產品失敗');
@@ -97,26 +75,10 @@ export class ProductService {
     const product = await this.findOne(id);
 
     try {
-      const { attributes, ...productData } = updateProductDto;
-
       // 更新产品基本信息
-      Object.assign(product, productData);
+      Object.assign(product, updateProductDto);
 
-      await this.productRepository.save(product);
-
-      // 更新属性
-      await this.attributeRepository.delete({ productId: id });
-      if (attributes?.length) {
-        const productAttributes = attributes.map((attribute) =>
-          this.attributeRepository.create({
-            ...attribute,
-            productId: id,
-          }),
-        );
-        await this.attributeRepository.save(productAttributes);
-      }
-
-      return this.findOne(id);
+      return this.productRepository.save(product);
     } catch (err) {
       console.error(err);
       throw new InternalServerErrorException('更新產品失敗');

@@ -44,11 +44,7 @@ export class AuthService {
 
   async login(data: LoginInput): Promise<AuthToken> {
     let customer = await this.customerService.findByPhone(data.phone);
-    if (customer) {
-      if (data.name !== customer.name) {
-        throw new BadRequestException('姓名和手机号不匹配');
-      }
-    } else {
+    if (!customer) {
       // 如果用户不存在，则创建一个新用户
       customer = await this.customerService.create({
         phone: data.phone,

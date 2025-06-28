@@ -37,15 +37,8 @@ import {
   ProductList,
   ProductShow,
 } from "./pages/product";
-import {
-  ProductCategoryCreate,
-  ProductCategoryEdit,
-  ProductCategoryList,
-  ProductCategoryShow,
-} from "./pages/product-category";
 
 import { getResources } from "./config/app";
-import { BannerCreate, BannerEdit, BannerList } from "./pages/banner";
 import { OrderList, OrderShow } from "./pages/order";
 import {
   MerchantWithdrawalCreate,
@@ -107,26 +100,12 @@ function App() {
                       index
                       element={<NavigateToResource resource="user" />}
                     />
-                    <Route path="/product-category">
-                      <Route index element={<ProductCategoryList />} />
-                      <Route path="new" element={<ProductCategoryCreate />} />
-                      <Route
-                        path=":id/edit"
-                        element={<ProductCategoryEdit />}
-                      />
-                      <Route path=":id" element={<ProductCategoryShow />} />
-                    </Route>
+
                     <Route path="/product">
                       <Route index element={<ProductList />} />
                       <Route path="new" element={<ProductCreate />} />
                       <Route path=":id/edit" element={<ProductEdit />} />
                       <Route path=":id" element={<ProductShow />} />
-                    </Route>
-
-                    <Route path="/banner">
-                      <Route index element={<BannerList />} />
-                      <Route path="new" element={<BannerCreate />} />
-                      <Route path=":id/edit" element={<BannerEdit />} />
                     </Route>
 
                     <Route path="/order">

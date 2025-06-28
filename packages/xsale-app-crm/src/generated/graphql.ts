@@ -94,19 +94,6 @@ export type AuthToken = {
   token: Scalars['String']['output'];
 };
 
-export type Banner = {
-  __typename?: 'Banner';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  image?: Maybe<Scalars['String']['output']>;
-  link?: Maybe<Scalars['String']['output']>;
-  merchant?: Maybe<Merchant>;
-  merchantId?: Maybe<Scalars['String']['output']>;
-  sort?: Maybe<Scalars['Float']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
 export type CreateAffiliateWithdrawalInput = {
   accountName: Scalars['String']['input'];
   amount: Scalars['Float']['input'];
@@ -263,9 +250,6 @@ export type OrderWhereInput = {
 export type Product = {
   __typename?: 'Product';
   affiliateCommission?: Maybe<Scalars['Float']['output']>;
-  attributes?: Maybe<Array<ProductAttribute>>;
-  category?: Maybe<ProductCategory>;
-  categoryId?: Maybe<Scalars['String']['output']>;
   commission?: Maybe<Scalars['Float']['output']>;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
@@ -282,28 +266,6 @@ export type Product = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
-export type ProductAttribute = {
-  __typename?: 'ProductAttribute';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  name?: Maybe<Scalars['String']['output']>;
-  product?: Maybe<Product>;
-  updatedAt: Scalars['DateTime']['output'];
-  values?: Maybe<Array<Scalars['String']['output']>>;
-};
-
-export type ProductCategory = {
-  __typename?: 'ProductCategory';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  image?: Maybe<Scalars['String']['output']>;
-  merchant?: Maybe<Merchant>;
-  merchantId?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  sort?: Maybe<Scalars['Float']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
 export type ProductPagination = {
   __typename?: 'ProductPagination';
   data: Array<Product>;
@@ -314,7 +276,6 @@ export type ProductWhereInput = {
   categoryId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   merchantId?: InputMaybe<Scalars['String']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Query = {

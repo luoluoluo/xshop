@@ -38,34 +38,6 @@ export const getResources = (): ResourceProps[] => {
     //     icon: <AccountCircleOutlinedIcon />,
     //   },
     // },
-    {
-      name: "article-management",
-      meta: {
-        icon: <FileAddOutlined />,
-        label: i18n.t("article.article"),
-      },
-    },
-    {
-      name: "article",
-      list: "/article",
-      create: "/article/new",
-      edit: "/article/:id/edit",
-      show: "/article/:id",
-      meta: {
-        parent: "article-management",
-        icon: <></>,
-      },
-    },
-    {
-      name: "articleCategory",
-      list: "/article-category",
-      create: "/article-category/new",
-      edit: "/article-category/:id/edit",
-      meta: {
-        parent: "article-management",
-        icon: <></>,
-      },
-    },
 
     {
       name: "affiliate",
@@ -86,40 +58,13 @@ export const getResources = (): ResourceProps[] => {
       },
     },
     {
-      name: "banner",
-      list: "/banner",
-      create: "/banner/new",
-      edit: "/banner/:id/edit",
-      meta: {
-        icon: <FileImageOutlined />,
-      },
-    },
-    {
-      name: "product-management",
-      meta: {
-        icon: <ProductOutlined />,
-        label: i18n.t("product.product"),
-      },
-    },
-    {
       name: "product",
       list: "/product",
       create: "/product/new",
       edit: "/product/:id/edit",
       show: "/product/:id",
       meta: {
-        parent: "product-management",
-        icon: <></>,
-      },
-    },
-    {
-      name: "productCategory",
-      list: "/product-category",
-      create: "/product-category/new",
-      edit: "/product-category/:id/edit",
-      meta: {
-        parent: "product-management",
-        icon: <></>,
+        icon: <ProductOutlined />,
       },
     },
     {

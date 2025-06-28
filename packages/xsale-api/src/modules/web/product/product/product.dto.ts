@@ -10,9 +10,6 @@ export class ProductWhereInput {
   title?: string;
 
   @Field({ nullable: true })
-  categoryId?: string;
-
-  @Field({ nullable: true })
   merchantId?: string;
 }
 

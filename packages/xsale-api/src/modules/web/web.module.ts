@@ -11,7 +11,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { createTypeOrmConfig } from '@/core/type-orm.config';
 import { I18nModule } from 'nestjs-i18n';
 import { createI18nConfig } from '@/core/i18n.config';
-import { BannerModule } from './banner/banner.module';
 import { CustomerModule } from './customer/customer.module';
 import { WechatPayModule } from '../_common/wechat-pay/wechat-pay.module';
 import { WechatModule } from '../_common/wechat/wechat.module';
@@ -24,7 +23,6 @@ const webModules = [
   ArticleModule,
   OrderModule,
   MerchantModule,
-  BannerModule,
   CustomerModule,
   WechatPayModule,
   WechatModule,

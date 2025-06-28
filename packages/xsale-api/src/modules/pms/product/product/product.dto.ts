@@ -4,19 +4,10 @@ import { Product } from '@/entities/product.entity';
 @InputType()
 export class CreateProductInput {
   @Field()
-  title: string;
-
-  @Field()
   content: string;
-
-  @Field()
-  image: string;
 
   @Field(() => Boolean, { nullable: true })
   isActive?: boolean;
-
-  @Field(() => String, { nullable: true })
-  categoryId?: string;
 
   @Field(() => Float)
   price: number;
@@ -30,38 +21,20 @@ export class CreateProductInput {
   @Field(() => Int)
   sort: number;
 
-  @Field(() => [ProductAttributeInput], { nullable: true })
-  attributes?: ProductAttributeInput[];
-}
-
-@InputType()
-class ProductAttributeInput {
   @Field()
-  name: string;
+  title: string;
 
-  @Field(() => [String])
-  values: string[];
-
-  @Field(() => Int)
-  sort: number;
+  @Field()
+  image: string;
 }
 
 @InputType()
 export class UpdateProductInput {
-  @Field({ nullable: true })
-  title?: string;
-
   @Field()
   content: string;
 
   @Field({ nullable: true })
-  image?: string;
-
-  @Field({ nullable: true })
   price?: number;
-
-  @Field(() => String, { nullable: true })
-  categoryId?: string;
 
   @Field(() => Float, { nullable: true })
   commission?: number;
@@ -75,20 +48,17 @@ export class UpdateProductInput {
   @Field(() => Int)
   sort: number;
 
-  @Field(() => [ProductAttributeInput], { nullable: true })
-  attributes?: ProductAttributeInput[];
+  @Field()
+  title: string;
+
+  @Field()
+  image: string;
 }
 
 @InputType()
 export class ProductWhereInput {
   @Field({ nullable: true })
   id?: string;
-
-  @Field({ nullable: true })
-  title?: string;
-
-  @Field({ nullable: true })
-  categoryId?: string;
 
   @Field({ nullable: true })
   merchantId?: string;

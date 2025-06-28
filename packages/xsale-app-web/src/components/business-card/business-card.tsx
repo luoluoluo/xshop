@@ -134,7 +134,7 @@ export const BusinessCard = function ({
         qrcodeH = 200;
       // 二维码
       QRCode.toCanvas(url, {
-        width: 200,
+        width: qrcodeW,
         margin: 0
       })
         .then(res => {
@@ -223,24 +223,14 @@ export const BusinessCard = function ({
                 toast({ title: "链接复制成功" });
               }}
             >
-              <Button className="w-full">立即分享</Button>
+              <Button className="w-full">立即联系</Button>
             </Clipboard>
           </div>
           <div className="shadow mt-4 p-4 rounded">
             <div
-              className={cn(
-                `w-full overflow-hidden transition-[max-height] ease-in-out duration-200 max-h-32 lg:max-h-fit whitespace-pre-wrap`,
-                expanded ? "max-h-fit" : ""
-              )}
-            >
-              {merchant?.description}
-            </div>
-            <div
-              className={cn(`w-full flex justify-center mt-4 lg:hidden`, expanded ? "rotate-180" : "")}
-              onClick={() => setExpanded(!expanded)}
-            >
-              <Icons.arrow className="w-4 h-4 animate-bounce" />
-            </div>
+              className="w-full overflow-hidden transition-[max-height] ease-in-out duration-200 max-h-32 lg:max-h-fit whitespace-pre-wrap wysiwyg"
+              dangerouslySetInnerHTML={{ __html: merchant?.description || "" }}
+            />
           </div>
         </>
       ) : null}

@@ -29,7 +29,6 @@ export class ProductService {
       skip,
       take,
       relations: {
-        category: true,
         merchant: {
           affiliate: true,
         },

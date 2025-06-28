@@ -5,6 +5,7 @@ import { Affiliate, AffiliatePagination } from "../../../generated/graphql";
 import { getAffiliates } from "../../../requests/affiliate";
 import { request } from "../../../utils/request";
 import { useTranslate } from "@refinedev/core";
+import { CustomEditor } from "../../../components/custom-editor";
 
 export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
   const t = useTranslate();
@@ -97,7 +98,7 @@ export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
         name={["description"]}
         rules={[{ required: true }]}
       >
-        <Input.TextArea rows={4} />
+        <CustomEditor />
       </Form.Item>
 
       <Form.Item label={t("fields.isActive.label")} name={["isActive"]}>

@@ -1,25 +1,12 @@
 import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
-import { ProductCategory } from './product-category.entity';
 import { Base } from './base.entity';
-import { ProductAttribute } from './product-attribute.entity';
 import { Merchant } from './merchant.entity';
 import { Client } from '@/decorators/client.decorator';
 
 @ObjectType()
 @Entity('product')
 export class Product extends Base {
-  @Field(() => String, {
-    nullable: true,
-  })
-  @Column({ name: 'category_id', nullable: true })
-  categoryId?: string;
-
-  @Field(() => ProductCategory, { nullable: true })
-  @ManyToOne(() => ProductCategory)
-  @JoinColumn({ name: 'category_id' })
-  category?: ProductCategory;
-
   @Field(() => String, { nullable: true })
   @Column({ name: 'merchant_id', nullable: true })
   merchantId: string;
@@ -75,8 +62,4 @@ export class Product extends Base {
   @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
-
-  @Field(() => [ProductAttribute], { nullable: true })
-  @OneToMany(() => ProductAttribute, (attribute) => attribute.product)
-  attributes: ProductAttribute[];
 }

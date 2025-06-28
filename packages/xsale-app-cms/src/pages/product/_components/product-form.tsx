@@ -4,13 +4,10 @@ import { CustomEditor } from "../../../components/custom-editor";
 import { useEffect, useState } from "react";
 import {
   CreateProductInput,
-  ProductCategory,
-  ProductCategoryPagination,
   Merchant,
   MerchantPagination,
   UpdateProductInput,
 } from "../../../generated/graphql";
-import { getProductCategories } from "../../../requests/product-category";
 import { request } from "../../../utils/request";
 import { useTranslate } from "@refinedev/core";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
@@ -18,17 +15,10 @@ import { getMerchants } from "../../../requests/merchant";
 
 export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
   const t = useTranslate();
-  const [categories, setCategories] = useState<ProductCategory[]>();
 
   const [merchants, setMerchants] = useState<Merchant[]>();
 
   useEffect(() => {
-    request<{ productCategories?: ProductCategoryPagination }>({
-      query: getProductCategories,
-    }).then((res) => {
-      setCategories(res.data?.productCategories?.data || []);
-    });
-
     request<{ merchants?: MerchantPagination }>({
       query: getMerchants,
     }).then((res) => {
@@ -45,13 +35,6 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
     values.price = Number(values?.price || 0);
     values.stock = Number(values?.stock || 0);
 
-    if (values.attributes?.length) {
-      values.attributes = values.attributes.map((item, index) => ({
-        name: item.name,
-        values: item.values,
-        sort: index,
-      }));
-    }
     if (formProps.onFinish) {
       formProps.onFinish(values);
     }
@@ -66,17 +49,6 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
         <Select
           options={
             merchants?.map((item) => ({
-              label: item.name,
-              value: item.id,
-              disabled: !item.isActive,
-            })) || []
-          }
-        />
-      </Form.Item>
-      <Form.Item label={t("product.fields.category")} name={["categoryId"]}>
-        <Select
-          options={
-            categories?.map((item) => ({
               label: item.name,
               value: item.id,
               disabled: !item.isActive,
@@ -142,62 +114,6 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
         rules={[{ required: true }]}
       >
         <Input />
-      </Form.Item>
-
-      <Form.Item label={t("product.fields.attribute")}>
-        <Form.List name="attributes">
-          {(fields, { add, remove }) => (
-            <>
-              {fields.map(({ key, name, ...restField }) => (
-                <Space
-                  key={key}
-                  style={{ display: "flex", marginBottom: 8 }}
-                  align="baseline"
-                >
-                  <Form.Item
-                    {...restField}
-                    name={[name, "name"]}
-                    rules={[
-                      { required: true, message: "Missing attribute name" },
-                    ]}
-                  >
-                    <Input placeholder={t("product.fields.attributeName")} />
-                  </Form.Item>
-                  <Form.Item
-                    {...restField}
-                    name={[name, "values"]}
-                    rules={[
-                      { required: true, message: "Missing attribute value" },
-                    ]}
-                  >
-                    <Select
-                      mode="tags"
-                      placeholder={t("product.fields.attributeValue")}
-                      className="min-w-48"
-                      showSearch={false}
-                    />
-                  </Form.Item>
-                  <MinusCircleOutlined onClick={() => remove(name)} />
-                </Space>
-              ))}
-              <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() =>
-                    add({
-                      name: "",
-                      values: [],
-                    })
-                  }
-                  block
-                  icon={<PlusOutlined />}
-                >
-                  {t("buttons.add")}
-                </Button>
-              </Form.Item>
-            </>
-          )}
-        </Form.List>
       </Form.Item>
 
       <Form.Item

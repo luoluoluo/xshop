@@ -1,5 +1,5 @@
 import { Field, ObjectType, InputType } from '@nestjs/graphql';
-import { IsString, MinLength, IsOptional, Matches } from 'class-validator';
+import { IsString, IsOptional, Matches } from 'class-validator';
 import { Customer } from '@/entities/customer.entity';
 
 const phoneReg = /^1\d{10}$/;

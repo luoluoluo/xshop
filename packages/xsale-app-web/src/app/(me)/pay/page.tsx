@@ -11,11 +11,9 @@ export async function generateMetadata() {
 export default async function Page({ searchParams }: { searchParams: { orderId: string; title: string; amount: string } }) {
   return (
     <div className="relative flex min-h-screen flex-col">
-      <SiteHeader />
       <main className="container my-4 lg:my-20">
         <WechatPay orderId={searchParams.orderId} title={searchParams.title} amount={searchParams.amount} />
       </main>
-      <SiteFooter />
     </div>
   );
 }

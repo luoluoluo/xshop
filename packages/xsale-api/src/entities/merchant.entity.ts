@@ -14,7 +14,7 @@ export class Merchant extends Base {
   name: string;
 
   @Field({ nullable: true })
-  @Column({ length: 200 })
+  @Column({ type: 'text' })
   description: string;
 
   @Field({ nullable: true })

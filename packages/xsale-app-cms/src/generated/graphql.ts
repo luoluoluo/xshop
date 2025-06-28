@@ -129,32 +129,6 @@ export type AuthToken = {
   user: User;
 };
 
-export type Banner = {
-  __typename?: 'Banner';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  image?: Maybe<Scalars['String']['output']>;
-  isActive?: Maybe<Scalars['Boolean']['output']>;
-  link?: Maybe<Scalars['String']['output']>;
-  merchant?: Maybe<Merchant>;
-  merchantId?: Maybe<Scalars['String']['output']>;
-  sort?: Maybe<Scalars['Float']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-export type BannerPagination = {
-  __typename?: 'BannerPagination';
-  data: Array<Banner>;
-  total: Scalars['Int']['output'];
-};
-
-export type BannerWhereInput = {
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  merchantId?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type CreateAffiliateInput = {
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
@@ -179,15 +153,6 @@ export type CreateArticleInput = {
   title: Scalars['String']['input'];
 };
 
-export type CreateBannerInput = {
-  image: Scalars['String']['input'];
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  link?: InputMaybe<Scalars['String']['input']>;
-  merchantId: Scalars['String']['input'];
-  sort: Scalars['Int']['input'];
-  title: Scalars['String']['input'];
-};
-
 export type CreateMerchantInput = {
   address: Scalars['String']['input'];
   affiliateId: Scalars['String']['input'];
@@ -200,17 +165,7 @@ export type CreateMerchantInput = {
   phone: Scalars['String']['input'];
 };
 
-export type CreateProductCategoryInput = {
-  image?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  merchantId: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  sort: Scalars['Int']['input'];
-};
-
 export type CreateProductInput = {
-  attributes?: InputMaybe<Array<ProductAttributeInput>>;
-  categoryId?: InputMaybe<Scalars['String']['input']>;
   commission: Scalars['Float']['input'];
   content: Scalars['String']['input'];
   image: Scalars['String']['input'];
@@ -331,19 +286,15 @@ export type Mutation = {
   createAffiliate: Affiliate;
   createArticle: Article;
   createArticleCategory: ArticleCategory;
-  createBanner: Banner;
   createMerchant: Merchant;
   createProduct: Product;
-  createProductCategory: ProductCategory;
   createRole: Role;
   createUser: User;
   deleteAffiliate: Scalars['Boolean']['output'];
   deleteArticle: Scalars['Boolean']['output'];
   deleteArticleCategory: Scalars['Boolean']['output'];
-  deleteBanner: Scalars['Boolean']['output'];
   deleteMerchant: Scalars['Boolean']['output'];
   deleteProduct: Scalars['Boolean']['output'];
-  deleteProductCategory: Scalars['Boolean']['output'];
   deleteRole: Scalars['Boolean']['output'];
   deleteUser: Scalars['Boolean']['output'];
   login: AuthToken;
@@ -352,10 +303,8 @@ export type Mutation = {
   updateAffiliate: Affiliate;
   updateArticle: Article;
   updateArticleCategory: ArticleCategory;
-  updateBanner: Banner;
   updateMerchant: Merchant;
   updateProduct: Product;
-  updateProductCategory: ProductCategory;
   updateRole: Role;
   updateUser: User;
 };
@@ -396,11 +345,6 @@ export type MutationCreateArticleCategoryArgs = {
 };
 
 
-export type MutationCreateBannerArgs = {
-  data: CreateBannerInput;
-};
-
-
 export type MutationCreateMerchantArgs = {
   data: CreateMerchantInput;
 };
@@ -408,11 +352,6 @@ export type MutationCreateMerchantArgs = {
 
 export type MutationCreateProductArgs = {
   data: CreateProductInput;
-};
-
-
-export type MutationCreateProductCategoryArgs = {
-  data: CreateProductCategoryInput;
 };
 
 
@@ -441,22 +380,12 @@ export type MutationDeleteArticleCategoryArgs = {
 };
 
 
-export type MutationDeleteBannerArgs = {
-  id: Scalars['String']['input'];
-};
-
-
 export type MutationDeleteMerchantArgs = {
   id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteProductArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type MutationDeleteProductCategoryArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -506,12 +435,6 @@ export type MutationUpdateArticleCategoryArgs = {
 };
 
 
-export type MutationUpdateBannerArgs = {
-  data: UpdateBannerInput;
-  id: Scalars['String']['input'];
-};
-
-
 export type MutationUpdateMerchantArgs = {
   data: UpdateMerchantInput;
   id: Scalars['String']['input'];
@@ -520,12 +443,6 @@ export type MutationUpdateMerchantArgs = {
 
 export type MutationUpdateProductArgs = {
   data: UpdateProductInput;
-  id: Scalars['String']['input'];
-};
-
-
-export type MutationUpdateProductCategoryArgs = {
-  data: UpdateProductCategoryInput;
   id: Scalars['String']['input'];
 };
 
@@ -605,9 +522,6 @@ export type Permission = {
 export type Product = {
   __typename?: 'Product';
   affiliateCommission?: Maybe<Scalars['Float']['output']>;
-  attributes?: Maybe<Array<ProductAttribute>>;
-  category?: Maybe<ProductCategory>;
-  categoryId?: Maybe<Scalars['String']['output']>;
   commission?: Maybe<Scalars['Float']['output']>;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
@@ -625,48 +539,6 @@ export type Product = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
-export type ProductAttribute = {
-  __typename?: 'ProductAttribute';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  name?: Maybe<Scalars['String']['output']>;
-  product?: Maybe<Product>;
-  updatedAt: Scalars['DateTime']['output'];
-  values?: Maybe<Array<Scalars['String']['output']>>;
-};
-
-export type ProductAttributeInput = {
-  name: Scalars['String']['input'];
-  sort: Scalars['Int']['input'];
-  values: Array<Scalars['String']['input']>;
-};
-
-export type ProductCategory = {
-  __typename?: 'ProductCategory';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  image?: Maybe<Scalars['String']['output']>;
-  isActive?: Maybe<Scalars['Boolean']['output']>;
-  merchant?: Maybe<Merchant>;
-  merchantId?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  sort?: Maybe<Scalars['Float']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-export type ProductCategoryPagination = {
-  __typename?: 'ProductCategoryPagination';
-  data: Array<ProductCategory>;
-  total: Scalars['Int']['output'];
-};
-
-export type ProductCategoryWhereInput = {
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  merchantId?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type ProductPagination = {
   __typename?: 'ProductPagination';
   data: Array<Product>;
@@ -674,7 +546,6 @@ export type ProductPagination = {
 };
 
 export type ProductWhereInput = {
-  categoryId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   merchantId?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
@@ -690,8 +561,6 @@ export type Query = {
   articleCategories: ArticleCategoryPagination;
   articleCategory: ArticleCategory;
   articles: ArticlePagination;
-  banner: Banner;
-  banners: BannerPagination;
   me: User;
   merchant: Merchant;
   merchantWithdrawal: MerchantWithdrawal;
@@ -701,8 +570,6 @@ export type Query = {
   orders: OrderPagination;
   permissions: Array<Permission>;
   product: Product;
-  productCategories: ProductCategoryPagination;
-  productCategory: ProductCategory;
   products: ProductPagination;
   role: Role;
   roles: RolePagination;
@@ -759,18 +626,6 @@ export type QueryArticlesArgs = {
 };
 
 
-export type QueryBannerArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryBannersArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  take?: InputMaybe<Scalars['Int']['input']>;
-  where?: BannerWhereInput;
-};
-
-
 export type QueryMerchantArgs = {
   id: Scalars['String']['input'];
 };
@@ -808,18 +663,6 @@ export type QueryOrdersArgs = {
 
 
 export type QueryProductArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryProductCategoriesArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  take?: InputMaybe<Scalars['Int']['input']>;
-  where?: ProductCategoryWhereInput;
-};
-
-
-export type QueryProductCategoryArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -909,15 +752,6 @@ export type UpdateArticleInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateBannerInput = {
-  image?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  link?: InputMaybe<Scalars['String']['input']>;
-  merchantId?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Scalars['Int']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type UpdateMerchantInput = {
   address?: InputMaybe<Scalars['String']['input']>;
   affiliateId?: InputMaybe<Scalars['String']['input']>;
@@ -930,26 +764,16 @@ export type UpdateMerchantInput = {
   phone?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateProductCategoryInput = {
-  image?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  merchantId?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Scalars['Int']['input']>;
-};
-
 export type UpdateProductInput = {
-  attributes?: InputMaybe<Array<ProductAttributeInput>>;
-  categoryId?: InputMaybe<Scalars['String']['input']>;
   commission?: InputMaybe<Scalars['Float']['input']>;
   content: Scalars['String']['input'];
-  image?: InputMaybe<Scalars['String']['input']>;
+  image: Scalars['String']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   merchantId?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
   sort: Scalars['Int']['input'];
   stock?: InputMaybe<Scalars['Int']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
 };
 
 export type UpdateRoleInput = {

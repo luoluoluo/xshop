@@ -43,12 +43,6 @@ import {
   ProductList,
   ProductShow,
 } from "./pages/product";
-import {
-  ProductCategoryCreate,
-  ProductCategoryEdit,
-  ProductCategoryList,
-  ProductCategoryShow,
-} from "./pages/product-category";
 
 import { getResources } from "./config/app";
 import {
@@ -57,7 +51,6 @@ import {
   ArticleCategoryList,
 } from "./pages/article-category";
 import { ArticleCreate, ArticleEdit, ArticleList } from "./pages/article";
-import { BannerCreate, BannerEdit, BannerList } from "./pages/banner";
 import { MerchantCreate, MerchantEdit, MerchantList } from "./pages/merchant";
 import { OrderList, OrderShow } from "./pages/order";
 import { AffiliateWithdrawalList } from "./pages/affiliate-withdrawal";
@@ -124,15 +117,6 @@ function App() {
                       index
                       element={<NavigateToResource resource="user" />}
                     />
-                    <Route path="/product-category">
-                      <Route index element={<ProductCategoryList />} />
-                      <Route path="new" element={<ProductCategoryCreate />} />
-                      <Route
-                        path=":id/edit"
-                        element={<ProductCategoryEdit />}
-                      />
-                      <Route path=":id" element={<ProductCategoryShow />} />
-                    </Route>
                     <Route path="/product">
                       <Route index element={<ProductList />} />
                       <Route path="new" element={<ProductCreate />} />
@@ -164,12 +148,6 @@ function App() {
                       <Route index element={<ArticleList />} />
                       <Route path="new" element={<ArticleCreate />} />
                       <Route path=":id/edit" element={<ArticleEdit />} />
-                    </Route>
-
-                    <Route path="/banner">
-                      <Route index element={<BannerList />} />
-                      <Route path="new" element={<BannerCreate />} />
-                      <Route path=":id/edit" element={<BannerEdit />} />
                     </Route>
 
                     <Route path="/merchant">

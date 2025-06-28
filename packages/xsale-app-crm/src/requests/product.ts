@@ -15,10 +15,6 @@ export const getProducts = /* GraphQL */ `
         title
         image
         sort
-        category {
-          id
-          name
-        }
         createdAt
         price
         commission
@@ -41,21 +37,11 @@ export const getProduct = /* GraphQL */ `
         id
         name
       }
-      categoryId
       title
       content
       image
       sort
-      category {
-        id
-        name
-      }
       createdAt
-      attributes {
-        id
-        name
-        values
-      }
       price
       commission
       stock

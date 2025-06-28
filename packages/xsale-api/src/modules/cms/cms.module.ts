@@ -14,7 +14,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { I18nModule } from 'nestjs-i18n';
 import { createTypeOrmConfig } from '@/core/type-orm.config';
 import { createI18nConfig } from '@/core/i18n.config';
-import { BannerModule } from './banner/banner.module';
 import { OrderModule } from './order/order.module';
 import { MerchantModule } from './merchant/merchant.module';
 import { MerchantWithdrawalModule } from './merchant-withdrawal/merchant-withdrawal.module';
@@ -30,7 +29,6 @@ const cmsModules = [
   ProductModule,
   ArticleModule,
   MerchantModule,
-  BannerModule,
   MerchantWithdrawalModule,
   AffiliateWithdrawalModule,
   AffiliateModule,

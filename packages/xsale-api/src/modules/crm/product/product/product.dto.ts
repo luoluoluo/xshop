@@ -7,9 +7,6 @@ export class ProductWhereInput {
   id?: string;
 
   @Field({ nullable: true })
-  title?: string;
-
-  @Field({ nullable: true })
   categoryId?: string;
 
   @Field({ nullable: true })

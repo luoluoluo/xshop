@@ -10,26 +10,14 @@ export const getProduct = /* GraphQL */ `
       commission
       stock
       sort
-      categoryId
       merchantId
       createdAt
       updatedAt
-      category {
-        id
-        name
-        image
-        sort
-      }
       merchant {
         id
         name
         logo
         address
-      }
-      attributes {
-        id
-        name
-        values
       }
     }
   }
@@ -47,15 +35,9 @@ export const getProducts = /* GraphQL */ `
         commission
         stock
         sort
-        categoryId
         merchantId
         createdAt
         updatedAt
-        category {
-          id
-          name
-          image
-        }
         merchant {
           id
           name
