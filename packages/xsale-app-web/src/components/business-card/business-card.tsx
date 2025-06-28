@@ -7,9 +7,8 @@ import { getChannel } from "@/utils/index.client";
 import NextImage from "next/image";
 import QRCode from "qrcode";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Clipboard } from "../clipboard";
 import { Button } from "../ui/button";
-import { toast } from "../ui/use-toast";
+import { Contact } from "../contact/contact";
 
 export const sliceText = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number) => {
   while (true) {
@@ -214,15 +213,9 @@ export const BusinessCard = function ({
               下载名片
             </Button>
 
-            <Clipboard
-              asChild
-              value={url}
-              onSuccess={() => {
-                toast({ title: "链接复制成功" });
-              }}
-            >
+            <Contact merchant={merchant!}>
               <Button className="w-full">立即联系</Button>
-            </Clipboard>
+            </Contact>
           </div>
           <div className="shadow mt-4 p-4 rounded">
             <div
@@ -238,7 +231,7 @@ export const BusinessCard = function ({
           if (!open) setCanvasUrl(undefined);
         }}
       >
-        <DialogContent onOpenAutoFocus={e => e.preventDefault()}>
+        <DialogContent onInteractOutside={e => e.preventDefault()} onOpenAutoFocus={e => e.preventDefault()}>
           <DialogHeader>
             <DialogTitle>长按图片，保存到手机</DialogTitle>
           </DialogHeader>

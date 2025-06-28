@@ -2,12 +2,13 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Merchant } from "@/generated/graphql";
 import { cn } from "@/utils";
-import { DialogDescription } from "@radix-ui/react-dialog";
+import { DialogDescription, DialogOverlay } from "@radix-ui/react-dialog";
 import Image from "next/image";
 import { Clipboard } from "../clipboard";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
+import { useState } from "react";
 
 export const Contact = ({
   merchant,
@@ -18,9 +19,11 @@ export const Contact = ({
   children?: React.ReactNode;
   className?: string;
 }) => {
+  const [open, setOpen] = useState(false);
   return (
     <>
-      <Dialog modal={false}>
+      {open ? <div className=" fixed inset-0 bg-black/50 z-20" onClick={() => setOpen(false)}></div> : null}
+      <Dialog modal={false} open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           {children ? (
             children
@@ -44,7 +47,7 @@ export const Contact = ({
             </div>
           )}
         </DialogTrigger>
-        <DialogContent onOpenAutoFocus={e => e.preventDefault()}>
+        <DialogContent onInteractOutside={e => e.preventDefault()} onOpenAutoFocus={e => e.preventDefault()}>
           <DialogHeader>
             <DialogTitle>联系方式</DialogTitle>
             <DialogDescription></DialogDescription>

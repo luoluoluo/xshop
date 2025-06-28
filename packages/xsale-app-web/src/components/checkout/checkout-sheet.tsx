@@ -102,9 +102,8 @@ export function CheckoutSheet({ product, children, quantity }: { product: Produc
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
-        onInteractOutside={e => e.preventDefault()}
         side="right"
-        className="px-4 pt-9 pb-4 w-full box-border"
+        className="px-4 pt-9 pb-4 box-border"
         onOpenAutoFocus={e => e.preventDefault()}
       >
         <SheetTitle></SheetTitle>
