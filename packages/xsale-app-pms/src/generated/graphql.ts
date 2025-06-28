@@ -141,7 +141,6 @@ export type CreateProductInput = {
   content: Scalars['String']['input'];
   image: Scalars['String']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  merchantId: Scalars['String']['input'];
   price: Scalars['Float']['input'];
   sort: Scalars['Int']['input'];
   stock: Scalars['Int']['input'];
@@ -537,7 +536,6 @@ export type UpdateProductInput = {
   content: Scalars['String']['input'];
   image?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  merchantId?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
   sort: Scalars['Int']['input'];
   stock?: InputMaybe<Scalars['Int']['input']>;
