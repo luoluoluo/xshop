@@ -2,13 +2,13 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Merchant } from "@/generated/graphql";
 import { cn } from "@/utils";
-import { DialogDescription, DialogOverlay } from "@radix-ui/react-dialog";
+import { DialogDescription } from "@radix-ui/react-dialog";
 import Image from "next/image";
+import { useState } from "react";
 import { Clipboard } from "../clipboard";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
-import { useState } from "react";
 
 export const Contact = ({
   merchant,

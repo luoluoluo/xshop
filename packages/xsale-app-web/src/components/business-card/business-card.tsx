@@ -7,8 +7,8 @@ import { getChannel } from "@/utils/index.client";
 import NextImage from "next/image";
 import QRCode from "qrcode";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button } from "../ui/button";
 import { Contact } from "../contact/contact";
+import { Button } from "../ui/button";
 
 export const sliceText = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number) => {
   while (true) {
