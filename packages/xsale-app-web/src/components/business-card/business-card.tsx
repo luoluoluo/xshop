@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Merchant } from "@/generated/graphql";
 import { getChannel } from "@/utils/index.client";
 import NextImage from "next/image";
-import QRCode from "qrcode";
+// import QRCode from "qrcode";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Contact } from "../contact/contact";
 import { Button } from "../ui/button";
@@ -50,21 +50,21 @@ export const BusinessCard = function ({
     setUrl(u.toString());
   }, [merchant]);
 
-  const drawBackground = useCallback((ctx: CanvasRenderingContext2D, onSuccess: () => void) => {
-    // 背景图
-    const backgroundImg = new Image();
-    backgroundImg.crossOrigin = "anonymous";
-    backgroundImg.src = "/images/business-card.jpg";
-    backgroundImg.onload = () => {
-      // 绘制背景图，覆盖整个画布
-      ctx.drawImage(backgroundImg, 0, 0, businessCardWidth, businessCardHeight);
+  // const drawBackground = useCallback((ctx: CanvasRenderingContext2D, onSuccess: () => void) => {
+  //   // 背景图
+  //   const backgroundImg = new Image();
+  //   backgroundImg.crossOrigin = "anonymous";
+  //   backgroundImg.src = "/images/business-card.jpg";
+  //   backgroundImg.onload = () => {
+  //     // 绘制背景图，覆盖整个画布
+  //     ctx.drawImage(backgroundImg, 0, 0, businessCardWidth, businessCardHeight);
 
-      // 可选：添加半透明遮罩层以确保文字可读性
-      ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-      ctx.fillRect(0, 0, businessCardWidth, businessCardHeight);
-      onSuccess();
-    };
-  }, []);
+  //     // 可选：添加半透明遮罩层以确保文字可读性
+  //     ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+  //     ctx.fillRect(0, 0, businessCardWidth, businessCardHeight);
+  //     onSuccess();
+  //   };
+  // }, []);
 
   const drawContent = useCallback(
     (ctx: CanvasRenderingContext2D) => {
@@ -125,24 +125,24 @@ export const BusinessCard = function ({
       ctx.font = "bold 64px Microsoft YaHei";
       ctx.fillText(sliceText(ctx, merchant?.businessScope || "", businessCardWidth - 128).text, businessX, businessY);
 
-      const qrcodeX = 1176,
-        qrcodeY = 64,
-        qrcodeW = 200,
-        qrcodeH = 200;
-      // 二维码
-      QRCode.toCanvas(url, {
-        width: qrcodeW,
-        margin: 0
-      })
-        .then(res => {
-          ctx.drawImage(res, qrcodeX, qrcodeY, qrcodeW, qrcodeH);
-        })
-        .catch(e => {
-          console.log(e, 111);
-        });
-      ctx.fillStyle = "#18181b";
-      ctx.font = "22px Microsoft YaHei";
-      ctx.fillText("微信扫码，查看更多", qrcodeX, qrcodeY + qrcodeH + 32);
+      // const qrcodeX = 1176,
+      //   qrcodeY = 64,
+      //   qrcodeW = 200,
+      //   qrcodeH = 200;
+      // // 二维码
+      // QRCode.toCanvas(url, {
+      //   width: qrcodeW,
+      //   margin: 0
+      // })
+      //   .then(res => {
+      //     ctx.drawImage(res, qrcodeX, qrcodeY, qrcodeW, qrcodeH);
+      //   })
+      //   .catch(e => {
+      //     console.log(e, 111);
+      //   });
+      // ctx.fillStyle = "#18181b";
+      // ctx.font = "22px Microsoft YaHei";
+      // ctx.fillText("微信扫码，查看更多", qrcodeX, qrcodeY + qrcodeH + 32);
     },
     [merchant, url]
   );
@@ -159,10 +159,10 @@ export const BusinessCard = function ({
 
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, businessCardWidth, businessCardHeight);
-    drawBackground(ctx, () => {
-      drawContent(ctx);
-    });
-  }, [merchant, url, drawBackground, drawContent]);
+    // drawBackground(ctx, () => {
+    drawContent(ctx);
+    // });
+  }, [merchant, url, drawContent]);
 
   useEffect(() => {
     drawBusinessCard();
