@@ -8,7 +8,6 @@ import NextImage from "next/image";
 import QRCode from "qrcode";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Clipboard } from "../clipboard";
-import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
 
@@ -35,7 +34,6 @@ export const BusinessCard = function ({
   className?: string;
   showAction?: boolean;
 }) {
-  const [expanded, setExpanded] = useState(false);
   const [canvasUrl, setCanvasUrl] = useState<string>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [url, setUrl] = useState("");

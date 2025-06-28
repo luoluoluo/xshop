@@ -1,5 +1,3 @@
-import { SiteFooter } from "@/components/layouts/site-footer";
-import { SiteHeader } from "@/components/layouts/site-header";
 import { WechatPay } from "./_components/wechat-pay";
 
 export async function generateMetadata() {

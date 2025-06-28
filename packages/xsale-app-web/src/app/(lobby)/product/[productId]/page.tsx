@@ -1,4 +1,3 @@
-import { AmountFormat } from "@/components/amount";
 import { BusinessCard } from "@/components/business-card/business-card";
 import { BuyCard } from "@/components/checkout/buy-card";
 import { SiteFooter } from "@/components/layouts/site-footer";
@@ -54,10 +53,7 @@ export default async function Page({ params }: { params: { productId: string } }
       <main className="flex-1">
         <div className="container lg:flex lg:gap-8">
           <div className="w-full mt-4 lg:mt-8 lg:p-4 lg:rounded lg:shadow">
-            <div
-              className="mt-4 lg:mt-8 pt-4 lg:pt-8 wysiwyg"
-              dangerouslySetInnerHTML={{ __html: product.content || "" }}
-            ></div>
+            <div className="mt-4 lg:mt-8 pt-4 lg:pt-8 wysiwyg" dangerouslySetInnerHTML={{ __html: product.content || "" }}></div>
             <BuyCard product={product} />
           </div>
           <div className="w-full lg:w-[375px] flex-shrink-0 border-t mt-4 lg:mt-0 lg:border-none">
