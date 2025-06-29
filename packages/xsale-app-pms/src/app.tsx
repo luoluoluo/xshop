@@ -88,7 +88,7 @@ function App() {
                           )}
                         >
                           <CanAccess
-                            fallback={<NavigateToResource resource="order" />}
+                            fallback={<NavigateToResource resource="product" />}
                           >
                             <Outlet />
                           </CanAccess>
@@ -98,7 +98,7 @@ function App() {
                   >
                     <Route
                       index
-                      element={<NavigateToResource resource="user" />}
+                      element={<NavigateToResource resource="product" />}
                     />
 
                     <Route path="/product">

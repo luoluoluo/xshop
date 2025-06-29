@@ -177,15 +177,21 @@ export const ProductList = () => {
       throw new Error("产品海报或二维码配置缺失");
     }
 
-    const config = product.posterQrcodeConfig;
     if (
-      config.x === undefined ||
-      config.y === undefined ||
-      !config.w ||
-      !config.h
+      !product.posterQrcodeConfig.x ||
+      !product.posterQrcodeConfig.y ||
+      !product.posterQrcodeConfig.w ||
+      !product.posterQrcodeConfig.h
     ) {
       throw new Error("二维码配置不完整");
     }
+
+    const config = {
+      x: product.posterQrcodeConfig.x,
+      y: product.posterQrcodeConfig.y,
+      w: product.posterQrcodeConfig.w,
+      h: product.posterQrcodeConfig.h,
+    };
 
     const qrCodeDataUrl = await QRCode.toDataURL(getAffiliateLink(product.id), {
       width: 256,
@@ -215,13 +221,32 @@ export const ProductList = () => {
             ctx.drawImage(posterImage, 0, 0);
 
             // 根据配置精确绘制二维码
-            ctx.drawImage(
-              qrCodeImage,
-              config.x as number,
-              config.y as number,
-              config.w as number,
-              config.h as number,
+            ctx.drawImage(qrCodeImage, config.x, config.y, config.w, config.h);
+
+            // 在二维码下方添加文字"长按识别二维码"，带白色背景
+            const text = "长按识别二维码";
+            const fontSize = Math.max(12, config.w * 0.08); // 根据二维码大小调整字体大小
+            const textY = config.y + config.h - fontSize / 2; // 紧贴QR码底部，无间隙
+
+            ctx.font = `${fontSize}px Arial, "Microsoft YaHei", sans-serif`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "top";
+
+            // 计算文字位置（二维码中心对齐）
+            const textX = config.x + config.w / 2;
+
+            // 绘制白色背景矩形，宽度和QR码一致
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(
+              config.x, // 和QR码左边对齐
+              textY,
+              config.w, // 宽度和QR码一致
+              fontSize + 8, // 文字高度 + 上下padding
             );
+
+            // 绘制黑色文字
+            ctx.fillStyle = "#333333";
+            ctx.fillText(text, textX, textY + 4); // 向下偏移4px作为上边距
 
             resolve(canvas.toDataURL("image/png", 0.9));
           } catch (error) {

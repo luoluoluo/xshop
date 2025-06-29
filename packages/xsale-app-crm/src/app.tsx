@@ -83,7 +83,7 @@ function App() {
                           )}
                         >
                           <CanAccess
-                            fallback={<NavigateToResource resource="user" />}
+                            fallback={<NavigateToResource resource="product" />}
                           >
                             <Outlet />
                           </CanAccess>
