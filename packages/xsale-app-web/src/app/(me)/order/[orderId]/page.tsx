@@ -1,4 +1,5 @@
 import { BusinessCard } from "@/components/business-card/business-card";
+import { Contact } from "@/components/contact/contact";
 import { SiteFooter } from "@/components/layouts/site-footer";
 import { SiteHeader } from "@/components/layouts/site-header";
 import { Merchant, Order } from "@/generated/graphql";
@@ -9,7 +10,6 @@ import { getAffiliateId } from "@/utils/index.server";
 import { getLogger } from "@/utils/logger";
 import { request } from "@/utils/request.server";
 import { OrderItem } from "../_components/order-item";
-import { Contact } from "@/components/contact/contact";
 
 export async function generateMetadata() {
   return {
@@ -17,7 +17,13 @@ export async function generateMetadata() {
   };
 }
 
-export default async function Page({ params, searchParams }: { params: { orderId: string }; searchParams: { contact?: string } }) {
+export default async function Page({
+  params,
+  searchParams
+}: {
+  params: { orderId: string };
+  searchParams: { contact?: string };
+}) {
   checkToken();
   const order = await request<{ order: Order }>({
     query: getOrder,

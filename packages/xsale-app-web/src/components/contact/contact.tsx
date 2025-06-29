@@ -2,14 +2,13 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Merchant } from "@/generated/graphql";
 import { cn } from "@/utils";
-import { DialogDescription } from "@radix-ui/react-dialog";
+import { getChannel } from "@/utils/index.client";
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Clipboard } from "../clipboard";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
-import { getChannel } from "@/utils/index.client";
 
 export const Contact = ({
   merchant,
@@ -46,8 +45,8 @@ export const Contact = ({
       };
 
       updatePosition();
-      window.addEventListener('resize', updatePosition);
-      return () => window.removeEventListener('resize', updatePosition);
+      window.addEventListener("resize", updatePosition);
+      return () => window.removeEventListener("resize", updatePosition);
     }
   }, [position]);
 
@@ -88,12 +87,12 @@ export const Contact = ({
   // 添加全局触摸事件监听
   useEffect(() => {
     if (isDragging) {
-      document.addEventListener('touchmove', handleTouchMove, { passive: false });
-      document.addEventListener('touchend', handleTouchEnd);
+      document.addEventListener("touchmove", handleTouchMove, { passive: false });
+      document.addEventListener("touchend", handleTouchEnd);
 
       return () => {
-        document.removeEventListener('touchmove', handleTouchMove);
-        document.removeEventListener('touchend', handleTouchEnd);
+        document.removeEventListener("touchmove", handleTouchMove);
+        document.removeEventListener("touchend", handleTouchEnd);
       };
     }
   }, [isDragging, dragOffset]);
@@ -109,13 +108,10 @@ export const Contact = ({
             <div
               ref={dragRef}
               onTouchStart={handleTouchStart}
-              className={cn(
-                "fixed flex flex-col justify-center items-center z-10 select-none",
-                className
-              )}
+              className={cn("fixed flex flex-col justify-center items-center z-10 select-none", className)}
               style={{
                 left: position?.x ?? 0,
-                top: position?.y ?? 0,
+                top: position?.y ?? 0
               }}
             >
               <Image

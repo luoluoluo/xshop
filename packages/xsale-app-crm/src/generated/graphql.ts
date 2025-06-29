@@ -131,6 +131,7 @@ export type Merchant = {
   phone?: Maybe<Scalars['String']['output']>;
   products?: Maybe<Array<Product>>;
   updatedAt: Scalars['DateTime']['output'];
+  wechatQrcode?: Maybe<Scalars['String']['output']>;
 };
 
 export type MerchantPagination = {
