@@ -146,7 +146,7 @@ export const Contact = ({
                 }}
               >
                 <div className="flex items-baseline">
-                  <Icons.phone className="w-4 h-4" /> <div className="ml-1 text-left">{merchant.affiliate?.phone}</div>
+                  <Icons.phone className="w-4 h-4" /> <div className="ml-1 text-left">{merchant?.phone}</div>
                   <div className="px-1 py-[1px] text-xs bg-primary text-white rounded ml-2 h-auto">复制</div>
                 </div>
               </Clipboard>
