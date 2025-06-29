@@ -6,7 +6,7 @@ import { footerMenuItems, setting } from "@/config/config";
 import { cn } from "@/utils";
 import Image from "next/image";
 
-export async function SiteFooter({ className, theme = "default" }: { className?: string, theme?: "default" | "home" }) {
+export async function SiteFooter({ className, theme = "default" }: { className?: string; theme?: "default" | "home" }) {
   return (
     <footer className={cn("w-full bg-background mt-8", theme === "home" ? "border-t" : "", className)}>
       {theme === "home" ? (
@@ -51,7 +51,14 @@ export async function SiteFooter({ className, theme = "default" }: { className?:
             ))}
             <div className="space-y-3">
               <h4 className="text-base font-medium">微信公众号</h4>
-              <Image priority width={200} height={200} src="/images/qrcode-mp.jpg" alt="微信公众号" className="w-40 h-40 border" />
+              <Image
+                priority
+                width={200}
+                height={200}
+                src="/images/qrcode-mp.jpg"
+                alt="微信公众号"
+                className="w-40 h-40 border"
+              />
             </div>
           </div>
         </Shell>

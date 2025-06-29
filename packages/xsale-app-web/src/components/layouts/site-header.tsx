@@ -1,7 +1,7 @@
 import { setting } from "@/config/config";
+import { cn } from "@/utils";
 import Link from "next/link";
 import { AuthDropdown } from "./auth-dropdown";
-import { cn } from "@/utils";
 
 export const Logo = async ({
   link,
@@ -23,9 +23,20 @@ export const Logo = async ({
     </Link>
   );
 };
-export async function SiteHeader({ logoAttributes, theme = "default" }: { logoAttributes?: { link?: string; name?: string; logo?: string }, theme?: "default" | "product" }) {
+export async function SiteHeader({
+  logoAttributes,
+  theme = "default"
+}: {
+  logoAttributes?: { link?: string; name?: string; logo?: string };
+  theme?: "default" | "product";
+}) {
   return (
-    <header className={cn("sticky top-0 z-20 w-full border-b bg-background", theme === "product" ? "max-lg:bg-black/10 max-lg:fixed  max-lg:border-none" : "")}>
+    <header
+      className={cn(
+        "sticky top-0 z-20 w-full border-b bg-background",
+        theme === "product" ? "max-lg:bg-black/10 max-lg:fixed  max-lg:border-none" : ""
+      )}
+    >
       <div className="container flex h-14 lg:h-16 items-center justify-between w-full box-border">
         <div className="flex items-center">
           <Logo

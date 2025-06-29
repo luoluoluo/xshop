@@ -52,7 +52,10 @@ export default async function Page({ params }: { params: { productId: string } }
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <SiteHeader theme="product" logoAttributes={{ link: "#", name: merchant?.name || undefined, logo: merchant?.logo || undefined }} />
+      <SiteHeader
+        theme="product"
+        logoAttributes={{ link: "#", name: merchant?.name || undefined, logo: merchant?.logo || undefined }}
+      />
       <main className="lg:flex lg:gap-8">
         <div className="w-full lg:mt-8 lg:p-4 lg:rounded lg:shadow">
           <div className="px-0 lg:px-4 flex flex-col lg:flex-row gap-4">
