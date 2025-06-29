@@ -9,20 +9,16 @@ import { useTranslation } from "@refinedev/core";
 import { Button, Dropdown } from "antd";
 // import { useTranslation } from "react-i18next";
 import { languages } from "../../i18n";
+import { User } from "../../generated/graphql";
 
 const { Text } = Typography;
 const { useToken } = theme;
-
-type IUser = {
-  id: number;
-  email: string;
-};
 
 export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
   sticky = true,
 }) => {
   const { token } = useToken();
-  const { data: user } = useGetIdentity<IUser>();
+  const { data: user } = useGetIdentity<User>();
   const { mode, setMode } = useContext(ColorModeContext);
   // const { i18n } = useTranslation();
   const { getLocale, changeLocale } = useTranslation();

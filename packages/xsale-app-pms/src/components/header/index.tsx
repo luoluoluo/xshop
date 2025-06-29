@@ -9,20 +9,16 @@ import { useTranslation } from "@refinedev/core";
 import { Button, Dropdown } from "antd";
 // import { useTranslation } from "react-i18next";
 import { languages } from "../../i18n";
+import { Merchant } from "../../generated/graphql";
 
 const { Text } = Typography;
 const { useToken } = theme;
-
-type IUser = {
-  id: number;
-  email: string;
-};
 
 export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
   sticky = true,
 }) => {
   const { token } = useToken();
-  const { data: user } = useGetIdentity<IUser>();
+  const { data: user } = useGetIdentity<Merchant>();
   const { mode, setMode } = useContext(ColorModeContext);
   // const { i18n } = useTranslation();
   const { getLocale, changeLocale } = useTranslation();
@@ -47,7 +43,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
     <AntdLayout.Header style={headerStyles}>
       <Space>
         <Space style={{ marginLeft: "8px" }} size="middle">
-          {user?.email && <Text strong>{user.email}</Text>}
+          {user?.name && <Text strong>{user.name || user.phone}</Text>}
         </Space>
         <Switch
           checkedChildren="🌛"
