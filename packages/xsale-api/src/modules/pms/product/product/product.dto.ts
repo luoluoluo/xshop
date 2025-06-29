@@ -1,5 +1,5 @@
 import { ObjectType, Int, InputType, Field, Float } from '@nestjs/graphql';
-import { Product } from '@/entities/product.entity';
+import { Product, PosterQrcodeConfig } from '@/entities/product.entity';
 
 @InputType()
 export class CreateProductInput {
@@ -26,6 +26,12 @@ export class CreateProductInput {
 
   @Field()
   image: string;
+
+  @Field({ nullable: true })
+  poster?: string;
+
+  @Field(() => PosterQrcodeConfig, { nullable: true })
+  posterQrcodeConfig?: PosterQrcodeConfig;
 }
 
 @InputType()
@@ -53,6 +59,12 @@ export class UpdateProductInput {
 
   @Field()
   image: string;
+
+  @Field({ nullable: true })
+  poster?: string;
+
+  @Field(() => PosterQrcodeConfig, { nullable: true })
+  posterQrcodeConfig?: PosterQrcodeConfig;
 }
 
 @InputType()

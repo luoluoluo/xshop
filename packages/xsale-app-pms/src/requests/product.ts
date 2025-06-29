@@ -16,6 +16,13 @@ export const getProducts = /* GraphQL */ `
         price
         commission
         stock
+        poster
+        posterQrcodeConfig {
+          x
+          y
+          w
+          h
+        }
       }
       total
     }
@@ -40,6 +47,13 @@ export const getProduct = /* GraphQL */ `
       price
       commission
       stock
+      poster
+      posterQrcodeConfig {
+        x
+        y
+        w
+        h
+      }
     }
   }
 `;

@@ -248,6 +248,21 @@ export type OrderWhereInput = {
   status?: InputMaybe<OrderStatus>;
 };
 
+export type PosterQrcodeConfig = {
+  __typename?: 'PosterQrcodeConfig';
+  h?: Maybe<Scalars['Float']['output']>;
+  w?: Maybe<Scalars['Float']['output']>;
+  x?: Maybe<Scalars['Float']['output']>;
+  y?: Maybe<Scalars['Float']['output']>;
+};
+
+export type PosterQrcodeConfigInput = {
+  h?: InputMaybe<Scalars['Float']['input']>;
+  w?: InputMaybe<Scalars['Float']['input']>;
+  x?: InputMaybe<Scalars['Float']['input']>;
+  y?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type Product = {
   __typename?: 'Product';
   affiliateCommission?: Maybe<Scalars['Float']['output']>;
@@ -260,6 +275,8 @@ export type Product = {
   merchantAffiliateCommission?: Maybe<Scalars['Float']['output']>;
   merchantId?: Maybe<Scalars['String']['output']>;
   platformCommission?: Maybe<Scalars['Float']['output']>;
+  poster?: Maybe<Scalars['String']['output']>;
+  posterQrcodeConfig?: Maybe<PosterQrcodeConfig>;
   price?: Maybe<Scalars['Float']['output']>;
   sort?: Maybe<Scalars['Int']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;

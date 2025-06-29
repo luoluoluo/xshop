@@ -1,7 +1,18 @@
-import { Button, Form, FormProps, Input, Select, Space, Switch } from "antd";
+import {
+  Form,
+  FormProps,
+  Input,
+  Select,
+  Switch,
+  InputNumber,
+  Card,
+  Row,
+  Col,
+  Spin,
+} from "antd";
 import { CustomUpload } from "../../../components/custom-upload";
 import { CustomEditor } from "../../../components/custom-editor";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   CreateProductInput,
   Merchant,
@@ -10,13 +21,20 @@ import {
 } from "../../../generated/graphql";
 import { request } from "../../../utils/request";
 import { useTranslate } from "@refinedev/core";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { getMerchants } from "../../../requests/merchant";
+import QRCode from "qrcode";
+import { debounce } from "lodash";
 
 export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
   const t = useTranslate();
 
   const [merchants, setMerchants] = useState<Merchant[]>();
+  const [posterDimensions, setPosterDimensions] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string>("");
+  const [generatingPreview, setGeneratingPreview] = useState(false);
 
   useEffect(() => {
     request<{ merchants?: MerchantPagination }>({
@@ -28,6 +46,76 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
 
   const price = Form.useWatch<number>("price", formProps.form);
   const commission = Form.useWatch<number>("commission", formProps.form);
+  const poster = Form.useWatch<string>("poster", formProps.form);
+  const posterQrcodeConfig = Form.useWatch(
+    "posterQrcodeConfig",
+    formProps.form,
+  );
+
+  // 监听poster变化，获取图片尺寸
+  useEffect(() => {
+    if (poster) {
+      const img = new Image();
+      img.onload = () => {
+        setPosterDimensions({
+          width: img.naturalWidth,
+          height: img.naturalHeight,
+        });
+      };
+      img.onerror = () => {
+        setPosterDimensions(null);
+      };
+      img.src = poster;
+    } else {
+      setPosterDimensions(null);
+    }
+    // 清除之前的预览图片
+    setPreviewImageUrl("");
+  }, [poster]);
+
+  // 创建防抖的预览生成函数
+  const debouncedGeneratePreview = useCallback(
+    debounce(async () => {
+      if (!poster || !posterQrcodeConfig) return;
+
+      const config = posterQrcodeConfig;
+      if (
+        config.x === undefined ||
+        config.y === undefined ||
+        !config.w ||
+        !config.h
+      ) {
+        setPreviewImageUrl("");
+        return;
+      }
+
+      setGeneratingPreview(true);
+      try {
+        const canvas = await generatePosterWithQRCode();
+        setPreviewImageUrl(canvas.toDataURL());
+      } catch (error) {
+        console.error("生成预览失败:", error);
+        setPreviewImageUrl("");
+      } finally {
+        setGeneratingPreview(false);
+      }
+    }, 500), // 500ms防抖延迟
+    [poster, posterQrcodeConfig],
+  );
+
+  // 监听二维码配置变化，使用防抖生成预览
+  useEffect(() => {
+    if (poster && posterQrcodeConfig) {
+      debouncedGeneratePreview();
+    } else {
+      setPreviewImageUrl("");
+    }
+
+    // 清理函数：组件卸载时取消防抖
+    return () => {
+      debouncedGeneratePreview.cancel();
+    };
+  }, [poster, posterQrcodeConfig, debouncedGeneratePreview]);
 
   const onFinish = (values: CreateProductInput | UpdateProductInput) => {
     values.sort = Number(values?.sort || 0);
@@ -39,6 +127,149 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
       formProps.onFinish(values);
     }
   };
+
+  const generatePosterWithQRCode = async (): Promise<HTMLCanvasElement> => {
+    if (!poster || !posterQrcodeConfig) {
+      throw new Error("海报或二维码配置缺失");
+    }
+
+    // 生成二维码
+    const qrCodeDataUrl = await QRCode.toDataURL(`${window.location.origin}`, {
+      width: 256,
+      margin: 2,
+      color: {
+        dark: "#000000",
+        light: "#FFFFFF",
+      },
+    });
+
+    // 加载图片
+    const posterImage = new Image();
+    const qrCodeImage = new Image();
+
+    return new Promise((resolve, reject) => {
+      let loadedCount = 0;
+      const checkBothLoaded = () => {
+        loadedCount++;
+        if (loadedCount === 2) {
+          try {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d")!;
+
+            // 设置canvas尺寸为海报尺寸
+            canvas.width = posterImage.naturalWidth;
+            canvas.height = posterImage.naturalHeight;
+
+            // 绘制海报
+            ctx.drawImage(posterImage, 0, 0);
+
+            // 绘制二维码到指定位置
+            const config = posterQrcodeConfig;
+            if (
+              config.x !== undefined &&
+              config.y !== undefined &&
+              config.w &&
+              config.h
+            ) {
+              ctx.drawImage(
+                qrCodeImage,
+                config.x,
+                config.y,
+                config.w,
+                config.h,
+              );
+            }
+
+            resolve(canvas);
+          } catch (error) {
+            reject(error);
+          }
+        }
+      };
+
+      posterImage.onload = checkBothLoaded;
+      posterImage.onerror = () => reject(new Error("海报加载失败"));
+
+      qrCodeImage.onload = checkBothLoaded;
+      qrCodeImage.onerror = () => reject(new Error("二维码生成失败"));
+
+      posterImage.crossOrigin = "anonymous";
+      qrCodeImage.crossOrigin = "anonymous";
+
+      posterImage.src = poster;
+      qrCodeImage.src = qrCodeDataUrl;
+    });
+  };
+
+  const renderPreviewContent = () => {
+    if (!poster) return null;
+
+    // 如果有生成的预览图，显示它
+    if (previewImageUrl) {
+      return (
+        <Spin spinning={generatingPreview}>
+          <div style={{ textAlign: "center", marginTop: 16 }}>
+            <h4>预览效果：</h4>
+            <img
+              src={previewImageUrl}
+              alt="Poster with QR Code Preview"
+              style={{
+                maxWidth: "100%",
+                maxHeight: "400px",
+                border: "1px solid #d9d9d9",
+                borderRadius: 6,
+              }}
+            />
+          </div>
+        </Spin>
+      );
+    }
+
+    // 显示简单的布局预览
+    const config = posterQrcodeConfig || {};
+    if (config.x !== undefined || config.y !== undefined) {
+      const qrCodeStyle = {
+        position: "absolute" as const,
+        left: `${config.x || 0}px`,
+        top: `${config.y || 0}px`,
+        width: `${config.w || 100}px`,
+        height: `${config.h || 100}px`,
+        backgroundColor: "#000",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#fff",
+        fontSize: "12px",
+        border: "2px dashed #666",
+      };
+
+      return (
+        <div style={{ textAlign: "center", marginTop: 16 }}>
+          <h4>布局预览：</h4>
+          <div style={{ position: "relative", display: "inline-block" }}>
+            <img
+              src={poster}
+              alt="Poster Preview"
+              style={{
+                maxWidth: "100%",
+                maxHeight: "400px",
+                border: "1px solid #d9d9d9",
+                borderRadius: 6,
+              }}
+            />
+            <div style={qrCodeStyle}>
+              QR Code
+              <br />
+              {config.w}×{config.h}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <Form {...{ ...formProps, onFinish }} layout="vertical">
       <Form.Item
@@ -64,6 +295,114 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
       >
         <CustomUpload />
       </Form.Item>
+
+      <Form.Item
+        label="海报"
+        name={["poster"]}
+        extra="自动为每个推广员生成专属推广海报"
+      >
+        <CustomUpload />
+      </Form.Item>
+
+      {poster && (
+        <Form.Item>
+          <Card
+            title={
+              <div>
+                <span>海报二维码配置</span>
+                {posterDimensions && (
+                  <span
+                    style={{
+                      marginLeft: 16,
+                      color: "#666",
+                      fontWeight: "normal",
+                      fontSize: "14px",
+                    }}
+                  >
+                    海报尺寸: {posterDimensions.width} ×{" "}
+                    {posterDimensions.height}
+                    px
+                  </span>
+                )}
+              </div>
+            }
+            size="small"
+          >
+            {posterDimensions && (
+              <div
+                style={{
+                  marginBottom: 16,
+                  padding: 12,
+                  backgroundColor: "#f0f9ff",
+                  borderRadius: 6,
+                  border: "1px solid #bae6fd",
+                }}
+              >
+                <div style={{ fontSize: "13px", color: "#0369a1" }}>
+                  <strong>参考信息：</strong>
+                  <br />
+                  海报宽度: {posterDimensions.width}px，高度:{" "}
+                  {posterDimensions.height}px
+                  <br />
+                  请根据海报尺寸配置二维码的位置(X,Y坐标)和大小(宽度,高度)
+                </div>
+              </div>
+            )}
+            <Row gutter={16}>
+              <Col span={6}>
+                <Form.Item label="X坐标" name={["posterQrcodeConfig", "x"]}>
+                  <InputNumber
+                    placeholder="X坐标"
+                    style={{ width: "100%" }}
+                    min={0}
+                    max={posterDimensions?.width || undefined}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item label="Y坐标" name={["posterQrcodeConfig", "y"]}>
+                  <InputNumber
+                    placeholder="Y坐标"
+                    style={{ width: "100%" }}
+                    min={0}
+                    max={posterDimensions?.height || undefined}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item label="宽度" name={["posterQrcodeConfig", "w"]}>
+                  <InputNumber
+                    placeholder="宽度"
+                    style={{ width: "100%" }}
+                    min={1}
+                    max={
+                      posterDimensions
+                        ? posterDimensions.width - (posterQrcodeConfig?.x || 0)
+                        : undefined
+                    }
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item label="高度" name={["posterQrcodeConfig", "h"]}>
+                  <InputNumber
+                    placeholder="高度"
+                    style={{ width: "100%" }}
+                    min={1}
+                    max={
+                      posterDimensions
+                        ? posterDimensions.height - (posterQrcodeConfig?.y || 0)
+                        : undefined
+                    }
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            {renderPreviewContent()}
+          </Card>
+        </Form.Item>
+      )}
 
       <Form.Item
         label={t("product.fields.title")}
@@ -99,8 +438,7 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
             },
           },
         ]}
-        extra={`
-          ${commission && price
+        extra={`${commission && price
             ? `佣金比例：${((commission / price) * 100).toFixed(2)}%`
             : ""
           }（包含平台服务费1%，商家客户经理1%）`}

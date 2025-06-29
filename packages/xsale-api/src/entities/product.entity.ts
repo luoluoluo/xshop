@@ -1,8 +1,24 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, Int, ObjectType, InputType } from '@nestjs/graphql';
 import { Base } from './base.entity';
 import { Merchant } from './merchant.entity';
 import { Client } from '@/decorators/client.decorator';
+
+@ObjectType()
+@InputType('PosterQrcodeConfigInput')
+export class PosterQrcodeConfig {
+  @Field(() => Float, { nullable: true })
+  x?: number;
+
+  @Field(() => Float, { nullable: true })
+  y?: number;
+
+  @Field(() => Float, { nullable: true })
+  w?: number;
+
+  @Field(() => Float, { nullable: true })
+  h?: number;
+}
 
 @ObjectType()
 @Entity('product')
@@ -27,6 +43,14 @@ export class Product extends Base {
   @Field({ nullable: true })
   @Column({ length: 100 })
   image: string;
+
+  @Field({ nullable: true })
+  @Column({ length: 200, nullable: true })
+  poster: string;
+
+  @Field(() => PosterQrcodeConfig, { nullable: true })
+  @Column({ type: 'json', nullable: true })
+  posterQrcodeConfig: PosterQrcodeConfig;
 
   @Field(() => Float, { nullable: true })
   @Column({ type: 'float', precision: 10, scale: 2 })
