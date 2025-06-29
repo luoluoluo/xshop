@@ -1,6 +1,7 @@
 import { AmountFormat } from "@/components/amount";
 import { BusinessCard } from "@/components/business-card/business-card";
 import { BuyCard } from "@/components/checkout/buy-card";
+import { Contact } from "@/components/contact/contact";
 import { Wechat } from "@/components/wechat";
 import { Merchant, Product } from "@/generated/graphql";
 import { getMerchant } from "@/requests/merchant";
@@ -80,6 +81,7 @@ export default async function Page({ params }: { params: { productId: string } }
           </div>
         </div>
       </main>
+      <Contact merchant={merchant} />
       <Wechat
         shareConfig={{
           title: product?.title || "",

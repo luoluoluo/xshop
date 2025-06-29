@@ -84,9 +84,10 @@ export const WechatPay = ({ orderId, title, amount }: { orderId: string; title: 
           if (window?.WeixinJSBridge) {
             window.WeixinJSBridge.invoke("getBrandWCPayRequest", res.data?.createOrderPayment, (res: any) => {
               if (res.err_msg == "get_brand_wcpay_request:ok") {
-                window.location.replace(orderUrl);
+                window.location.replace(`${orderUrl}?contact=true`);
               } else {
                 toast({ title: "支付失败", variant: "destructive" });
+                window.location.replace(orderUrl);
               }
             });
           }

@@ -17,6 +17,7 @@ export const getMerchant = /* GraphQL */ `
         phone
       }
       businessScope
+      wechatQrcode
     }
   }
 `;
@@ -41,6 +42,7 @@ export const getMerchants = /* GraphQL */ `
           phone
         }
         businessScope
+        wechatQrcode
       }
       total
     }

@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { hash, compare } from 'bcrypt';
 import { Merchant } from '@/entities/merchant.entity';
 import { Role } from '@/entities/role.entity';
-import { UpdateMerchantInput } from './merchant.dto';
+import { UpdateMeInput } from '../auth/auth.dto';
 
 @Injectable()
 export class MerchantService {
@@ -40,7 +40,7 @@ export class MerchantService {
 
   async update(
     id: string,
-    updateMerchantDto: UpdateMerchantInput,
+    updateMerchantDto: UpdateMeInput,
   ): Promise<Merchant> {
     const merchant = await this.findOne(id);
 

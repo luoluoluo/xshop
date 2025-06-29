@@ -763,7 +763,8 @@
       "affiliate": "推广员",
       "description": "简介",
       "password": "密码",
-      "businessScope": "业务范围"
+      "businessScope": "业务范围",
+      "wechatQrcode": "微信二维码"
     }
   },
   "order": {

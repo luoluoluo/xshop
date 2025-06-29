@@ -163,6 +163,7 @@ export type CreateMerchantInput = {
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
+  wechatQrcode?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateProductInput = {
@@ -224,6 +225,7 @@ export type Merchant = {
   phone?: Maybe<Scalars['String']['output']>;
   products?: Maybe<Array<Product>>;
   updatedAt: Scalars['DateTime']['output'];
+  wechatQrcode?: Maybe<Scalars['String']['output']>;
 };
 
 export type MerchantPagination = {
@@ -762,6 +764,7 @@ export type UpdateMerchantInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
+  wechatQrcode?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateProductInput = {

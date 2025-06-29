@@ -83,41 +83,6 @@ export type AuthToken = {
   token: Scalars['String']['output'];
 };
 
-export type Banner = {
-  __typename?: 'Banner';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  image?: Maybe<Scalars['String']['output']>;
-  isActive?: Maybe<Scalars['Boolean']['output']>;
-  link?: Maybe<Scalars['String']['output']>;
-  merchant?: Maybe<Merchant>;
-  merchantId?: Maybe<Scalars['String']['output']>;
-  sort?: Maybe<Scalars['Float']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-export type BannerPagination = {
-  __typename?: 'BannerPagination';
-  data: Array<Banner>;
-  total: Scalars['Int']['output'];
-};
-
-export type BannerWhereInput = {
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  merchantId?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type CreateBannerInput = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  image: Scalars['String']['input'];
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  link?: InputMaybe<Scalars['String']['input']>;
-  sort: Scalars['Int']['input'];
-  title: Scalars['String']['input'];
-};
-
 export type CreateMerchantWithdrawalInput = {
   accountName: Scalars['String']['input'];
   amount: Scalars['Float']['input'];
@@ -126,16 +91,7 @@ export type CreateMerchantWithdrawalInput = {
   note?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type CreateProductCategoryInput = {
-  image?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
-  sort: Scalars['Int']['input'];
-};
-
 export type CreateProductInput = {
-  attributes?: InputMaybe<Array<ProductAttributeInput>>;
-  categoryId?: InputMaybe<Scalars['String']['input']>;
   commission: Scalars['Float']['input'];
   content: Scalars['String']['input'];
   image: Scalars['String']['input'];
@@ -176,6 +132,7 @@ export type Merchant = {
   phone?: Maybe<Scalars['String']['output']>;
   products?: Maybe<Array<Product>>;
   updatedAt: Scalars['DateTime']['output'];
+  wechatQrcode?: Maybe<Scalars['String']['output']>;
 };
 
 export type MerchantWithdrawal = {
@@ -218,27 +175,16 @@ export type MerchantWithdrawalWhereInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   completeOrder: Order;
-  createBanner: Banner;
   createMerchantWithdrawal: MerchantWithdrawal;
   createProduct: Product;
-  createProductCategory: ProductCategory;
-  deleteBanner: Scalars['Boolean']['output'];
   deleteProduct: Scalars['Boolean']['output'];
-  deleteProductCategory: Scalars['Boolean']['output'];
   login: AuthToken;
-  updateBanner: Banner;
   updateProduct: Product;
-  updateProductCategory: ProductCategory;
 };
 
 
 export type MutationCompleteOrderArgs = {
   id: Scalars['String']['input'];
-};
-
-
-export type MutationCreateBannerArgs = {
-  data: CreateBannerInput;
 };
 
 
@@ -252,22 +198,7 @@ export type MutationCreateProductArgs = {
 };
 
 
-export type MutationCreateProductCategoryArgs = {
-  data: CreateProductCategoryInput;
-};
-
-
-export type MutationDeleteBannerArgs = {
-  id: Scalars['String']['input'];
-};
-
-
 export type MutationDeleteProductArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type MutationDeleteProductCategoryArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -277,20 +208,8 @@ export type MutationLoginArgs = {
 };
 
 
-export type MutationUpdateBannerArgs = {
-  data: UpdateBannerInput;
-  id: Scalars['String']['input'];
-};
-
-
 export type MutationUpdateProductArgs = {
   data: UpdateProductInput;
-  id: Scalars['String']['input'];
-};
-
-
-export type MutationUpdateProductCategoryArgs = {
-  data: UpdateProductCategoryInput;
   id: Scalars['String']['input'];
 };
 
@@ -350,9 +269,6 @@ export type OrderWhereInput = {
 export type Product = {
   __typename?: 'Product';
   affiliateCommission?: Maybe<Scalars['Float']['output']>;
-  attributes?: Maybe<Array<ProductAttribute>>;
-  category?: Maybe<ProductCategory>;
-  categoryId?: Maybe<Scalars['String']['output']>;
   commission?: Maybe<Scalars['Float']['output']>;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
@@ -370,47 +286,6 @@ export type Product = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
-export type ProductAttribute = {
-  __typename?: 'ProductAttribute';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  name?: Maybe<Scalars['String']['output']>;
-  product?: Maybe<Product>;
-  updatedAt: Scalars['DateTime']['output'];
-  values?: Maybe<Array<Scalars['String']['output']>>;
-};
-
-export type ProductAttributeInput = {
-  name: Scalars['String']['input'];
-  sort: Scalars['Int']['input'];
-  values: Array<Scalars['String']['input']>;
-};
-
-export type ProductCategory = {
-  __typename?: 'ProductCategory';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  image?: Maybe<Scalars['String']['output']>;
-  isActive?: Maybe<Scalars['Boolean']['output']>;
-  merchant?: Maybe<Merchant>;
-  merchantId?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  sort?: Maybe<Scalars['Float']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-export type ProductCategoryPagination = {
-  __typename?: 'ProductCategoryPagination';
-  data: Array<ProductCategory>;
-  total: Scalars['Int']['output'];
-};
-
-export type ProductCategoryWhereInput = {
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type ProductPagination = {
   __typename?: 'ProductPagination';
   data: Array<Product>;
@@ -418,38 +293,20 @@ export type ProductPagination = {
 };
 
 export type ProductWhereInput = {
-  categoryId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   merchantId?: InputMaybe<Scalars['String']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  banner: Banner;
-  banners: BannerPagination;
   me: Merchant;
   merchantWithdrawal: MerchantWithdrawal;
   merchantWithdrawals: MerchantWithdrawalPagination;
   order: Order;
   orders: OrderPagination;
   product: Product;
-  productCategories: ProductCategoryPagination;
-  productCategory: ProductCategory;
   products: ProductPagination;
   signedFileUrl: SignedFileUrl;
-};
-
-
-export type QueryBannerArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryBannersArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  take?: InputMaybe<Scalars['Int']['input']>;
-  where?: BannerWhereInput;
 };
 
 
@@ -482,18 +339,6 @@ export type QueryProductArgs = {
 };
 
 
-export type QueryProductCategoriesArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  take?: InputMaybe<Scalars['Int']['input']>;
-  where?: ProductCategoryWhereInput;
-};
-
-
-export type QueryProductCategoryArgs = {
-  id: Scalars['String']['input'];
-};
-
-
 export type QueryProductsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
@@ -511,32 +356,13 @@ export type SignedFileUrl = {
   uploadUrl: Scalars['String']['output'];
 };
 
-export type UpdateBannerInput = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  image?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  link?: InputMaybe<Scalars['String']['input']>;
-  merchantId?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Scalars['Int']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type UpdateProductCategoryInput = {
-  image?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Scalars['Int']['input']>;
-};
-
 export type UpdateProductInput = {
-  attributes?: InputMaybe<Array<ProductAttributeInput>>;
-  categoryId?: InputMaybe<Scalars['String']['input']>;
   commission?: InputMaybe<Scalars['Float']['input']>;
   content: Scalars['String']['input'];
-  image?: InputMaybe<Scalars['String']['input']>;
+  image: Scalars['String']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
   sort: Scalars['Int']['input'];
   stock?: InputMaybe<Scalars['Int']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
 };

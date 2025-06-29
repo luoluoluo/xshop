@@ -32,6 +32,9 @@ export class CreateMerchantInput {
 
   @Field({ nullable: true })
   businessScope?: string;
+
+  @Field({ nullable: true })
+  wechatQrcode?: string;
 }
 
 @InputType()
@@ -69,6 +72,9 @@ export class UpdateMerchantInput {
 
   @Field({ nullable: true })
   businessScope?: string;
+
+  @Field({ nullable: true })
+  wechatQrcode?: string;
 }
 
 @InputType()

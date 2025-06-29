@@ -144,6 +144,7 @@ export type Merchant = {
   phone?: Maybe<Scalars['String']['output']>;
   products?: Maybe<Array<Product>>;
   updatedAt: Scalars['DateTime']['output'];
+  wechatQrcode?: Maybe<Scalars['String']['output']>;
 };
 
 export type MerchantPagination = {
@@ -313,7 +314,6 @@ export type ProductPagination = {
 };
 
 export type ProductWhereInput = {
-  categoryId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   merchantId?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;

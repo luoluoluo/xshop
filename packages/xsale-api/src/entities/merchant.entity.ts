@@ -62,4 +62,8 @@ export class Merchant extends Base {
   @Field(() => String, { nullable: true })
   @Column({ name: 'business_scope', nullable: true })
   businessScope: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'wechat_qrcode', nullable: true })
+  wechatQrcode?: string;
 }

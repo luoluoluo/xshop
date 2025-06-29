@@ -9,6 +9,7 @@ import { getAffiliateId } from "@/utils/index.server";
 import { getLogger } from "@/utils/logger";
 import { request } from "@/utils/request.server";
 import { OrderItem } from "../_components/order-item";
+import { Contact } from "@/components/contact/contact";
 
 export async function generateMetadata() {
   return {
@@ -16,7 +17,7 @@ export async function generateMetadata() {
   };
 }
 
-export default async function Page({ params }: { params: { orderId: string } }) {
+export default async function Page({ params, searchParams }: { params: { orderId: string }; searchParams: { contact?: string } }) {
   checkToken();
   const order = await request<{ order: Order }>({
     query: getOrder,
@@ -52,6 +53,7 @@ export default async function Page({ params }: { params: { orderId: string } }) 
           <BusinessCard merchant={merchant} className="mt-4 lg:mt-8" showAction />
         </div>
       </main>
+      <Contact merchant={merchant} initialOpen={searchParams.contact === "true"} />
       <SiteFooter />
     </div>
   );

@@ -94,6 +94,14 @@ export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
       </Form.Item>
 
       <Form.Item
+        label={t("merchant.fields.wechatQrcode")}
+        name={["wechatQrcode"]}
+        rules={[{ required: true }]}
+      >
+        <CustomUpload />
+      </Form.Item>
+
+      <Form.Item
         label={t("merchant.fields.description")}
         name={["description"]}
         rules={[{ required: true }]}
