@@ -62,7 +62,7 @@ export default async function Page() {
         </section>
       </main>
 
-      <SiteFooter className="mt-16 lg:lg-24" />
+      <SiteFooter className="mt-16 lg:lg-24" theme="home" />
       <Wechat
         shareConfig={{
           title: setting.title,

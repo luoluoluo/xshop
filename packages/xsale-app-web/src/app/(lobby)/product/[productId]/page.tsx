@@ -2,6 +2,8 @@ import { AmountFormat } from "@/components/amount";
 import { BusinessCard } from "@/components/business-card/business-card";
 import { BuyCard } from "@/components/checkout/buy-card";
 import { Contact } from "@/components/contact/contact";
+import { SiteFooter } from "@/components/layouts/site-footer";
+import { SiteHeader } from "@/components/layouts/site-header";
 import { Wechat } from "@/components/wechat";
 import { Merchant, Product } from "@/generated/graphql";
 import { getMerchant } from "@/requests/merchant";
@@ -50,7 +52,8 @@ export default async function Page({ params }: { params: { productId: string } }
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <main className="lg:flex lg:gap-8 pb-24">
+      <SiteHeader theme="product" logoAttributes={{ link: "#", name: merchant?.name || undefined, logo: merchant?.logo || undefined }} />
+      <main className="lg:flex lg:gap-8">
         <div className="w-full lg:mt-8 lg:p-4 lg:rounded lg:shadow">
           <div className="px-0 lg:px-4 flex flex-col lg:flex-row gap-4">
             <Image
@@ -81,6 +84,7 @@ export default async function Page({ params }: { params: { productId: string } }
           </div>
         </div>
       </main>
+      <SiteFooter className="pb-20" />
       <Contact merchant={merchant} />
       <Wechat
         shareConfig={{
