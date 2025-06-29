@@ -142,9 +142,9 @@ export const Contact = ({
                 <div className="text-xs mt-2">{channel === "wechat" ? "长按二维码，添加微信" : "扫码添加微信"}</div>
               </div>
             ) : null}
-            {merchant?.affiliate?.phone ? (
+            {merchant?.phone ? (
               <Clipboard
-                value={merchant?.affiliate?.phone}
+                value={merchant?.phone}
                 onSuccess={() => {
                   toast({ title: "手机号复制成功" });
                 }}
