@@ -97,6 +97,10 @@ export const Contact = ({
     }
   }, [isDragging, dragOffset]);
 
+  if (!position) {
+    return null;
+  }
+
   return (
     <>
       {open ? <div className=" fixed inset-0 bg-black/50 z-20" onClick={() => setOpen(false)}></div> : null}
@@ -119,7 +123,7 @@ export const Contact = ({
                 alt={merchant?.name || ""}
                 width={200}
                 height={200}
-                className="w-12 h-12 object-cover rounded-full bg-white border shadow"
+                className="w-12 h-12 object-contain rounded-full bg-white border shadow"
               />
               <Button variant="outline" className="h-auto px-2 py-1 -mt-[2px] shadow text-xs">
                 立即联系
