@@ -175,15 +175,18 @@ export const BusinessCard = function ({
       ></canvas> */}
       <div className="w-full h-auto shadow rounded p-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <img
-              src={merchant?.logo || ""}
-              alt={merchant?.name || ""}
-              className="w-auto h-4 object-contain rounded flex-shrink-0"
-            />
-            <div className="text-base leading-none ml-1 font-bold">{merchant?.name}</div>
+          <div>
+            <div className="flex items-center">
+              <img
+                src={merchant?.logo || ""}
+                alt={merchant?.name || ""}
+                className="w-auto h-4 object-contain rounded flex-shrink-0"
+              />
+              <div className="text-base leading-none ml-1 font-bold">{merchant?.name}</div>
+            </div>
+            <div className="text-sm text-gray-500 mt-2">{merchant?.address}</div>
           </div>
-          <Contact merchant={merchant!}>
+          <Contact merchant={{ ...merchant!, phone: "", wechatQrcode: "" }}>
             <Button size="sm" className="text-xs">
               立即联系
             </Button>

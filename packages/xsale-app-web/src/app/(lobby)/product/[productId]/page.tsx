@@ -1,7 +1,6 @@
 import { AmountFormat } from "@/components/amount";
 import { BusinessCard } from "@/components/business-card/business-card";
 import { BuyCard } from "@/components/checkout/buy-card";
-import { Contact } from "@/components/contact/contact";
 import { SiteFooter } from "@/components/layouts/site-footer";
 import { SiteHeader } from "@/components/layouts/site-header";
 import { Wechat } from "@/components/wechat";
@@ -88,7 +87,6 @@ export default async function Page({ params }: { params: { productId: string } }
         </div>
       </main>
       <SiteFooter className="pb-20" />
-      <Contact merchant={merchant} />
       <Wechat
         shareConfig={{
           title: product?.title || "",
