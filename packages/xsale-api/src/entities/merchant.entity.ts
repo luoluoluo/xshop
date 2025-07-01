@@ -63,4 +63,16 @@ export class Merchant extends Base {
   @Field(() => String, { nullable: true })
   @Column({ name: 'wechat_qrcode', nullable: true })
   wechatQrcode?: string;
+
+  @Field({ nullable: true })
+  @Column({ length: 100 })
+  bankName?: string;
+
+  @Field({ nullable: true })
+  @Column({ length: 50 })
+  bankAccount?: string;
+
+  @Field({ nullable: true })
+  @Column({ length: 50 })
+  accountName?: string;
 }

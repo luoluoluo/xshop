@@ -40,6 +40,18 @@ export class MerchantWithdrawalService {
     merchantId: string,
   ): Promise<MerchantWithdrawal> {
     return this.dataSource.transaction(async (manager) => {
+      // 判断是否有提现中的
+      const historyWithdrawal = await manager.findOne(MerchantWithdrawal, {
+        where: {
+          merchantId,
+          status: MerchantWithdrawalStatus.CREATED,
+        },
+      });
+
+      if (historyWithdrawal) {
+        throw new BadRequestException('有提现中的订单，请等待提现完成');
+      }
+
       const merchant = await manager.findOne(Merchant, {
         where: { id: merchantId },
       });
@@ -51,6 +63,18 @@ export class MerchantWithdrawalService {
       if (merchant.balance < createMerchantWithdrawalInput.amount) {
         throw new BadRequestException('余额不足');
       }
+
+      // 判断和商户绑定的银行卡是否一致
+      if (merchant.bankAccount !== createMerchantWithdrawalInput.bankAccount) {
+        throw new BadRequestException(
+          '提现账户和上次提现账户不一致，为了你的资金安全，请联系管理员处理',
+        );
+      }
+
+      // 保存提现账户到商户
+      merchant.bankAccount = createMerchantWithdrawalInput.bankAccount;
+      merchant.bankName = createMerchantWithdrawalInput.bankName;
+      merchant.accountName = createMerchantWithdrawalInput.accountName;
 
       merchant.balance -= createMerchantWithdrawalInput.amount;
       await manager.save(Merchant, merchant);

@@ -40,6 +40,18 @@ export class AffiliateWithdrawalService {
     affiliateId: string,
   ): Promise<AffiliateWithdrawal> {
     return this.dataSource.transaction(async (manager) => {
+      // 判断是否有提现中的
+      const historyWithdrawal = await manager.findOne(AffiliateWithdrawal, {
+        where: {
+          affiliateId,
+          status: AffiliateWithdrawalStatus.CREATED,
+        },
+      });
+
+      if (historyWithdrawal) {
+        throw new BadRequestException('有提现中的订单，请等待提现完成');
+      }
+
       const affiliate = await manager.findOne(Affiliate, {
         where: { id: affiliateId },
       });
@@ -51,6 +63,19 @@ export class AffiliateWithdrawalService {
       if (affiliate.balance < createAffiliateWithdrawalInput.amount) {
         throw new BadRequestException('余额不足');
       }
+      // 判断和商户绑定的银行卡是否一致
+      if (
+        affiliate.bankAccount !== createAffiliateWithdrawalInput.bankAccount
+      ) {
+        throw new BadRequestException(
+          '提现账户和上次提现账户不一致，为了你的资金安全，请联系管理员处理',
+        );
+      }
+
+      // 保存提现账户到商户
+      affiliate.bankAccount = createAffiliateWithdrawalInput.bankAccount;
+      affiliate.bankName = createAffiliateWithdrawalInput.bankName;
+      affiliate.accountName = createAffiliateWithdrawalInput.accountName;
 
       affiliate.balance -= createAffiliateWithdrawalInput.amount;
       await manager.save(Affiliate, affiliate);

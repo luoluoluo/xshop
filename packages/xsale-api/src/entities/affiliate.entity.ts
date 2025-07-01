@@ -22,4 +22,16 @@ export class Affiliate extends Base {
   @Field(() => Float, { nullable: true, defaultValue: 0 })
   @Column({ type: 'float', precision: 10, scale: 2, default: 0 })
   balance: number;
+
+  @Field({ nullable: true })
+  @Column({ length: 100 })
+  bankName?: string;
+
+  @Field({ nullable: true })
+  @Column({ length: 50 })
+  bankAccount?: string;
+
+  @Field({ nullable: true })
+  @Column({ length: 50 })
+  accountName?: string;
 }
