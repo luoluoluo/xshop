@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
@@ -18,6 +19,8 @@ import { Role } from '@/entities/role.entity';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -88,8 +91,11 @@ export class UserService {
       });
       return this.userRepository.save(user);
     } catch (err) {
-      console.error(err);
-      throw new InternalServerErrorException('Failed to create user');
+      this.logger.error('創建用戶失敗', {
+        error: err,
+        createDto: createUserDto,
+      });
+      throw new InternalServerErrorException('創建用戶失敗');
     }
   }
 
@@ -116,10 +122,12 @@ export class UserService {
       Object.assign(user, updateUserDto, { roles });
       return this.userRepository.save(user);
     } catch (err) {
-      if (err instanceof ConflictException) {
-        throw err;
-      }
-      throw new InternalServerErrorException('Failed to update user');
+      this.logger.error('更新用戶失敗', {
+        error: err,
+        userId: id,
+        updateDto: updateUserDto,
+      });
+      throw new InternalServerErrorException('更新用戶失敗');
     }
   }
 
@@ -133,8 +141,11 @@ export class UserService {
       const { password: _, ...result } = user;
       return result as User;
     } catch (err) {
-      console.error(err);
-      throw new InternalServerErrorException('Failed to validate user');
+      this.logger.error('驗證用戶失敗', {
+        error: err,
+        email,
+      });
+      throw new InternalServerErrorException('驗證用戶失敗');
     }
   }
 

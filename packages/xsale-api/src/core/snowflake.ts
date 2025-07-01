@@ -1,3 +1,5 @@
+import { Logger } from '@nestjs/common';
+
 /**
  * 自定义 Snowflake ID 生成器 (优化版)
  *
@@ -5,6 +7,8 @@
  * 1位符号位(0) + 41位时间戳 + 8位机器ID + 14位序列号
  */
 export class SnowflakeGenerator {
+  private readonly logger = new Logger(SnowflakeGenerator.name);
+
   private static readonly EPOCH = 1704067200000; // 2024-01-01 00:00:00 UTC
   private static readonly MACHINE_ID_BITS = 8; // 机器ID位数 (支持256个节点)
   private static readonly SEQUENCE_BITS = 14; // 序列号位数 (每毫秒16384个ID)

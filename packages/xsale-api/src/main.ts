@@ -5,6 +5,7 @@ import { WebModule } from './modules/web/web.module';
 import { PmsModule } from './modules/pms/pms.module';
 import { TaskAppModule } from './modules/_common/task/task-app.module';
 import { CrmModule } from './modules/crm/crm.module';
+import { createLogger } from './core/logger.config';
 
 const getServers = () => {
   return [
@@ -32,9 +33,11 @@ const getServers = () => {
 };
 
 async function bootstrap() {
+  const logger = createLogger();
+
   // Start task service independently
   const taskApp = await NestFactory.create(TaskAppModule, {
-    logger: console,
+    logger,
   });
   await taskApp.init();
   console.log('Task service initialized');
@@ -51,7 +54,7 @@ async function bootstrap() {
           optionsSuccessStatus: 204,
           credentials: true,
         },
-        logger: console,
+        logger,
       });
       await app.listen(server.port, () => {
         console.log(`${server.name} server is running on port ${server.port}`);

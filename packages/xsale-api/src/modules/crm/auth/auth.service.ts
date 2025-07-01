@@ -16,9 +16,12 @@ import {
 } from './auth.dto';
 import { Affiliate } from '@/entities/affiliate.entity';
 import { getJwtExpiresIn } from '../../../core/auth.config';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly affiliateService: AffiliateService,
     private readonly jwtService: JwtService,

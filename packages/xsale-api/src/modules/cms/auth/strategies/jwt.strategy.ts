@@ -1,5 +1,5 @@
 // auth/jwt.strategy.ts
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
@@ -9,6 +9,8 @@ import { getPassportJwtOptions } from '../../../../core/auth.config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, CMS_JWT_STRATEGY) {
+  private readonly logger = new Logger(JwtStrategy.name);
+
   constructor(
     private readonly authService: AuthService,
     configService: ConfigService,
@@ -21,6 +23,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, CMS_JWT_STRATEGY) {
       const user = await this.authService.validateUser(payload);
       return user;
     } catch (e) {
+      this.logger.error('JWT策略驗證失敗', {
+        error: e,
+        payload,
+      });
       throw new UnauthorizedException(e?.message || 'Unauthorized');
     }
   }

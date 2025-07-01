@@ -18,9 +18,12 @@ import {
   PLATFORM_FEE_PERCENTAGE,
 } from '@/core/constants';
 import { Affiliate } from '@/entities/affiliate.entity';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class OrderService {
+  private readonly logger = new Logger(OrderService.name);
+
   constructor(
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
@@ -179,6 +182,11 @@ export class OrderService {
 
       return this.findOne(createdOrder.id);
     } catch (error) {
+      this.logger.error(`创建订单失败`, {
+        error,
+        customerId,
+        createOrderDto: data,
+      });
       // 回滚事务
       await queryRunner.rollbackTransaction();
       throw error;
@@ -226,6 +234,12 @@ export class OrderService {
 
       return savedOrder;
     } catch (error) {
+      this.logger.error(`取消订单失败`, {
+        error,
+        orderId: id,
+        reason:
+          error instanceof BadRequestException ? error.message : undefined,
+      });
       // 回滚事务
       await queryRunner.rollbackTransaction();
       throw error;
@@ -300,6 +314,11 @@ export class OrderService {
 
       return savedOrder;
     } catch (error) {
+      this.logger.error(`退款失败`, {
+        error,
+        orderId: id,
+        reason,
+      });
       // 回滚事务
       await queryRunner.rollbackTransaction();
       throw error;

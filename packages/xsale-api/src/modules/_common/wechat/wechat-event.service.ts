@@ -85,7 +85,11 @@ export class WechatEventService {
           return this.generateReply(event, '暂不支持此类型消息');
       }
     } catch (error) {
-      this.logger.error('Error handling WeChat event:', error);
+      this.logger.error(`处理消息事件失败`, {
+        error,
+        openid: event.FromUserName,
+        messageType: event.MsgType,
+      });
       return this.generateReply(event, '服务器处理消息时出现错误');
     }
   }
@@ -209,7 +213,14 @@ export class WechatEventService {
           },
         });
       } catch (error) {
-        this.logger.error('Failed to send welcome template message:', error);
+        this.logger.error(
+          `发送欢迎模板消息失败`,
+          {
+            error,
+            openid: event.FromUserName,
+            eventType: event.Event,
+          },
+        );
       }
     }
 

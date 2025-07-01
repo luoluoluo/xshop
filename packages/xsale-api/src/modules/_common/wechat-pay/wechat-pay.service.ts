@@ -238,8 +238,10 @@ export class WechatPayService {
           .sign(this.config.privateKey, 'base64');
       }
     } catch (error) {
+      this.logger.error(`微信支付私钥格式错误`, {
+        error,
+      });
       const errorMsg = '微信支付私钥格式错误';
-      this.logger.error(errorMsg, { error: error.message });
       throw new Error(errorMsg);
     }
 
@@ -256,6 +258,12 @@ export class WechatPayService {
         });
       }
     } catch (error) {
+      this.logger.error(
+        `商户公钥证书格式可能有问题`,
+        {
+          error,
+        },
+      );
       this.logger.warn('商户公钥证书格式可能有问题', { error: error.message });
     }
 
@@ -298,6 +306,10 @@ export class WechatPayService {
     try {
       return JSON.parse(decoded);
     } catch (e) {
+      this.logger.error(`JSON解析失败`, {
+        error: e,
+        decoded,
+      });
       return decoded as T;
     }
   };

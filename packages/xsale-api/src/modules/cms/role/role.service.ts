@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
@@ -11,6 +12,8 @@ import { RolePagination, RoleWhereInput } from './role.dto';
 
 @Injectable()
 export class RoleService {
+  private readonly logger = new Logger(RoleService.name);
+
   constructor(
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
@@ -61,6 +64,10 @@ export class RoleService {
       const role = this.roleRepository.create(createRoleDto);
       return this.roleRepository.save(role);
     } catch (err) {
+      this.logger.error('創建角色失敗', {
+        error: err,
+        createRoleDto,
+      });
       throw new InternalServerErrorException('創建角色失敗');
     }
   }
@@ -88,6 +95,11 @@ export class RoleService {
       Object.assign(role, updateRoleDto);
       return this.roleRepository.save(role);
     } catch (err) {
+      this.logger.error('更新角色失敗', {
+        error: err,
+        roleId: id,
+        updateRoleDto,
+      });
       throw new InternalServerErrorException('更新角色失敗');
     }
   }

@@ -77,7 +77,10 @@ export class SmsService {
       await this.alismsService.sendCode(phone, code);
       return true;
     } catch (error) {
-      this.logger.error(`Failed to send SMS to ${phone}:`, error);
+      this.logger.error('发送验证码失败', {
+        error,
+        phone,
+      });
       throw error;
     }
   }
@@ -133,10 +136,11 @@ export class SmsService {
 
       return false;
     } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw new Error('验证码验证失败');
+      this.logger.error('验证验证码失败', {
+        error,
+        phone,
+      });
+      return false;
     }
   }
 
@@ -164,10 +168,9 @@ export class SmsService {
         attempts,
       };
     } catch (error) {
-      this.logger.error(
-        `Failed to get verification code status for ${phone}:`,
+      this.logger.error('清理过期验证码失败', {
         error,
-      );
+      });
       return null;
     }
   }

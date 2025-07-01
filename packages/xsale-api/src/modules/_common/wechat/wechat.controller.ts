@@ -43,7 +43,15 @@ export class WechatController {
         res.status(HttpStatus.UNAUTHORIZED).send('Verification failed');
       }
     } catch (error) {
-      this.logger.error('Error during WeChat verification:', error);
+      this.logger.error(
+        `处理微信服务器验证失败`,
+        {
+          error,
+          signature,
+          timestamp,
+          nonce,
+        },
+      );
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Server error');
     }
   }
@@ -86,7 +94,12 @@ export class WechatController {
         .set('Content-Type', 'application/xml; charset=utf-8')
         .send(reply);
     } catch (error) {
-      this.logger.error('Error handling WeChat message:', error);
+      this.logger.error(`处理微信消息事件失败`, {
+        error,
+        signature,
+        timestamp,
+        nonce,
+      });
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Server error');
     }
   }
@@ -140,7 +153,10 @@ export class WechatController {
 
       return event;
     } catch (error) {
-      this.logger.error('Error parsing WeChat message:', error);
+      this.logger.error(`解析微信消息失败`, {
+        error,
+        xmlBody,
+      });
       return null;
     }
   }

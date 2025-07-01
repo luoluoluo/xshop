@@ -1,7 +1,9 @@
 import {
   Injectable,
   NotFoundException,
+  ConflictException,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -15,6 +17,8 @@ import {
 
 @Injectable()
 export class ProductService {
+  private readonly logger = new Logger(ProductService.name);
+
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
@@ -63,7 +67,10 @@ export class ProductService {
       const product = this.productRepository.create(createProductDto);
       return this.productRepository.save(product);
     } catch (err) {
-      console.error(err);
+      this.logger.error('創建產品失敗', {
+        error: err,
+        createDto: createProductDto,
+      });
       throw new InternalServerErrorException('創建產品失敗');
     }
   }
@@ -80,7 +87,11 @@ export class ProductService {
 
       return this.productRepository.save(product);
     } catch (err) {
-      console.error(err);
+      this.logger.error(`更新產品失敗`, {
+        error: err,
+        productId: id,
+        updateDto: updateProductDto,
+      });
       throw new InternalServerErrorException('更新產品失敗');
     }
   }

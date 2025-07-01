@@ -48,7 +48,13 @@ export class PaymentListener {
         outTradeNo: event.outTradeNo,
       });
     } catch (error) {
-      this.logger.error('处理支付成功事件失败', error);
+      this.logger.error('处理支付成功事件失败', {
+        error,
+        outTradeNo: event.outTradeNo,
+        transactionId: event.transactionId,
+        amount: event.amount,
+        openid: event.openid,
+      });
       throw error;
     }
   }

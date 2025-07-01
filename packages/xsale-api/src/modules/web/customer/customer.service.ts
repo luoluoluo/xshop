@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,6 +13,8 @@ import { UpdateMeInput } from '../auth/auth.dto';
 
 @Injectable()
 export class CustomerService {
+  private readonly logger = new Logger(CustomerService.name);
+
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
@@ -53,8 +56,11 @@ export class CustomerService {
       const savedCustomer = await this.customerRepository.save(customer);
       return savedCustomer;
     } catch (err) {
-      console.error(err);
-      throw new InternalServerErrorException('Failed to create customer');
+      this.logger.error(`創建客戶失敗`, {
+        error: err,
+        createDto: createCustomerDto,
+      });
+      throw new InternalServerErrorException('創建客戶失敗');
     }
   }
 
@@ -81,10 +87,15 @@ export class CustomerService {
       const savedCustomer = await this.customerRepository.save(customer);
       return savedCustomer;
     } catch (err) {
+      this.logger.error(`更新客戶失敗`, {
+        error: err,
+        customerId: id,
+        updateDto: updateCustomerDto,
+      });
       if (err instanceof ConflictException) {
         throw err;
       }
-      throw new InternalServerErrorException('Failed to update customer');
+      throw new InternalServerErrorException('更新客戶失敗');
     }
   }
 }

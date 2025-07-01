@@ -16,9 +16,12 @@ import {
 } from './auth.dto';
 import { Merchant } from '@/entities/merchant.entity';
 import { getJwtExpiresIn } from '../../../core/auth.config';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly merchantService: MerchantService,
     private readonly jwtService: JwtService,

@@ -206,17 +206,27 @@ export class WechatService {
   ): Promise<Response> => {
     const accessToken = await this.getAccessToken();
     const url = `${sendTemplateMessageUrl}?access_token=${accessToken}`;
-    const res = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }).then((res) => {
-      return res.json() as Promise<Response>;
-    });
-    if (res.errcode) {
-      this.logger.error(res, 'sendTemplateMessage error');
-      throw new Error(res.errmsg);
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }).then((res) => {
+        return res.json() as Promise<Response>;
+      });
+      if (res.errcode) {
+        this.logger.error(res, 'sendTemplateMessage error');
+        throw new Error(res.errmsg);
+      }
+      return res;
+    } catch (error) {
+      this.logger.error('微信接口调用失败', {
+        error,
+        endpoint: url,
+        method: 'POST',
+        data,
+      });
+      throw error;
     }
-    return res;
   };
 
   // 发送客服消息
@@ -225,17 +235,27 @@ export class WechatService {
   ): Promise<Response> => {
     const accessToken = await this.getAccessToken();
     const url = `${sendCustomMessageUrl}?access_token=${accessToken}`;
-    const res = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }).then((res) => {
-      return res.json() as Promise<Response>;
-    });
-    if (res.errcode) {
-      this.logger.error(res, 'sendCustomMessage error');
-      throw new Error(res.errmsg);
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }).then((res) => {
+        return res.json() as Promise<Response>;
+      });
+      if (res.errcode) {
+        this.logger.error(res, 'sendCustomMessage error');
+        throw new Error(res.errmsg);
+      }
+      return res;
+    } catch (error) {
+      this.logger.error('微信接口调用失败', {
+        error,
+        endpoint: url,
+        method: 'POST',
+        data,
+      });
+      throw error;
     }
-    return res;
   };
 
   getTicket = async (): Promise<string> => {

@@ -7,6 +7,7 @@ import * as path from 'path';
 import * as sharp from 'sharp';
 import { getJwtExpiresIn } from '@/core/auth.config';
 import { getJwtOptions } from '@/core/auth.config';
+import { Logger } from '@nestjs/common';
 
 export class FileAuthPayload {
   sub: string;

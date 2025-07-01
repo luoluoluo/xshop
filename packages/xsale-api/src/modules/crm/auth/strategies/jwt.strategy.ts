@@ -1,5 +1,5 @@
 // auth/jwt.strategy.ts
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
@@ -9,6 +9,8 @@ import { getPassportJwtOptions } from '../../../../core/auth.config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, CRM_JWT_STRATEGY) {
+  private readonly logger = new Logger(JwtStrategy.name);
+
   constructor(
     private readonly authService: AuthService,
     configService: ConfigService,
@@ -17,12 +19,15 @@ export class JwtStrategy extends PassportStrategy(Strategy, CRM_JWT_STRATEGY) {
   }
 
   async validate(payload: any) {
-    console.log('CRM JWT Strategy validate called with payload:', payload);
     try {
-      return this.authService.validateAffiliate(payload);
+      const user = await this.authService.validateAffiliate(payload);
+      return user;
     } catch (e) {
-      console.log(e);
-      throw new UnauthorizedException();
+      this.logger.error('CRM JWT策略驗證失敗', {
+        error: e,
+        payload,
+      });
+      throw new UnauthorizedException(e?.message || 'Unauthorized');
     }
   }
 }

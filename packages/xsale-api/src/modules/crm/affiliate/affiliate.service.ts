@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,6 +12,8 @@ import { UpdateMeInput } from '../auth/auth.dto';
 
 @Injectable()
 export class AffiliateService {
+  private readonly logger = new Logger(AffiliateService.name);
+
   constructor(
     @InjectRepository(Affiliate)
     private readonly affiliateRepository: Repository<Affiliate>,
@@ -52,8 +55,11 @@ export class AffiliateService {
       const savedAffiliate = await this.affiliateRepository.save(affiliate);
       return savedAffiliate;
     } catch (err) {
-      console.error('Failed to create affiliate:', err);
-      throw new InternalServerErrorException('创建推广员失败');
+      this.logger.error('創建推廣員失敗', {
+        error: err,
+        createDto: affiliateData,
+      });
+      throw new InternalServerErrorException('創建推廣員失敗');
     }
   }
 
@@ -67,10 +73,15 @@ export class AffiliateService {
       Object.assign(affiliate, updateAffiliateDto);
       return this.affiliateRepository.save(affiliate);
     } catch (err) {
+      this.logger.error('更新推廣員失敗', {
+        error: err,
+        affiliateId: id,
+        updateDto: updateAffiliateDto,
+      });
       if (err instanceof ConflictException) {
         throw err;
       }
-      throw new InternalServerErrorException('Failed to update affiliate');
+      throw new InternalServerErrorException('更新推廣員失敗');
     }
   }
 

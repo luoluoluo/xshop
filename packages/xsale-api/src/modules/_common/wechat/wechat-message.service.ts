@@ -21,7 +21,11 @@ export class WechatMessageService {
       await this.wechatService.sendCustomMessage(message);
       this.logger.log(`Text message sent to ${openid}: ${content}`);
     } catch (error) {
-      this.logger.error(`Failed to send text message to ${openid}:`, error);
+      this.logger.error(`Failed to send text message to ${openid}:`, {
+        error,
+        openid,
+        content,
+      });
       throw error;
     }
   }
@@ -40,7 +44,11 @@ export class WechatMessageService {
       await this.wechatService.sendCustomMessage(message);
       this.logger.log(`Image message sent to ${openid}`);
     } catch (error) {
-      this.logger.error(`Failed to send image message to ${openid}:`, error);
+      this.logger.error(`Failed to send image message to ${openid}:`, {
+        error,
+        openid,
+        mediaId,
+      });
       throw error;
     }
   }
@@ -59,7 +67,11 @@ export class WechatMessageService {
       await this.wechatService.sendCustomMessage(message);
       this.logger.log(`Voice message sent to ${openid}`);
     } catch (error) {
-      this.logger.error(`Failed to send voice message to ${openid}:`, error);
+      this.logger.error(`Failed to send voice message to ${openid}:`, {
+        error,
+        openid,
+        mediaId,
+      });
       throw error;
     }
   }
@@ -89,7 +101,14 @@ export class WechatMessageService {
       await this.wechatService.sendCustomMessage(message);
       this.logger.log(`Video message sent to ${openid}`);
     } catch (error) {
-      this.logger.error(`Failed to send video message to ${openid}:`, error);
+      this.logger.error(`Failed to send video message to ${openid}:`, {
+        error,
+        openid,
+        mediaId,
+        thumbMediaId,
+        title,
+        description,
+      });
       throw error;
     }
   }
@@ -121,7 +140,15 @@ export class WechatMessageService {
       await this.wechatService.sendCustomMessage(message);
       this.logger.log(`Music message sent to ${openid}`);
     } catch (error) {
-      this.logger.error(`Failed to send music message to ${openid}:`, error);
+      this.logger.error(`Failed to send music message to ${openid}:`, {
+        error,
+        openid,
+        title,
+        description,
+        musicUrl,
+        hqMusicUrl,
+        thumbMediaId,
+      });
       throw error;
     }
   }
@@ -148,7 +175,11 @@ export class WechatMessageService {
       await this.wechatService.sendCustomMessage(message);
       this.logger.log(`News message sent to ${openid}`);
     } catch (error) {
-      this.logger.error(`Failed to send news message to ${openid}:`, error);
+      this.logger.error(`Failed to send news message to ${openid}:`, {
+        error,
+        openid,
+        articles,
+      });
       throw error;
     }
   }
@@ -182,10 +213,14 @@ export class WechatMessageService {
         `Order notification sent to ${openid} for order ${orderId}`,
       );
     } catch (error) {
-      this.logger.error(
-        `Failed to send order notification to ${openid}:`,
+      this.logger.error(`Failed to send order notification to ${openid}:`, {
         error,
-      );
+        openid,
+        orderId,
+        orderStatus,
+        amount,
+        url,
+      });
       throw error;
     }
   }
@@ -220,8 +255,15 @@ export class WechatMessageService {
       );
     } catch (error) {
       this.logger.error(
-        `Failed to send payment notification to ${openid}:`,
-        error,
+        `Failed to send payment success notification to ${openid}:`,
+        {
+          error,
+          openid,
+          orderId,
+          amount,
+          paymentTime,
+          url,
+        },
       );
       throw error;
     }

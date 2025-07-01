@@ -3,6 +3,7 @@ import {
   NotFoundException,
   InternalServerErrorException,
   ConflictException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -15,6 +16,8 @@ import {
 
 @Injectable()
 export class ArticleCategoryService {
+  private readonly logger = new Logger(ArticleCategoryService.name);
+
   constructor(
     @InjectRepository(ArticleCategory)
     private readonly categoryRepository: Repository<ArticleCategory>,
@@ -73,6 +76,10 @@ export class ArticleCategoryService {
       await this.categoryRepository.save(category);
       return category;
     } catch (err) {
+      this.logger.error('創建文章分類失敗', {
+        error: err,
+        createDto: createCategoryDto,
+      });
       if (err instanceof ConflictException) {
         throw err;
       }
@@ -99,6 +106,11 @@ export class ArticleCategoryService {
       Object.assign(category, updateCategoryDto);
       return await this.categoryRepository.save(category);
     } catch (err) {
+      this.logger.error('更新文章分類失敗', {
+        error: err,
+        categoryId: id,
+        updateDto: updateCategoryDto,
+      });
       if (err instanceof ConflictException) {
         throw err;
       }

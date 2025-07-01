@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args, Context, Int } from '@nestjs/graphql';
 import { OrderService } from './order.service';
 import { Order, OrderStatus } from '@/entities/order.entity';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, Logger } from '@nestjs/common';
 import { GqlAuthGuard } from '@/modules/web/auth/guards/gql-auth.guard';
 import {
   CreateOrderInput,
@@ -21,6 +21,8 @@ import {
 
 @Resolver(() => Order)
 export class OrderResolver {
+  private readonly logger = new Logger(OrderResolver.name);
+
   constructor(
     private readonly orderService: OrderService,
     private readonly wechatPayService: WechatPayService,
@@ -88,7 +90,16 @@ export class OrderResolver {
     @Context() ctx: WebContext,
     @Args('data') data: CreateOrderInput,
   ): Promise<Order> {
-    return this.orderService.create(ctx.req.user!.id, data);
+    try {
+      return this.orderService.create(ctx.req.user!.id, data);
+    } catch (error) {
+      this.logger.error(`创建订单失败`, {
+        error,
+        customerId: ctx.req.user?.id,
+        createOrderInput: data,
+      });
+      throw error;
+    }
   }
 
   @Mutation(() => Order)

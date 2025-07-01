@@ -1,7 +1,11 @@
 import { DataSource } from 'typeorm';
 import { adminSeed } from './admin.seed';
 import * as dotenv from 'dotenv';
+import { Logger } from '@nestjs/common';
+
 dotenv.config();
+
+const logger = new Logger('Seeds');
 
 export const runSeeds = async (dataSource: DataSource) => {
   try {
@@ -9,7 +13,9 @@ export const runSeeds = async (dataSource: DataSource) => {
     await adminSeed(dataSource);
     console.log('資料庫種子執行完成！');
   } catch (error) {
-    console.error('資料庫種子執行失敗：', error);
+    logger.error(`种子数据生成失败`, {
+      error,
+    });
     throw error;
   }
 };
@@ -31,7 +37,10 @@ if (require.main === module) {
       process.exit(0);
     })
     .catch((error) => {
-      console.error('種子腳本執行失敗：', error);
+      logger.error(`数据库连接失败`, {
+        error,
+      });
+      console.error('Error during Data Source initialization:', error);
       process.exit(1);
     });
 }

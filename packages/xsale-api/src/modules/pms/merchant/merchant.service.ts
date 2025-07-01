@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,6 +13,8 @@ import { Affiliate } from '@/entities/affiliate.entity';
 
 @Injectable()
 export class MerchantService {
+  private readonly logger = new Logger(MerchantService.name);
+
   constructor(
     @InjectRepository(Merchant)
     private readonly merchantRepository: Repository<Merchant>,
@@ -47,6 +50,11 @@ export class MerchantService {
       Object.assign(merchant, updateMerchantDto);
       return this.merchantRepository.save(merchant);
     } catch (err) {
+      this.logger.error(`更新商戶失敗`, {
+        error: err,
+        merchantId: id,
+        updateDto: updateMerchantDto,
+      });
       if (err instanceof ConflictException) {
         throw err;
       }
@@ -93,7 +101,10 @@ export class MerchantService {
       const savedMerchant = await this.merchantRepository.save(merchant);
       return savedMerchant;
     } catch (err) {
-      console.error('Failed to create merchant:', err);
+      this.logger.error(`創建商戶失敗`, {
+        error: err,
+        createDto: merchantData,
+      });
       throw new InternalServerErrorException('创建商户失败');
     }
   }

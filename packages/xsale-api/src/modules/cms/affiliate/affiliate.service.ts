@@ -3,6 +3,7 @@ import {
   NotFoundException,
   InternalServerErrorException,
   ConflictException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,10 +14,11 @@ import {
   AffiliateWhereInput,
   UpdateAffiliateInput,
 } from './affiliate.dto';
-import { hash } from 'bcrypt';
 
 @Injectable()
 export class AffiliateService {
+  private readonly logger = new Logger(AffiliateService.name);
+
   constructor(
     @InjectRepository(Affiliate)
     private affiliateRepository: Repository<Affiliate>,
@@ -66,7 +68,15 @@ export class AffiliateService {
 
     const affiliate = this.affiliateRepository.create(createAffiliateInput);
 
-    return this.affiliateRepository.save(affiliate);
+    try {
+      return this.affiliateRepository.save(affiliate);
+    } catch (err) {
+      this.logger.error('創建推廣員失敗', {
+        error: err,
+        createDto: createAffiliateInput,
+      });
+      throw new InternalServerErrorException('創建推廣員失敗');
+    }
   }
 
   async update(

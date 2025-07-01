@@ -3,6 +3,7 @@ import {
   NotFoundException,
   InternalServerErrorException,
   ConflictException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -17,6 +18,8 @@ import { hash } from 'bcrypt';
 
 @Injectable()
 export class MerchantService {
+  private readonly logger = new Logger(MerchantService.name);
+
   constructor(
     @InjectRepository(Merchant)
     private merchantRepository: Repository<Merchant>,
@@ -71,7 +74,15 @@ export class MerchantService {
     }
     const merchant = this.merchantRepository.create(createMerchantInput);
 
-    return this.merchantRepository.save(merchant);
+    try {
+      return this.merchantRepository.save(merchant);
+    } catch (err) {
+      this.logger.error('創建商戶失敗', {
+        error: err,
+        createMerchantDto: createMerchantInput,
+      });
+      throw new InternalServerErrorException('創建商戶失敗');
+    }
   }
 
   async update(

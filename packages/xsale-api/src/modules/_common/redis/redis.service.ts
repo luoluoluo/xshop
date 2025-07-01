@@ -1,4 +1,4 @@
-import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, OnModuleDestroy, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 import { getRedisConnectionOptions } from '../../../core/redis.config';
@@ -6,6 +6,7 @@ import { getRedisConnectionOptions } from '../../../core/redis.config';
 @Injectable()
 export class RedisService implements OnModuleDestroy {
   private readonly redis: Redis;
+  private readonly logger = new Logger(RedisService.name);
 
   constructor(private readonly configService: ConfigService) {
     const { url, options } = getRedisConnectionOptions(this.configService);
@@ -28,7 +29,10 @@ export class RedisService implements OnModuleDestroy {
       const value = await this.redis.get(key);
       return value;
     } catch (error) {
-      console.error('Redis get error:', error);
+      this.logger.error('Redis get error:', {
+        error,
+        key,
+      });
       return null;
     }
   }
@@ -44,7 +48,12 @@ export class RedisService implements OnModuleDestroy {
         await this.redis.set(key, value);
       }
     } catch (error) {
-      console.error('Redis set error:', error);
+      this.logger.error('Redis set error:', {
+        error,
+        key,
+        value: value.length > 100 ? value.substring(0, 100) + '...' : value,
+        ttl,
+      });
     }
   }
 
@@ -55,7 +64,10 @@ export class RedisService implements OnModuleDestroy {
     try {
       await this.redis.del(key);
     } catch (error) {
-      console.error('Redis del error:', error);
+      this.logger.error('Redis del error:', {
+        error,
+        key,
+      });
     }
   }
 
@@ -66,7 +78,9 @@ export class RedisService implements OnModuleDestroy {
     try {
       await this.redis.flushdb();
     } catch (error) {
-      console.error('Redis reset error:', error);
+      this.logger.error('Redis reset error:', {
+        error,
+      });
     }
   }
 
@@ -78,7 +92,10 @@ export class RedisService implements OnModuleDestroy {
       const exists = await this.redis.exists(key);
       return exists === 1;
     } catch (error) {
-      console.error('Redis has error:', error);
+      this.logger.error('Redis has error:', {
+        error,
+        key,
+      });
       return false;
     }
   }

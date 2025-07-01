@@ -59,8 +59,12 @@ export class WechatPayController {
 
       return result;
     } catch (error) {
-      this.logger.error('微信支付回调处理异常', error);
-      return { code: 'FAIL', message: '处理异常' };
+      this.logger.error(`处理微信支付回调失败`, {
+        error,
+        headers,
+        body: body?.length > 500 ? body.substring(0, 500) + '...' : body,
+      });
+      throw error;
     }
   }
 }

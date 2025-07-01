@@ -5,10 +5,12 @@ import * as $OpenApi from '@alicloud/openapi-client';
 import * as $Util from '@alicloud/tea-util';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export default class AlismsService {
   private readonly client: Dysmsapi20170525;
+  private readonly logger: Logger;
 
   constructor(private readonly configService: ConfigService) {
     const config = new $OpenApi.Config({
@@ -22,6 +24,7 @@ export default class AlismsService {
     // Endpoint 请参考 https://api.aliyun.com/product/Dysmsapi
     config.endpoint = `dysmsapi.aliyuncs.com`;
     this.client = new Dysmsapi20170525(config);
+    this.logger = new Logger(AlismsService.name);
   }
 
   async sendCode(phone: string, code: string): Promise<void> {
@@ -48,11 +51,12 @@ export default class AlismsService {
         new $Util.RuntimeOptions({}),
       );
     } catch (error) {
-      // 此处仅做打印展示，请谨慎对待异常处理，在工程项目中切勿直接忽略异常。
-      // 错误 message
-      console.log(error.message);
-      // 诊断地址
-      console.log(error.data['Recommend']);
+      this.logger.error('阿里云短信发送失败', {
+        error,
+        phone: params.phoneNumbers,
+        templateCode: params.templateCode,
+      });
+      throw error;
     }
   }
 }

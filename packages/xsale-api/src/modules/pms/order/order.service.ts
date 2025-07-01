@@ -10,9 +10,12 @@ import { OrderPagination, OrderWhereInput } from './order.dto';
 import { User } from '@/entities/user.entity';
 import { Merchant } from '@/entities/merchant.entity';
 import { Affiliate } from '@/entities/affiliate.entity';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class OrderService {
+  private readonly logger = new Logger(OrderService.name);
+
   constructor(
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
@@ -155,6 +158,10 @@ export class OrderService {
 
       return savedOrder;
     } catch (error) {
+      this.logger.error(`查询订单详情失败`, {
+        error,
+        orderId: id,
+      });
       // 回滚事务
       await queryRunner.rollbackTransaction();
       throw error;

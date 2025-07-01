@@ -4,9 +4,12 @@ import { Merchant } from '@/entities/merchant.entity';
 import { MerchantWhereInput, MerchantPagination } from './merchant.dto';
 
 import { AffiliateService } from '../affiliate/affiliate.service';
+import { Logger } from '@nestjs/common';
 
 @Resolver(() => Merchant)
 export class MerchantResolver {
+  private readonly logger = new Logger(MerchantResolver.name);
+
   constructor(
     private readonly merchantService: MerchantService,
     private readonly affiliateService: AffiliateService,
@@ -51,7 +54,11 @@ export class MerchantResolver {
         const affiliate = await this.affiliateService.findOne(affiliateId);
         merchant.affiliate = affiliate;
       } catch (error) {
-        console.log(error);
+        this.logger.error(`獲取商戶失敗`, {
+          error,
+          merchantId: id,
+        });
+        throw error;
       }
     }
     return merchant;
