@@ -16,13 +16,13 @@ export const getMe = (): Customer | undefined => {
 export const setToken = (token: AuthToken) => {
   const expires = dayjs().add(token.expiresIn, "seconds").toDate();
   Cookies.set(tokenKey, token.token, {
-    expires
+    expires,
   });
   Cookies.set(meKey, JSON.stringify(token.customer), {
-    expires
+    expires,
   });
   Cookies.set(expireInKey, String(token.expiresIn), {
-    expires
+    expires,
   });
 };
 
@@ -32,7 +32,7 @@ export const setMe = (me: Customer) => {
   if (expireIn) {
     const expires = dayjs().add(Number(expireIn), "seconds").toDate();
     Cookies.set(meKey, JSON.stringify(me), {
-      expires
+      expires,
     });
   }
 };

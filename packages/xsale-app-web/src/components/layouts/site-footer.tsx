@@ -6,14 +6,34 @@ import { footerMenuItems, setting } from "@/config/config";
 import { cn } from "@/utils";
 import Image from "next/image";
 
-export async function SiteFooter({ className, theme = "default" }: { className?: string; theme?: "default" | "home" }) {
+export function SiteFooter({
+  className,
+  theme = "default",
+}: {
+  className?: string;
+  theme?: "default" | "home";
+}) {
   return (
-    <footer className={cn("w-full bg-background mt-8", theme === "home" ? "border-t" : "", className)}>
+    <footer
+      className={cn(
+        "w-full bg-background mt-8",
+        theme === "home" ? "border-t" : "",
+        className,
+      )}
+    >
       {theme === "home" ? (
         <Shell>
-          <div id="footer-links" aria-labelledby="footer-links-heading" className="grid flex-1 grid-cols-1 gap-10 lg:grid-cols-3">
+          <div
+            id="footer-links"
+            aria-labelledby="footer-links-heading"
+            className="grid flex-1 grid-cols-1 gap-10 lg:grid-cols-3"
+          >
             <div className="space-y-3">
-              <Link prefetch={false} href={`/`} className="flex flex-nowrap space-x-2">
+              <Link
+                prefetch={false}
+                href={`/`}
+                className="flex flex-nowrap space-x-2"
+              >
                 <Image
                   priority
                   alt=""
@@ -27,13 +47,15 @@ export async function SiteFooter({ className, theme = "default" }: { className?:
                 </span>
                 <span className="sr-only">Home</span>
               </Link>
-              <div className="text-balance text-muted-foreground">{setting.slogan}</div>
+              <div className="text-balance text-muted-foreground">
+                {setting.slogan}
+              </div>
             </div>
-            {footerMenuItems.map(item => (
+            {footerMenuItems.map((item) => (
               <div key={item.title} className="space-y-3">
                 <h4 className="text-base font-medium">{item.title}</h4>
                 <ul className="space-y-2.5">
-                  {item.items.map(link => (
+                  {item.items.map((link) => (
                     <li key={link.title}>
                       <Link
                         prefetch={false}
@@ -64,7 +86,9 @@ export async function SiteFooter({ className, theme = "default" }: { className?:
         </Shell>
       ) : null}
       <div className="flex flex-col lg:flex-row p-4 box-border w-full justify-center text-gray-400 text-sm gap-2">
-        <div className="text-center">沪ICP备19045011号-1 Copyright © 2024 xltzx.com</div>
+        <div className="text-center">
+          沪ICP备19045011号-1 Copyright © 2024 xltzx.com
+        </div>
       </div>
     </footer>
   );

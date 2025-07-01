@@ -1,13 +1,13 @@
 import { SiteFooter } from "@/components/layouts/site-footer";
 import { SiteHeader } from "@/components/layouts/site-header";
 
-export async function generateMetadata() {
+export function generateMetadata() {
   return {
-    title: `服务条款`
+    title: `服务条款`,
   };
 }
 
-export default async function Page() {
+export default function Page() {
   return (
     <div className="relative flex min-h-screen flex-col">
       <SiteHeader />
@@ -17,7 +17,9 @@ export default async function Page() {
           <div className="mt-8">
             <>
               <p>"当您申请客户时，表示您已经同意遵守本规章。</p>
-              <p>欢迎您加入本站点参与交流和讨论，本站点为社区，为维护网上公共秩序和社会稳定，请您自觉遵守以下条款：</p>
+              <p>
+                欢迎您加入本站点参与交流和讨论，本站点为社区，为维护网上公共秩序和社会稳定，请您自觉遵守以下条款：
+              </p>
               <p>
                 一、不得利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会集体的和公民的合法权益，不得利用本站制作、复制和传播下列信息：
                 <br />
@@ -31,7 +33,7 @@ export default async function Page() {
                 <br />
                 （五）捏造或者歪曲事实，散布谣言，扰乱社会秩序的；
                 <br />
-                （六）宣扬封建迷信、淫秽、色情、赌博、暴力、凶杀、恐怖、教唆犯罪的；　
+                （六）宣扬封建迷信、淫秽、色情、赌博、暴力、凶杀、恐怖、教唆犯罪的；
                 <br />
                 （七）公然侮辱他人或者捏造事实诽谤他人的，或者进行其他恶意攻击的；
                 <br />

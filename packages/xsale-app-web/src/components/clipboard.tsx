@@ -12,7 +12,7 @@ const Clipboard = React.forwardRef(
       className,
       style,
       onSuccess,
-      asChild
+      asChild,
     }: {
       value: string;
       children: React.ReactNode;
@@ -21,7 +21,7 @@ const Clipboard = React.forwardRef(
       onSuccess?: () => void;
       asChild?: boolean;
     },
-    ref
+    ref,
   ) => {
     const copyRef = useRef<any>(ref);
     useEffect(() => {
@@ -29,10 +29,10 @@ const Clipboard = React.forwardRef(
       if (copyRef.current) {
         clipboard = new ClipboardJS(copyRef.current, {
           text: () => value,
-          container: document.body
+          container: document.body,
         });
-        clipboard.on("success", function () {
-          onSuccess && onSuccess();
+        clipboard.on("success", () => {
+          if (onSuccess) onSuccess();
         });
       }
       return () => clipboard?.destroy && clipboard.destroy();
@@ -43,16 +43,21 @@ const Clipboard = React.forwardRef(
         {asChild ? (
           React.cloneElement(children as React.ReactElement, {
             ref: copyRef,
-            "data-clipboard-text": value
+            "data-clipboard-text": value,
           })
         ) : (
-          <button className={cn("p-0 m-0 cursor-pointer", className)} style={style} ref={copyRef} data-clipboard-text={value}>
+          <button
+            className={cn("p-0 m-0 cursor-pointer", className)}
+            style={style}
+            ref={copyRef}
+            data-clipboard-text={value}
+          >
             {children}
           </button>
         )}
       </>
     );
-  }
+  },
 );
 Clipboard.displayName = "Clipboard";
 export { Clipboard };

@@ -9,32 +9,32 @@ export const setting = {
   features: [
     {
       title: "零风险",
-      description: "成交才付费，无效果不花钱"
+      description: "成交才付费，无效果不花钱",
     },
     {
       title: "数据透明",
-      description: "精准识别推广者，实时计算佣金"
+      description: "精准识别推广者，实时计算佣金",
     },
     {
       title: "自动分佣",
-      description: "订单完成即时结算，佣金自动到账"
+      description: "订单完成即时结算，佣金自动到账",
     },
     {
       title: "专属服务",
-      description: "专属客户经理全程跟进"
-    }
-  ]
+      description: "专属客户经理全程跟进",
+    },
+  ],
 };
 
 export const headerMenuItems: HeaderItem[] = [
   {
     title: "首页",
-    href: "/"
+    href: "/",
   },
   {
     title: "商家",
-    href: "/merchant"
-  }
+    href: "/merchant",
+  },
 ];
 
 export const footerMenuItems = [
@@ -49,18 +49,18 @@ export const footerMenuItems = [
       {
         title: "隐私协议",
         href: "/page/privacy-agreement",
-        external: false
+        external: false,
       },
       {
         title: "服务条款",
         href: "/page/terms-of-service",
-        external: false
+        external: false,
       },
       {
         title: "关于我们",
         href: "/",
-        external: false
-      }
-    ]
-  }
+        external: false,
+      },
+    ],
+  },
 ];

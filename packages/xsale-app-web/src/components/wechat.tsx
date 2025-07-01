@@ -5,21 +5,23 @@ import { request } from "@/utils/request";
 import { useEffect } from "react";
 import wx from "weixin-js-sdk";
 
-export const Wechat = (props: { shareConfig?: { title: string; desc?: string; imgUrl?: string } }) => {
+export const Wechat = (props: {
+  shareConfig?: { title: string; desc?: string; imgUrl?: string };
+}) => {
   useEffect(() => {
-    request<{ wechatJsConfig: WechatJsConfig }>({
+    void request<{ wechatJsConfig: WechatJsConfig }>({
       query: getWechatJsConfig,
-      variables: { where: { url: window.location.href } }
-    }).then(res => {
+      variables: { where: { url: window.location.href } },
+    }).then((res) => {
       if (res.errors) {
         console.log(res.errors);
         return;
       }
       if (!res.data) return;
       wx.config({
-        ...res.data!.wechatJsConfig,
+        ...res.data.wechatJsConfig,
         // debug: true,
-        jsApiList: ["updateAppMessageShareData", "updateTimelineShareData"]
+        jsApiList: ["updateAppMessageShareData", "updateTimelineShareData"],
       });
     });
   }, []);
@@ -37,9 +39,9 @@ export const Wechat = (props: { shareConfig?: { title: string; desc?: string; im
         success: () => {
           console.log("updateAppMessageShareData success");
         },
-        fail: e => {
+        fail: (e) => {
           console.log("updateAppMessageShareData error: ", e);
-        }
+        },
       });
       wx.updateTimelineShareData({
         title: props.shareConfig?.title || "",
@@ -48,9 +50,9 @@ export const Wechat = (props: { shareConfig?: { title: string; desc?: string; im
         success: () => {
           console.log("updateTimelineShareData success");
         },
-        fail: e => {
+        fail: (e) => {
           console.log("updateTimelineShareData error: ", e);
-        }
+        },
       });
     });
   }, [props.shareConfig]);

@@ -1,7 +1,7 @@
 export const AmountFormat = ({
   value,
   className,
-  size = "base"
+  size = "base",
 }: {
   className?: string;
   value: number;
@@ -24,7 +24,9 @@ export const AmountFormat = ({
       break;
   }
   return (
-    <div className={` flex items-end font-semibold text-red-500 text-${size} ${className}`}>
+    <div
+      className={` flex items-end font-semibold text-red-500 text-${size} ${className}`}
+    >
       <div className="leading-[100%] px-[1px]">¥</div>
       <div className={`${integerClassName} leading-[100%]`}>{integer}</div>
       <div className="leading-[100%]">.{decimal}</div>

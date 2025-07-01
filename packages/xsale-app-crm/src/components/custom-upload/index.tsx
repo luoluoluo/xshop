@@ -29,15 +29,15 @@ export const CustomUpload = (props: {
     : [];
 
   const fileList = useMemo(() => {
-    return values.map((f) => ({
-      uid: genId(),
-      name: f,
-      url: f,
-      status: "done" as const,
-    }));
+    return values.length
+      ? values.map((f) => ({
+          uid: genId(),
+          name: f,
+          url: f,
+          status: "done" as const,
+        }))
+      : undefined;
   }, [values]);
-
-  console.log(values, fileList?.[0], "111");
 
   return (
     <Upload
@@ -64,7 +64,6 @@ export const CustomUpload = (props: {
         });
       }}
       onChange={(e) => {
-        console.log(e);
         setStatus(e.file.status || "");
         switch (e.file.status) {
           case "done":

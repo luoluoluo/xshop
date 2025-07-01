@@ -5,7 +5,13 @@ import Link from "next/link";
 import * as React from "react";
 
 import { Icons } from "@/components/icons";
-import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import type { HeaderItem } from "@/types";
 
 interface MobileNavProps {
@@ -24,12 +30,16 @@ export function MobileNav({ items }: MobileNavProps) {
           <span className="sr-only">Toggle Menu</span>
         </div>
       </SheetTrigger>
-      <SheetContent side="left" className="pt-9" onOpenAutoFocus={e => e.preventDefault()}>
+      <SheetContent
+        side="left"
+        className="pt-9"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <SheetTitle></SheetTitle>
         <SheetDescription></SheetDescription>
         {items?.map((v, k) => {
           const openKey: string = `${k}`;
-          const openKeyIndex = openKeys.findIndex(ok => ok === openKey);
+          const openKeyIndex = openKeys.findIndex((ok) => ok === openKey);
           return (
             <div className="-ml-2" key={k}>
               <div key={k} className="w-full flex justify-between py-4">
@@ -49,7 +59,9 @@ export function MobileNav({ items }: MobileNavProps) {
                       if (openKeyIndex === -1) {
                         setOpenKeys([...openKeys, `${k}`]);
                       } else {
-                        const newOpenKeys = openKeys.filter(ok => ok !== openKey);
+                        const newOpenKeys = openKeys.filter(
+                          (ok) => ok !== openKey,
+                        );
                         setOpenKeys(newOpenKeys);
                       }
                     }}

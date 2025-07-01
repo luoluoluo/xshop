@@ -35,18 +35,32 @@ const getStatusText = (status: OrderStatus) => {
   }
 };
 
-export const OrderItem = ({ order, link, className }: { order: Order; link?: boolean; className?: string }) => {
+export const OrderItem = ({
+  order,
+  link,
+  className,
+}: {
+  order: Order;
+  link?: boolean;
+  className?: string;
+}) => {
   const router = useRouter();
   const [loading, setLoading] = useState<"cancel" | "pay" | "refund">();
 
   const onPay = () => {
-    router.push(`/pay?orderId=${order.id}&title=${order.productTitle}&amount=${order.amount}`);
+    router.push(
+      `/pay?orderId=${order.id}&title=${order.productTitle}&amount=${order.amount}`,
+    );
   };
 
   return (
     <>
       <div
-        className={cn(`px-4 border border-gray-100 shadow-sm rounded`, link ? " cursor-pointer" : "", className)}
+        className={cn(
+          `px-4 border border-gray-100 shadow-sm rounded`,
+          link ? " cursor-pointer" : "",
+          className,
+        )}
         // onClick={() => {
         //   if (link) router.push(`/order/${order.id}`);
         // }}
@@ -58,21 +72,52 @@ export const OrderItem = ({ order, link, className }: { order: Order; link?: boo
           <div>{getStatusText(order.status!)}</div>
         </div>
         <div className="mt-2 flex flex-col gap-1 p-2">
-          <CardMeta name="编号" value={order.id!} link={link ? `/order/${order.id}` : undefined}></CardMeta>
-          <CardMeta name="下单时间" value={dayjs(order.createdAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}></CardMeta>
+          <CardMeta
+            name="编号"
+            value={order.id}
+            link={link ? `/order/${order.id}` : undefined}
+          ></CardMeta>
+          <CardMeta
+            name="下单时间"
+            value={dayjs(order.createdAt)
+              .tz("Asia/Shanghai")
+              .format("YYYY-MM-DD HH:mm")}
+          ></CardMeta>
           {order.cancelledAt ? (
-            <CardMeta name="取消时间" value={dayjs(order.cancelledAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}></CardMeta>
+            <CardMeta
+              name="取消时间"
+              value={dayjs(order.cancelledAt)
+                .tz("Asia/Shanghai")
+                .format("YYYY-MM-DD HH:mm")}
+            ></CardMeta>
           ) : null}
           {order.paidAt ? (
-            <CardMeta name="支付时间" value={dayjs(order.paidAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}></CardMeta>
+            <CardMeta
+              name="支付时间"
+              value={dayjs(order.paidAt)
+                .tz("Asia/Shanghai")
+                .format("YYYY-MM-DD HH:mm")}
+            ></CardMeta>
           ) : null}
           {order.refundedAt ? (
-            <CardMeta name="退款时间" value={dayjs(order.refundedAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}></CardMeta>
+            <CardMeta
+              name="退款时间"
+              value={dayjs(order.refundedAt)
+                .tz("Asia/Shanghai")
+                .format("YYYY-MM-DD HH:mm")}
+            ></CardMeta>
           ) : null}
           {order.completedAt ? (
-            <CardMeta name="完成时间" value={dayjs(order.completedAt).tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm")}></CardMeta>
+            <CardMeta
+              name="完成时间"
+              value={dayjs(order.completedAt)
+                .tz("Asia/Shanghai")
+                .format("YYYY-MM-DD HH:mm")}
+            ></CardMeta>
           ) : null}
-          {order.note ? <CardMeta name="备注" value={order.note || ""}></CardMeta> : null}
+          {order.note ? (
+            <CardMeta name="备注" value={order.note || ""}></CardMeta>
+          ) : null}
         </div>
 
         <div className="text-black font-bold flex items-center gap-2 mt-4">
@@ -98,7 +143,11 @@ export const OrderItem = ({ order, link, className }: { order: Order; link?: boo
                   >
                     {order.productTitle}
                   </Link>
-                  <AmountFormat value={order.productPrice || 0} size="sm" className="mt-1"></AmountFormat>
+                  <AmountFormat
+                    value={order.productPrice || 0}
+                    size="sm"
+                    className="mt-1"
+                  ></AmountFormat>
                 </div>
                 <div className="mt-2 flex items-center gap-4">{`x ${order.quantity}`}</div>
               </div>
@@ -129,15 +178,15 @@ export const OrderItem = ({ order, link, className }: { order: Order; link?: boo
                     key="pay"
                     size="sm"
                     disabled={loading === "pay"}
-                    onClick={async () => {
+                    onClick={() => {
                       if (loading === "pay") return;
                       setLoading("pay");
-                      await onPay();
+                      onPay();
                       setLoading(undefined);
                     }}
                   >
                     立即支付
-                  </Button>
+                  </Button>,
                 ]
               : []),
             ...([OrderStatus.Paid].includes(order.status!)
@@ -147,18 +196,17 @@ export const OrderItem = ({ order, link, className }: { order: Order; link?: boo
                     size="sm"
                     disabled={loading === "refund"}
                     variant="destructive"
-                    onClick={async () => {
+                    onClick={() => {
                       toast({
                         title: "订单处理中，请联系商家申请退款",
-                        variant: "destructive"
+                        variant: "destructive",
                       });
-                      return;
                     }}
                   >
                     申请退款
-                  </Button>
+                  </Button>,
                 ]
-              : [])
+              : []),
           ]}
         ></CardFooter>
       </div>

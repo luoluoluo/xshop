@@ -8,25 +8,34 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export async function generateMetadata() {
+export function generateMetadata() {
   return {
     title: setting.title,
     keywords: setting.keywords,
-    description: setting.description
+    description: setting.description,
   };
 }
 
 export function generateViewport() {
   return {
     maximumScale: 1.0,
-    userScalable: "no"
+    userScalable: "no",
   };
 }
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <head>
-        <link sizes="32x32" rel="icon" type="image/x-icon" href="/images/logo.png" />
+        <link
+          sizes="32x32"
+          rel="icon"
+          type="image/x-icon"
+          href="/images/logo.png"
+        />
         {/* <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta> */}
         {/* <script src="/scripts/baidu.js" /> */}
         <Analytics />

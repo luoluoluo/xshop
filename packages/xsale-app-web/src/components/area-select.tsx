@@ -14,7 +14,7 @@ const AreaTree = ({
   value,
   // openNames,
   // setOpenNames
-  depth
+  depth,
 }: {
   data?: Area[];
   onChange?: (value: string[], isLeaf: boolean) => void;
@@ -23,7 +23,7 @@ const AreaTree = ({
   // openNames: string[];
   // setOpenNames: (names: string[]) => void;
 }) => {
-  const children = data?.find(v => v.name === value[depth])?.children;
+  const children = data?.find((v) => v.name === value[depth])?.children;
   return (
     <>
       <div className="flex-1 max-h-80 border overflow-x-scroll p-1 rounded">
@@ -33,27 +33,38 @@ const AreaTree = ({
               key={k}
               className={`flex flex-1 items-center w-full p-1 hover:bg-gray-100 rounded cursor-pointer whitespace-nowrap ${v.name === value[depth] ? "bg-gray-100" : ""}`}
               onClick={() => {
-                let newValue = value || [v.name];
-                newValue = newValue.map((vv, kk) => {
-                  if (kk === depth) {
-                    return v.name;
-                  } else if (kk > depth) {
-                    return "";
-                  } else {
-                    return vv;
+                const newValue = [...(value || [v.name])];
+                for (let i = 0; i < newValue.length; i++) {
+                  if (i === depth) {
+                    newValue[i] = v.name;
+                  } else if (i > depth) {
+                    newValue[i] = "";
                   }
-                });
+                }
                 newValue.splice(depth, 1, v.name);
-                onChange && onChange(newValue, !v.children);
+                onChange?.(newValue, !v.children);
               }}
             >
               <div>{v.name}</div>
-              {v.children ? <Icons.arrow className="flex-shrink-0 w-2.5 ml-2 text-gray-400 -rotate-90" /> : <></>}
+              {v.children ? (
+                <Icons.arrow className="flex-shrink-0 w-2.5 ml-2 text-gray-400 -rotate-90" />
+              ) : (
+                <></>
+              )}
             </div>
           );
         })}
       </div>
-      {children ? <AreaTree data={children} onChange={onChange} value={value} depth={depth + 1} /> : <></>}
+      {children ? (
+        <AreaTree
+          data={children}
+          onChange={onChange}
+          value={value}
+          depth={depth + 1}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 };
@@ -73,7 +84,7 @@ export const AreaSelect = ({
   className,
   value,
   onChange,
-  onBlur
+  onBlur,
 }: {
   className?: string;
   value?: string;
@@ -89,7 +100,7 @@ export const AreaSelect = ({
         className={`w-full flex items-center justify-between flex-nowrap whitespace-nowrap ${value ? "" : "text-gray-400"}`}
         onClick={() => {
           if (open) {
-            onBlur && onBlur();
+            onBlur?.();
           }
           setOpen(!open);
         }}
@@ -102,10 +113,10 @@ export const AreaSelect = ({
           <AreaTree
             data={areaJson as Area[]}
             value={value?.split(" ") || []}
-            onChange={async (value, isLeaf) => {
-              isLeaf && setOpen(false);
-              onChange && onChange(value.join(" "));
-              onBlur && onBlur();
+            onChange={(value, isLeaf) => {
+              if (isLeaf) setOpen(false);
+              onChange?.(value.join(" "));
+              onBlur?.();
             }}
             depth={0}
           />

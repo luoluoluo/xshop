@@ -7,7 +7,7 @@ export const CardMeta = ({
   value,
   children,
   onClick,
-  link
+  link,
 }: {
   name: string;
   value?: string | React.ReactNode;
@@ -20,9 +20,12 @@ export const CardMeta = ({
     <div className="flex cursor-pointer" onClick={onClick}>
       <div className="w-20 flex-shrink-0 text-gray-500">{name}</div>
       <div
-        className={cn("select-text whitespace-pre-wrap", link ? "text-muted-foreground" : "")}
+        className={cn(
+          "select-text whitespace-pre-wrap",
+          link ? "text-muted-foreground" : "",
+        )}
         onClick={() => {
-          link && router.push(link);
+          if (link) router.push(link);
         }}
       >
         {value}

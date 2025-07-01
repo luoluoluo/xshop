@@ -4,7 +4,7 @@ import { Wechat } from "@/components/wechat";
 import { setting } from "@/config/config";
 import { getUrl } from "@/utils/index.server";
 
-export default async function Page() {
+export default function Page() {
   const url = getUrl();
   const u = new URL(url);
 
@@ -52,8 +52,12 @@ export default async function Page() {
               <a href="/" key={k}>
                 <div className="border bg-card text-card-foreground shadow h-full rounded-lg transition-colors hover:bg-muted/25">
                   <div className="flex flex-col space-y-1.5 p-6 flex-1">
-                    <h3 className="font-semibold leading-tight tracking-tight capitalize">{v.title}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-3 text-balance">{v.description}</p>
+                    <h3 className="font-semibold leading-tight tracking-tight capitalize">
+                      {v.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground line-clamp-3 text-balance">
+                      {v.description}
+                    </p>
                   </div>
                 </div>
               </a>
@@ -67,7 +71,7 @@ export default async function Page() {
         shareConfig={{
           title: setting.title,
           desc: setting.description,
-          imgUrl: `${u.origin}/images/logo.png`
+          imgUrl: `${u.origin}/images/logo.png`,
         }}
       />
     </div>

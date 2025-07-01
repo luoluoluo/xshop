@@ -7,24 +7,32 @@ import { useEffect, useState } from "react";
 import { Contact } from "../contact/contact";
 import { Button } from "../ui/button";
 
-export const sliceText = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number) => {
-  while (true) {
-    let end = text.length;
-    const w = ctx.measureText(text).width;
+export const sliceText = (
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+) => {
+  let currentText = text;
+  while (currentText.length > 0) {
+    const w = ctx.measureText(currentText).width;
     if (w < maxWidth) {
       return {
-        end,
-        text
+        end: currentText.length,
+        text: currentText,
       };
     }
-    text = text.slice(0, end - 1);
+    currentText = currentText.slice(0, currentText.length - 1);
   }
+  return {
+    end: 0,
+    text: "",
+  };
 };
 
 export const BusinessCard = function ({
   merchant,
   className,
-  showAction
+  showAction,
 }: {
   merchant?: Merchant;
   className?: string;
@@ -33,11 +41,11 @@ export const BusinessCard = function ({
   const [url, setUrl] = useState("");
 
   useEffect(() => {
-    if (!merchant) {
+    if (!merchant?.affiliate?.id) {
       return;
     }
     const u = new URL(window.location.href);
-    u.searchParams.set("aff", merchant?.affiliate?.id!);
+    u.searchParams.set("aff", merchant.affiliate.id);
     setUrl(u.toString());
   }, [merchant]);
 
@@ -182,9 +190,13 @@ export const BusinessCard = function ({
                 alt={merchant?.name || ""}
                 className="w-auto h-4 object-contain rounded flex-shrink-0"
               />
-              <div className="text-base leading-none ml-1 font-bold">{merchant?.name}</div>
+              <div className="text-base leading-none ml-1 font-bold">
+                {merchant?.name}
+              </div>
             </div>
-            <div className="text-sm text-gray-500 mt-2">{merchant?.address}</div>
+            <div className="text-sm text-gray-500 mt-2">
+              {merchant?.address}
+            </div>
           </div>
           <Contact merchant={{ ...merchant!, phone: "", wechatQrcode: "" }}>
             <Button size="sm" className="text-xs">
@@ -192,7 +204,9 @@ export const BusinessCard = function ({
             </Button>
           </Contact>
         </div>
-        <div className="text-base mt-4 text-gray-500 border-t pt-4">{merchant?.businessScope}</div>
+        <div className="text-base mt-4 text-gray-500 border-t pt-4">
+          {merchant?.businessScope}
+        </div>
       </div>
       {showAction && url ? (
         <>
@@ -200,7 +214,9 @@ export const BusinessCard = function ({
             <div className="shadow mt-4 p-4 rounded">
               <div
                 className="w-full overflow-hidden transition-[max-height] ease-in-out duration-200 max-h-32 lg:max-h-fit whitespace-pre-wrap wysiwyg"
-                dangerouslySetInnerHTML={{ __html: merchant?.description || "" }}
+                dangerouslySetInnerHTML={{
+                  __html: merchant?.description || "",
+                }}
               />
             </div>
           ) : null}

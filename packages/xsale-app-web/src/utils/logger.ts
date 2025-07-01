@@ -7,11 +7,12 @@ export const getLogger = () => {
     logger = pinoLogger({
       level: deploymentEnv === "production" ? "info" : "debug",
       formatters: {
-        level: label => {
+        level: (label) => {
           return { level: label.toUpperCase() };
-        }
+        },
       },
-      timestamp: () => `,"timestamp":"${new Date(Date.now()).toLocaleString()}"`
+      timestamp: () =>
+        `,"timestamp":"${new Date(Date.now()).toLocaleString()}"`,
     });
   }
   return logger;

@@ -1,7 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { Customer } from "@/generated/graphql";
@@ -16,11 +22,11 @@ import { z } from "zod";
 
 const FormSchema = z.object({
   name: z.string().min(1, {
-    message: "请输入姓名"
+    message: "请输入姓名",
   }),
   phone: z.string().min(1, {
-    message: "请输入手机号"
-  })
+    message: "请输入手机号",
+  }),
 });
 
 export const SettingForm = ({ className }: { className?: string }) => {
@@ -31,38 +37,60 @@ export const SettingForm = ({ className }: { className?: string }) => {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       phone: me?.phone || undefined,
-      name: me?.name || undefined
-    }
+      name: me?.name || undefined,
+    },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const res = await request<{ updateMe: Customer }>({
-      query: updateMe,
-      variables: {
-        data: {
-          name: data.name,
-          phone: data.phone
-        }
+    setLoading(true);
+    try {
+      const res = await request<{ updateMe: Customer }>({
+        query: updateMe,
+        variables: {
+          data: {
+            name: data.name,
+            phone: data.phone,
+          },
+        },
+      });
+      if (res.errors) {
+        toast({
+          variant: "destructive",
+          title: res.errors[0].message,
+        });
+        return;
       }
-    });
-    if (res.errors) {
+      if (res.data?.updateMe) {
+        setMe(res.data.updateMe);
+        toast({
+          title: "保存成功",
+        });
+      }
+    } catch (_error) {
       toast({
         variant: "destructive",
-        title: res.errors[0].message
+        title: "保存失败，请重试",
       });
-      return;
+    } finally {
+      setLoading(false);
     }
-    setMe(res.data?.updateMe!);
-    setLoading(false);
-    toast({
-      title: "保存成功"
-    });
   }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    void form.handleSubmit(onSubmit)(e);
+  };
+
   return (
-    <div className={cn("w-full flex flex-col justify-center items-center", className)}>
+    <div
+      className={cn(
+        "w-full flex flex-col justify-center items-center",
+        className,
+      )}
+    >
       {/* <div className="text-center text-2xl font-bold">登录</div> */}
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+        <form onSubmit={handleSubmit} className="w-full">
           <div className=" flex flex-col gap-4">
             <FormField
               control={form.control}
@@ -71,7 +99,11 @@ export const SettingForm = ({ className }: { className?: string }) => {
                 <FormItem>
                   {/* <FormLabel>Username</FormLabel> */}
                   <FormControl>
-                    <Input placeholder="姓名" {...field} className="text-black bg-gray-100" />
+                    <Input
+                      placeholder="姓名"
+                      {...field}
+                      className="text-black bg-gray-100"
+                    />
                   </FormControl>
                   {/* <FormDescription>This is your public display name.</FormDescription> */}
                   <FormMessage />
@@ -85,7 +117,11 @@ export const SettingForm = ({ className }: { className?: string }) => {
                 <FormItem>
                   {/* <FormLabel>Username</FormLabel> */}
                   <FormControl>
-                    <Input placeholder="手机号" {...field} className="text-black bg-gray-100" />
+                    <Input
+                      placeholder="手机号"
+                      {...field}
+                      className="text-black bg-gray-100"
+                    />
                   </FormControl>
                   {/* <FormDescription>This is your public display name.</FormDescription> */}
                   <FormMessage />
@@ -94,7 +130,7 @@ export const SettingForm = ({ className }: { className?: string }) => {
             />
           </div>
           <div>
-            <Button disabled={loading} type="submit" className="w-full mt-4" onClick={form.handleSubmit(onSubmit)}>
+            <Button disabled={loading} type="submit" className="w-full mt-4">
               保存
             </Button>
           </div>

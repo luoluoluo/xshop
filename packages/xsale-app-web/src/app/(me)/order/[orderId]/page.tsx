@@ -11,15 +11,15 @@ import { getLogger } from "@/utils/logger";
 import { request } from "@/utils/request.server";
 import { OrderItem } from "../_components/order-item";
 
-export async function generateMetadata() {
+export function generateMetadata() {
   return {
-    title: `我的订单`
+    title: `我的订单`,
   };
 }
 
 export default async function Page({
   params,
-  searchParams
+  searchParams,
 }: {
   params: { orderId: string };
   searchParams: { contact?: string };
@@ -28,9 +28,9 @@ export default async function Page({
   const order = await request<{ order: Order }>({
     query: getOrder,
     variables: {
-      id: params.orderId
-    }
-  }).then(res => {
+      id: params.orderId,
+    },
+  }).then((res) => {
     if (res.errors) {
       getLogger().error(res.errors, "getOrder error");
     }
@@ -42,8 +42,8 @@ export default async function Page({
 
   const merchant = await request<{ merchant: Merchant }>({
     query: getMerchant,
-    variables: { id: order?.merchantId, affiliateId: getAffiliateId() }
-  }).then(res => {
+    variables: { id: order?.merchantId, affiliateId: getAffiliateId() },
+  }).then((res) => {
     if (res.errors) {
       getLogger().error(res.errors, "getMerchant error");
     }
@@ -52,14 +52,27 @@ export default async function Page({
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <SiteHeader logoAttributes={{ name: merchant?.name || undefined, logo: merchant?.logo || undefined, link: "#" }} />
+      <SiteHeader
+        logoAttributes={{
+          name: merchant?.name || undefined,
+          logo: merchant?.logo || undefined,
+          link: "#",
+        }}
+      />
       <main className="container lg:flex lg:gap-8">
         <OrderItem order={order} className="mt-4 lg:mt-8 w-full"></OrderItem>
         <div className="w-full lg:w-[375px] flex-shrink-0 border-t mt-4 lg:mt-0 lg:border-none">
-          <BusinessCard merchant={merchant} className="mt-4 lg:mt-8" showAction />
+          <BusinessCard
+            merchant={merchant}
+            className="mt-4 lg:mt-8"
+            showAction
+          />
         </div>
       </main>
-      <Contact merchant={merchant} initialOpen={searchParams.contact === "true"} />
+      <Contact
+        merchant={merchant}
+        initialOpen={searchParams.contact === "true"}
+      />
       <SiteFooter />
     </div>
   );

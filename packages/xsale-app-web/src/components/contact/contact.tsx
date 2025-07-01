@@ -1,5 +1,11 @@
 "use client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Merchant } from "@/generated/graphql";
 import { cn } from "@/utils";
 import { getChannel } from "@/utils/index.client";
@@ -14,7 +20,7 @@ export const Contact = ({
   merchant,
   children,
   className,
-  initialOpen
+  initialOpen,
 }: {
   merchant?: Merchant;
   children?: React.ReactNode;
@@ -23,7 +29,9 @@ export const Contact = ({
 }) => {
   const [channel, setChannel] = useState("");
   const [open, setOpen] = useState(initialOpen ?? false);
-  const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
+  const [position, setPosition] = useState<{ x: number; y: number } | null>(
+    null,
+  );
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const dragRef = useRef<HTMLDivElement>(null);
@@ -40,7 +48,7 @@ export const Contact = ({
         const bottomOffset = 96; // bottom-24 (24 * 4px = 96px)
         setPosition({
           x: window.innerWidth - rightOffset - 60, // 60px 是按钮的大致宽度
-          y: window.innerHeight - bottomOffset - 60 // 60px 是按钮的大致高度
+          y: window.innerHeight - bottomOffset - 60, // 60px 是按钮的大致高度
         });
       };
 
@@ -57,7 +65,7 @@ export const Contact = ({
     const touch = e.touches[0];
     setDragOffset({
       x: touch.clientX - rect.left,
-      y: touch.clientY - rect.top
+      y: touch.clientY - rect.top,
     });
     setIsDragging(true);
   };
@@ -76,7 +84,7 @@ export const Contact = ({
 
     setPosition({
       x: Math.max(0, Math.min(newX, maxX)),
-      y: Math.max(0, Math.min(newY, maxY))
+      y: Math.max(0, Math.min(newY, maxY)),
     });
   };
 
@@ -87,7 +95,9 @@ export const Contact = ({
   // 添加全局触摸事件监听
   useEffect(() => {
     if (isDragging) {
-      document.addEventListener("touchmove", handleTouchMove, { passive: false });
+      document.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
       document.addEventListener("touchend", handleTouchEnd);
 
       return () => {
@@ -103,7 +113,12 @@ export const Contact = ({
 
   return (
     <>
-      {open ? <div className=" fixed inset-0 bg-black/50 z-20" onClick={() => setOpen(false)}></div> : null}
+      {open ? (
+        <div
+          className=" fixed inset-0 bg-black/50 z-20"
+          onClick={() => setOpen(false)}
+        ></div>
+      ) : null}
       <Dialog modal={false} open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           {children ? (
@@ -112,10 +127,13 @@ export const Contact = ({
             <div
               ref={dragRef}
               onTouchStart={handleTouchStart}
-              className={cn("fixed flex flex-col justify-center items-center z-10 select-none", className)}
+              className={cn(
+                "fixed flex flex-col justify-center items-center z-10 select-none",
+                className,
+              )}
               style={{
                 left: position?.x ?? 0,
-                top: position?.y ?? 0
+                top: position?.y ?? 0,
               }}
             >
               <Image
@@ -125,21 +143,35 @@ export const Contact = ({
                 height={200}
                 className="w-12 h-12 object-contain rounded-full bg-white border shadow"
               />
-              <Button variant="outline" className="h-auto px-2 py-1 -mt-[2px] shadow text-xs">
+              <Button
+                variant="outline"
+                className="h-auto px-2 py-1 -mt-[2px] shadow text-xs"
+              >
                 立即联系
               </Button>
             </div>
           )}
         </DialogTrigger>
-        <DialogContent onInteractOutside={e => e.preventDefault()} onOpenAutoFocus={e => e.preventDefault()}>
+        <DialogContent
+          onInteractOutside={(e) => e.preventDefault()}
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <DialogHeader>
             <DialogTitle>联系方式</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col justify-end pt-2 mt-2 text-gray-700 gap-2 border-t">
             {merchant?.wechatQrcode ? (
               <div className="flex flex-col items-center">
-                <img src={merchant.wechatQrcode} alt="微信二维码" className="w-40 h-auto" />
-                <div className="text-xs mt-2">{channel === "wechat" ? "长按二维码，添加微信" : "扫码添加微信"}</div>
+                <img
+                  src={merchant.wechatQrcode}
+                  alt="微信二维码"
+                  className="w-40 h-auto"
+                />
+                <div className="text-xs mt-2">
+                  {channel === "wechat"
+                    ? "长按二维码，添加微信"
+                    : "扫码添加微信"}
+                </div>
               </div>
             ) : null}
             {merchant?.phone ? (
@@ -150,8 +182,11 @@ export const Contact = ({
                 }}
               >
                 <div className="flex items-baseline">
-                  <Icons.phone className="w-4 h-4" /> <div className="ml-1 text-left">{merchant?.phone}</div>
-                  <div className="px-1 py-[1px] text-xs bg-primary text-white rounded ml-2 h-auto">复制</div>
+                  <Icons.phone className="w-4 h-4" />{" "}
+                  <div className="ml-1 text-left">{merchant?.phone}</div>
+                  <div className="px-1 py-[1px] text-xs bg-primary text-white rounded ml-2 h-auto">
+                    复制
+                  </div>
                 </div>
               </Clipboard>
             ) : null}
@@ -163,8 +198,11 @@ export const Contact = ({
                 }}
               >
                 <div className="flex items-baseline">
-                  <Icons.location className="w-4 h-4" /> <div className="ml-1 text-left">{merchant.address}</div>
-                  <div className="px-1 py-[1px] text-xs bg-primary text-white rounded ml-2 h-auto text-nowrap">复制</div>
+                  <Icons.location className="w-4 h-4" />{" "}
+                  <div className="ml-1 text-left">{merchant.address}</div>
+                  <div className="px-1 py-[1px] text-xs bg-primary text-white rounded ml-2 h-auto text-nowrap">
+                    复制
+                  </div>
                 </div>
               </Clipboard>
             ) : null}

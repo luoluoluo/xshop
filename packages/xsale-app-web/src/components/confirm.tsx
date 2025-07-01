@@ -6,9 +6,12 @@ import {
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogOverlay
+  AlertDialogOverlay,
 } from "@/components/ui/alert-dialog";
-import { AlertDialogDescription, AlertDialogTitle } from "@radix-ui/react-alert-dialog";
+import {
+  AlertDialogDescription,
+  AlertDialogTitle,
+} from "@radix-ui/react-alert-dialog";
 
 import React, { createContext, useContext, useState } from "react";
 
@@ -27,20 +30,23 @@ const ConfirmContext = createContext<ConfirmState>({
   onConfirm: () => {},
   onCancel: () => {},
   openConfirm: () => Promise.resolve(false),
-  closeConfirm: () => {}
+  closeConfirm: () => {},
 });
 
 export const useConfirm = () => useContext(ConfirmContext);
 
-export const ConfirmProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const ConfirmProvider: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [promiseResolve, setPromiseResolve] = useState<(value: boolean) => void>();
+  const [promiseResolve, setPromiseResolve] =
+    useState<(value: boolean) => void>();
 
   const openConfirm = async (message: string): Promise<boolean> => {
     setMessage(message);
     setOpen(true);
-    const promise = new Promise<boolean>(resolve => {
+    const promise = new Promise<boolean>((resolve) => {
       setPromiseResolve(() => resolve);
     });
     return promise;
@@ -51,12 +57,12 @@ export const ConfirmProvider: React.FC<React.PropsWithChildren> = ({ children })
   };
 
   const handleConfirm = () => {
-    promiseResolve && promiseResolve(true);
+    promiseResolve?.(true);
     closeConfirm();
   };
 
   const handleCancel = () => {
-    promiseResolve && promiseResolve(false);
+    promiseResolve?.(false);
     closeConfirm();
   };
 
@@ -68,7 +74,7 @@ export const ConfirmProvider: React.FC<React.PropsWithChildren> = ({ children })
         onConfirm: handleConfirm,
         onCancel: handleCancel,
         openConfirm,
-        closeConfirm
+        closeConfirm,
       }}
     >
       {children}
@@ -91,7 +97,7 @@ const ConfirmDialog: React.FC = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 onCancel();
               }}
@@ -99,7 +105,7 @@ const ConfirmDialog: React.FC = () => {
               取消
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 onConfirm();
               }}

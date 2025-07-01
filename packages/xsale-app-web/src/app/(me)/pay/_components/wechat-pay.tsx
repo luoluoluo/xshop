@@ -14,7 +14,15 @@ import { useSearchParams } from "next/navigation";
 import QRCode from "qrcode";
 import { useEffect, useState } from "react";
 
-export const WechatPay = ({ orderId, title, amount }: { orderId: string; title: string; amount: string }) => {
+export const WechatPay = ({
+  orderId,
+  title,
+  amount,
+}: {
+  orderId: string;
+  title: string;
+  amount: string;
+}) => {
   const searchParams = useSearchParams();
   const state = searchParams.get("state");
   const code = searchParams.get("code");
@@ -39,88 +47,95 @@ export const WechatPay = ({ orderId, title, amount }: { orderId: string; title: 
       if (!openId) {
         // 微信oauth 回调
         if (code && state && state === "wechat") {
-          request<{
+          void request<{
             wechatAccessToken: WechatAccessToken;
           }>({
             query: wechatAccessToken,
             variables: {
-              code
-            }
-          }).then(res => {
+              code,
+            },
+          }).then((res) => {
             if (res.errors) {
-              return toast({ title: res.errors?.[0]?.message, variant: "destructive" });
+              return toast({
+                title: res.errors?.[0]?.message,
+                variant: "destructive",
+              });
             } else {
               setOpenId(res.data?.wechatAccessToken?.openId);
             }
           });
         } else {
-          request<{ wechatOauthUrl: string }>({
+          void request<{ wechatOauthUrl: string }>({
             query: wechatOauthUrl,
             variables: {
               redirectUrl: payUrl,
               scope: "snsapi_base",
-              state: "wechat"
-            }
-          }).then(res => {
+              state: "wechat",
+            },
+          }).then((res) => {
             if (res.data?.wechatOauthUrl) {
               window.location.href = res.data?.wechatOauthUrl;
             }
           });
         }
       } else {
-        request<{ createOrderPayment: Payment }>({
+        void request<{ createOrderPayment: Payment }>({
           query: createOrderPayment,
           variables: {
             data: {
               orderId,
-              openId
-            }
-          }
-        }).then(res => {
+              openId,
+            },
+          },
+        }).then((res) => {
           if (res.errors) {
             const error = res.errors[0];
             return toast({ title: error.message, variant: "destructive" });
           }
           if (window?.WeixinJSBridge) {
-            window.WeixinJSBridge.invoke("getBrandWCPayRequest", res.data?.createOrderPayment, (res: any) => {
-              if (res.err_msg == "get_brand_wcpay_request:ok") {
-                window.location.replace(`${orderUrl}?contact=true`);
-              } else {
-                toast({ title: "支付失败", variant: "destructive" });
-                window.location.replace(orderUrl);
-              }
-            });
+            window.WeixinJSBridge.invoke(
+              "getBrandWCPayRequest",
+              res.data?.createOrderPayment,
+              (res: any) => {
+                if (res.err_msg == "get_brand_wcpay_request:ok") {
+                  window.location.replace(`${orderUrl}?contact=true`);
+                } else {
+                  toast({ title: "支付失败", variant: "destructive" });
+                  window.location.replace(orderUrl);
+                }
+              },
+            );
           }
         });
       }
     } else {
       QRCode.toDataURL(payUrl, {
         width: 300,
-        margin: 0
+        margin: 0,
       })
-        .then(res => {
+        .then((res) => {
           setPayQrcode(res);
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e, 111);
         });
 
-      const t = setInterval(async () => {
-        const state = await request<{
+      const t = setInterval(() => {
+        void request<{
           orderStatus: OrderStatus;
         }>({
           query: getOrderStatus,
           variables: {
-            id: orderId
+            id: orderId,
+          },
+        }).then((res) => {
+          const state = res.data?.orderStatus;
+          if (state === OrderStatus.Paid) {
+            clearInterval(t);
+            window.location.replace(orderUrl);
+            return;
           }
-        }).then(res => {
-          return res.data?.orderStatus;
         });
-        if (state === OrderStatus.Paid) {
-          clearInterval(t);
-          window.location.replace(orderUrl);
-          return;
-        }
       }, 1000);
       // 300 秒后删除定时器
       setTimeout(() => {
@@ -139,7 +154,7 @@ export const WechatPay = ({ orderId, title, amount }: { orderId: string; title: 
           </div>
         </div>
         <div className="mt-2 flex flex-col gap-1 p-2">
-          <CardMeta name="编号" value={orderId!}></CardMeta>
+          <CardMeta name="编号" value={orderId}></CardMeta>
         </div>
 
         <div className="text-black font-bold flex items-center gap-2 mt-4">
@@ -164,7 +179,7 @@ export const WechatPay = ({ orderId, title, amount }: { orderId: string; title: 
         }}
       >
         <DialogContent
-          onInteractOutside={e => {
+          onInteractOutside={(e) => {
             e.preventDefault();
             e.stopPropagation();
           }}
@@ -172,7 +187,13 @@ export const WechatPay = ({ orderId, title, amount }: { orderId: string; title: 
           <DialogTitle>{title}</DialogTitle>
           <div className="p-4 flex flex-col items-center justify-center mt-8 gap-4">
             {/* <div className="text-2xl font-bold">{title}</div> */}
-            <img width={256} height={256} alt="" src={payQrcode} className="w-64" />
+            <img
+              width={256}
+              height={256}
+              alt=""
+              src={payQrcode}
+              className="w-64"
+            />
             <div className=" text-gray-500">请使用微信扫码支付</div>
             <AmountFormat value={Number(amount)}></AmountFormat>
           </div>

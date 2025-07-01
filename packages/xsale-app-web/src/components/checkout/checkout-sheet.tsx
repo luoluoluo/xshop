@@ -1,7 +1,12 @@
 "use client";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { AuthToken, Order, Product } from "@/generated/graphql";
 import { login } from "@/requests/auth";
 import { createOrder } from "@/requests/order";
@@ -18,15 +23,23 @@ import { toast } from "../ui/use-toast";
 
 const FormSchema = z.object({
   phone: z.string().min(1, {
-    message: "请输入手机号"
+    message: "请输入手机号",
   }),
   name: z.string().min(1, {
-    message: "请输入姓名"
+    message: "请输入姓名",
   }),
-  note: z.string().optional()
+  note: z.string().optional(),
 });
 
-export function CheckoutSheet({ product, children, quantity }: { product: Product; quantity: number; children: ReactNode }) {
+export function CheckoutSheet({
+  product,
+  children,
+  quantity,
+}: {
+  product: Product;
+  quantity: number;
+  children: ReactNode;
+}) {
   const me = getMe();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,9 +51,9 @@ export function CheckoutSheet({ product, children, quantity }: { product: Produc
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema)
+    resolver: zodResolver(FormSchema),
   });
   if (!loaded) return <></>;
 
@@ -54,9 +67,9 @@ export function CheckoutSheet({ product, children, quantity }: { product: Produc
         variables: {
           data: {
             phone: data.phone,
-            name: data.name
-          }
-        }
+            name: data.name,
+          },
+        },
       });
       if (loginRes.errors) {
         return toast({
@@ -71,10 +84,12 @@ export function CheckoutSheet({ product, children, quantity }: { product: Produc
             >
               去登录
             </Button>
-          )
+          ),
         });
       }
-      setToken(loginRes.data?.login!);
+      if (loginRes.data?.login) {
+        setToken(loginRes.data.login);
+      }
     }
     setLoading(true);
     const res = await request<{ createOrder: Order }>({
@@ -86,9 +101,9 @@ export function CheckoutSheet({ product, children, quantity }: { product: Produc
           note: data.note,
           productId: product.id,
           quantity,
-          affiliateId: getAffiliateId()
-        }
-      }
+          affiliateId: getAffiliateId(),
+        },
+      },
     });
     setLoading(false);
     if (res.errors) {
@@ -98,14 +113,19 @@ export function CheckoutSheet({ product, children, quantity }: { product: Produc
     window.location.href = `/pay?orderId=${res.data?.createOrder.id}&title=${product.title}&amount=${res.data?.createOrder.amount}&quantity=${quantity}`;
   };
 
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    void handleSubmit(onSubmit)(e);
+  };
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
-        onInteractOutside={e => e.preventDefault()}
+        onInteractOutside={(e) => e.preventDefault()}
         side="right"
         className="px-4 pt-9 pb-4 box-border"
-        onOpenAutoFocus={e => e.preventDefault()}
+        onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <SheetTitle></SheetTitle>
         <div className="text-black font-bold text-2xl">结账</div>
@@ -127,8 +147,14 @@ export function CheckoutSheet({ product, children, quantity }: { product: Produc
                   />
                   <div className=" pl-4 box-border min-w-0 flex flex-col justify-between">
                     <div>
-                      <div className="font-bold w-full h-12 leading-6 inline-block overflow-hidden">{product.title}</div>
-                      <AmountFormat value={product.price!} size="sm" className="mt-1"></AmountFormat>
+                      <div className="font-bold w-full h-12 leading-6 inline-block overflow-hidden">
+                        {product.title}
+                      </div>
+                      <AmountFormat
+                        value={product.price!}
+                        size="sm"
+                        className="mt-1"
+                      ></AmountFormat>
                     </div>
                     <div className="mt-2 flex items-center gap-4">{`x ${quantity}`}</div>
                   </div>
@@ -149,7 +175,11 @@ export function CheckoutSheet({ product, children, quantity }: { product: Produc
                   className={`w-full p-2 box-border outline-none rounded text-black bg-gray-100 border ${errors.name ? "border-red-500" : ""}`}
                   {...register("name")}
                 />
-                {errors.name ? <div className=" text-red-500 text-sm">{errors.name.message}</div> : null}
+                {errors.name ? (
+                  <div className=" text-red-500 text-sm">
+                    {errors.name.message}
+                  </div>
+                ) : null}
               </div>
               <div className="w-full">
                 <input
@@ -158,7 +188,11 @@ export function CheckoutSheet({ product, children, quantity }: { product: Produc
                   className={`w-full p-2 box-border outline-none rounded text-black bg-gray-100 border ${errors.phone ? "border-red-500" : ""}`}
                   {...register("phone")}
                 />
-                {errors.phone ? <div className=" text-red-500 text-sm">{errors.phone.message}</div> : null}
+                {errors.phone ? (
+                  <div className=" text-red-500 text-sm">
+                    {errors.phone.message}
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
@@ -185,7 +219,12 @@ export function CheckoutSheet({ product, children, quantity }: { product: Produc
             <AmountFormat value={(product.price || 0) * quantity} />
           </div>
         </div>
-        <Button className="w-full mt-4" disabled={loading} size="lg" onClick={handleSubmit(onSubmit)}>
+        <Button
+          className="w-full mt-4"
+          disabled={loading}
+          size="lg"
+          onClick={handleFormSubmit}
+        >
           结账
         </Button>
       </SheetContent>

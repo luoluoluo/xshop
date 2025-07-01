@@ -10,13 +10,17 @@ import { request } from "@/utils/request.server";
 import { OrderItem } from "./_components/order-item";
 import { OrderStatusTabs } from "./_components/order-status-tabs";
 
-export async function generateMetadata() {
+export function generateMetadata() {
   return {
-    title: `我的订单`
+    title: `我的订单`,
   };
 }
 
-export default async function Page({ searchParams }: { searchParams: { page?: string; status?: OrderStatus } }) {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { page?: string; status?: OrderStatus };
+}) {
   checkToken();
   const page = Number(searchParams.page || "1");
 
@@ -28,9 +32,9 @@ export default async function Page({ searchParams }: { searchParams: { page?: st
     variables: {
       skip,
       take,
-      where: { status: searchParams.status }
-    }
-  }).then(res => {
+      where: { status: searchParams.status },
+    },
+  }).then((res) => {
     if (res.errors) {
       getLogger().error(res.errors, "getOrders error");
     }
@@ -45,9 +49,16 @@ export default async function Page({ searchParams }: { searchParams: { page?: st
           {orders?.data?.length ? (
             <>
               <div className="flex flex-col gap-8 mt-8">
-                {orders?.data?.map(v => <OrderItem link key={v.id} order={v}></OrderItem>)}
+                {orders?.data?.map((v) => (
+                  <OrderItem link key={v.id} order={v}></OrderItem>
+                ))}
               </div>
-              <Pagination page={page} size={take} count={orders?.total!} className="mt-4"></Pagination>
+              <Pagination
+                page={page}
+                size={take}
+                count={orders?.total}
+                className="mt-4"
+              ></Pagination>
             </>
           ) : (
             <Empty title="暂无订单" className="min-h-[20rem]"></Empty>

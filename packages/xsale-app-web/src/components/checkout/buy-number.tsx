@@ -6,7 +6,7 @@ export const BuyNumber = ({
   className,
   maxValue,
   value,
-  onChange
+  onChange,
 }: {
   className?: string;
   maxValue?: number;
@@ -25,11 +25,13 @@ export const BuyNumber = ({
     if (inputRef?.current) {
       inputRef.current.value = String(inputValue);
     }
-    onChange && onChange(inputValue);
+    onChange?.(inputValue);
   }, 1000);
   const data = value || 1;
   return (
-    <div className={`bg-gray-100 hover:bg-gray-100 flex-shrink-0 rounded ${className}`}>
+    <div
+      className={`bg-gray-100 hover:bg-gray-100 flex-shrink-0 rounded ${className}`}
+    >
       <div className="flex justify-between items-center w-full h-full overflow-hidden">
         <Button
           size="sm"
@@ -42,7 +44,7 @@ export const BuyNumber = ({
             if (inputRef?.current) {
               inputRef.current.value = String(newValue);
             }
-            onChange && onChange(newValue);
+            onChange?.(newValue);
           }}
         >
           -
@@ -53,7 +55,7 @@ export const BuyNumber = ({
           defaultValue={value}
           // value={value}
           className="w-12 h-9 outline-none active:outline-none text-black  text-center"
-          onInput={e => handleInput(e.currentTarget.value)}
+          onInput={(e) => handleInput(e.currentTarget.value)}
         />
         <Button
           size="sm"
@@ -66,7 +68,7 @@ export const BuyNumber = ({
             if (inputRef?.current) {
               inputRef.current.value = String(newValue);
             }
-            onChange && onChange(newValue);
+            onChange?.(newValue);
           }}
         >
           +

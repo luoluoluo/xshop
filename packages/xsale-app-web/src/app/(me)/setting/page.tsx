@@ -2,13 +2,14 @@ import { SiteFooter } from "@/components/layouts/site-footer";
 import { SiteHeader } from "@/components/layouts/site-header";
 
 import { SettingForm } from "./_components/setting-form";
-export async function generateMetadata() {
+
+export function generateMetadata() {
   return {
-    title: `设置`
+    title: `设置`,
   };
 }
 
-export default async function Page() {
+export default function Page() {
   return (
     <div className="relative flex min-h-screen flex-col">
       <SiteHeader />

@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/utils";
 import { getLoginUrl, getMe, logout } from "@/utils/auth.client";

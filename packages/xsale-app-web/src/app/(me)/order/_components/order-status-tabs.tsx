@@ -3,7 +3,13 @@ import { OrderStatus } from "@/generated/graphql";
 import { cn } from "@/utils";
 import Link from "next/link";
 
-export const OrderStatusTabs = ({ value, className }: { value?: string; className?: string }) => {
+export const OrderStatusTabs = ({
+  value,
+  className,
+}: {
+  value?: string;
+  className?: string;
+}) => {
   return (
     <Tabs defaultValue={value || "all"} className={cn("w-full", className)}>
       <TabsList>
@@ -23,7 +29,10 @@ export const OrderStatusTabs = ({ value, className }: { value?: string; classNam
           </Link>
         </TabsTrigger>
         <TabsTrigger value="completed" asChild>
-          <Link prefetch={false} href={`/order?status=${OrderStatus.Completed}`}>
+          <Link
+            prefetch={false}
+            href={`/order?status=${OrderStatus.Completed}`}
+          >
             已完成
           </Link>
         </TabsTrigger>

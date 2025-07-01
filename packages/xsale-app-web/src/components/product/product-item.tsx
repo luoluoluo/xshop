@@ -3,7 +3,7 @@ import { Product } from "@/generated/graphql";
 import Image from "next/image";
 import Link from "next/link";
 
-export const ProductItem = async ({ product }: { product: Product }) => {
+export const ProductItem = ({ product }: { product: Product }) => {
   const detailUrl = `/product/${product.id}`;
   return (
     <Link
