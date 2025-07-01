@@ -38,6 +38,9 @@ export class UpdateUserInput {
 
   @Field(() => [String], { nullable: true })
   roleIds?: string[];
+
+  @Field(() => Boolean, { nullable: true })
+  isActive?: boolean;
 }
 
 @InputType()

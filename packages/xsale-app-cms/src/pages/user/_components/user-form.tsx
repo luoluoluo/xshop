@@ -42,15 +42,7 @@ export const UserForm = ({ formProps }: { formProps: FormProps }) => {
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        label={t("user.fields.phone")}
-        name={["phone"]}
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
+      <Form.Item label={t("user.fields.phone")} name={["phone"]}>
         <Input />
       </Form.Item>
       <Form.Item
