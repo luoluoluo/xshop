@@ -764,7 +764,10 @@
       "description": "简介",
       "password": "密码",
       "businessScope": "业务范围",
-      "wechatQrcode": "微信二维码"
+      "wechatQrcode": "微信二维码",
+      "bankName": "银行名称",
+      "bankAccount": "银行账户",
+      "accountName": "账户名称"
     }
   },
   "order": {
@@ -854,7 +857,10 @@
       "email": "邮箱地址",
       "phone": "电话",
       "balance": "余额",
-      "password": "密码"
+      "password": "密码",
+      "bankName": "银行名称",
+      "bankAccount": "银行账户",
+      "accountName": "账户名称"
     }
   }
 }

@@ -14,6 +14,18 @@ export class CreateAffiliateInput {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  bankName?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  bankAccount?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  accountName?: string;
 }
 
 @InputType()
@@ -30,6 +42,18 @@ export class UpdateAffiliateInput {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  bankName?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  bankAccount?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  accountName?: string;
 }
 
 @InputType()

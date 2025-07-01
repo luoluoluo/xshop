@@ -97,6 +97,24 @@ export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
         <CustomEditor />
       </Form.Item>
 
+      <Form.Item label={t("merchant.fields.bankName")} name={["bankName"]}>
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label={t("merchant.fields.accountName")}
+        name={["accountName"]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label={t("merchant.fields.bankAccount")}
+        name={["bankAccount"]}
+      >
+        <Input />
+      </Form.Item>
+
       <Form.Item label={t("fields.isActive.label")} name={["isActive"]}>
         <Switch />
       </Form.Item>

@@ -17,7 +17,10 @@ export type Scalars = {
 
 export type Affiliate = {
   __typename?: 'Affiliate';
+  accountName?: Maybe<Scalars['String']['output']>;
   balance?: Maybe<Scalars['Float']['output']>;
+  bankAccount?: Maybe<Scalars['String']['output']>;
+  bankName?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   isActive?: Maybe<Scalars['Boolean']['output']>;
@@ -130,9 +133,11 @@ export type AuthToken = {
 };
 
 export type CreateAffiliateInput = {
+  accountName?: InputMaybe<Scalars['String']['input']>;
+  bankAccount?: InputMaybe<Scalars['String']['input']>;
+  bankName?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
-  password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
 };
 
@@ -154,14 +159,16 @@ export type CreateArticleInput = {
 };
 
 export type CreateMerchantInput = {
+  accountName?: InputMaybe<Scalars['String']['input']>;
   address: Scalars['String']['input'];
   affiliateId: Scalars['String']['input'];
+  bankAccount?: InputMaybe<Scalars['String']['input']>;
+  bankName?: InputMaybe<Scalars['String']['input']>;
   businessScope?: InputMaybe<Scalars['String']['input']>;
   description: Scalars['String']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   logo: Scalars['String']['input'];
   name: Scalars['String']['input'];
-  password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
   wechatQrcode?: InputMaybe<Scalars['String']['input']>;
 };
@@ -212,10 +219,13 @@ export type LoginInput = {
 
 export type Merchant = {
   __typename?: 'Merchant';
+  accountName?: Maybe<Scalars['String']['output']>;
   address?: Maybe<Scalars['String']['output']>;
   affiliate?: Maybe<Affiliate>;
   affiliateId?: Maybe<Scalars['String']['output']>;
   balance?: Maybe<Scalars['Float']['output']>;
+  bankAccount?: Maybe<Scalars['String']['output']>;
+  bankName?: Maybe<Scalars['String']['output']>;
   businessScope?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -750,9 +760,11 @@ export type SignedFileUrl = {
 };
 
 export type UpdateAffiliateInput = {
+  accountName?: InputMaybe<Scalars['String']['input']>;
+  bankAccount?: InputMaybe<Scalars['String']['input']>;
+  bankName?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -774,14 +786,16 @@ export type UpdateArticleInput = {
 };
 
 export type UpdateMerchantInput = {
+  accountName?: InputMaybe<Scalars['String']['input']>;
   address?: InputMaybe<Scalars['String']['input']>;
   affiliateId?: InputMaybe<Scalars['String']['input']>;
+  bankAccount?: InputMaybe<Scalars['String']['input']>;
+  bankName?: InputMaybe<Scalars['String']['input']>;
   businessScope?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   logo?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
   wechatQrcode?: InputMaybe<Scalars['String']['input']>;
 };
@@ -808,6 +822,7 @@ export type UpdateRoleInput = {
 
 export type UpdateUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;

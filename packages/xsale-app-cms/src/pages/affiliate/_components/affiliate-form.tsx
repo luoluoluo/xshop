@@ -28,6 +28,22 @@ export const AffiliateForm = ({ formProps }: { formProps: FormProps }) => {
         <Input />
       </Form.Item>
 
+      <Form.Item label={t("affiliate.fields.bankName")} name={["bankName"]}>
+        <Input />
+      </Form.Item>
+      <Form.Item
+        label={t("affiliate.fields.accountName")}
+        name={["accountName"]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        label={t("affiliate.fields.bankAccount")}
+        name={["bankAccount"]}
+      >
+        <Input />
+      </Form.Item>
+
       <Form.Item label={t("fields.isActive.label")} name={["isActive"]}>
         <Switch />
       </Form.Item>
