@@ -27,9 +27,6 @@ export class CreateMerchantInput {
   @IsBoolean()
   isActive?: boolean;
 
-  @Field()
-  password: string;
-
   @Field({ nullable: true })
   businessScope?: string;
 
@@ -66,9 +63,6 @@ export class UpdateMerchantInput {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
-
-  @Field({ nullable: true })
-  password?: string;
 
   @Field({ nullable: true })
   businessScope?: string;

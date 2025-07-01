@@ -6,18 +6,17 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { hash, compare } from 'bcrypt';
 import { Merchant } from '@/entities/merchant.entity';
-import { Role } from '@/entities/role.entity';
 import { UpdateMeInput } from '../auth/auth.dto';
+import { Affiliate } from '@/entities/affiliate.entity';
 
 @Injectable()
 export class MerchantService {
   constructor(
     @InjectRepository(Merchant)
     private readonly merchantRepository: Repository<Merchant>,
-    @InjectRepository(Role)
-    private readonly roleRepository: Repository<Role>,
+    @InjectRepository(Affiliate)
+    private readonly affiliateRepository: Repository<Affiliate>,
   ) {}
 
   async findOne(id: string): Promise<Merchant> {
@@ -29,7 +28,7 @@ export class MerchantService {
       throw new NotFoundException('商户未找到');
     }
 
-    return { ...merchant, password: '' };
+    return merchant;
   }
 
   async findByPhone(phone: string): Promise<Merchant | null> {
@@ -38,33 +37,13 @@ export class MerchantService {
     });
   }
 
-  async update(
+  async updateMe(
     id: string,
     updateMerchantDto: UpdateMeInput,
   ): Promise<Merchant> {
     const merchant = await this.findOne(id);
 
     try {
-      if (updateMerchantDto.password) {
-        const hashedPassword: string = await hash(
-          updateMerchantDto.password,
-          10,
-        );
-        updateMerchantDto.password = hashedPassword;
-      }
-
-      if (
-        updateMerchantDto.phone &&
-        updateMerchantDto.phone !== merchant.phone
-      ) {
-        const existingMerchant = await this.findByPhone(
-          updateMerchantDto.phone,
-        );
-        if (existingMerchant) {
-          throw new ConflictException('该手机号已注册');
-        }
-      }
-
       Object.assign(merchant, updateMerchantDto);
       return this.merchantRepository.save(merchant);
     } catch (err) {
@@ -75,29 +54,47 @@ export class MerchantService {
     }
   }
 
-  async validateMerchant(
-    phone: string,
-    password: string,
-  ): Promise<Merchant | null> {
-    try {
-      const merchant = await this.findByPhone(phone);
-      if (!merchant) return null;
-      const isPasswordValid = await compare(password, merchant?.password || '');
-      if (!isPasswordValid) return null;
-
-      const { password: _, ...result } = merchant;
-      return result as Merchant;
-    } catch (err) {
-      console.error(err);
-      throw new InternalServerErrorException('Failed to validate merchant');
-    }
-  }
-
   async delete(id: string): Promise<boolean> {
     const result = await this.merchantRepository.delete({ id });
     if (result.affected === 0) {
       throw new NotFoundException(`商户ID ${id} 未找到`);
     }
     return true;
+  }
+
+  async create(merchantData: {
+    phone: string;
+    name: string;
+    description?: string;
+    logo?: string;
+    address?: string;
+    businessScope?: string;
+    wechatQrcode?: string;
+    affiliateId: string;
+  }): Promise<Merchant> {
+    // 检查手机号是否已存在
+    const existingMerchant = await this.findByPhone(merchantData.phone);
+    if (existingMerchant) {
+      throw new ConflictException('该手机号已注册');
+    }
+
+    const affiliate = await this.affiliateRepository.findOne({
+      where: { id: merchantData.affiliateId },
+    });
+    if (!affiliate) {
+      throw new NotFoundException('未找到推广员');
+    }
+
+    try {
+      const merchant = this.merchantRepository.create({
+        ...merchantData,
+      });
+
+      const savedMerchant = await this.merchantRepository.save(merchant);
+      return savedMerchant;
+    } catch (err) {
+      console.error('Failed to create merchant:', err);
+      throw new InternalServerErrorException('创建商户失败');
+    }
   }
 }

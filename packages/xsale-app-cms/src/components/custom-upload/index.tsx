@@ -3,7 +3,7 @@ import * as Icons from "@ant-design/icons";
 import { UploadListType } from "antd/es/upload/interface";
 import { genId } from "../../utils/gen";
 import { upload } from "../../utils/request";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 const uploadButton = (
   <button style={{ border: 0, background: "none" }} type="button">
@@ -11,6 +11,7 @@ const uploadButton = (
     <div style={{ marginTop: 8 }}>Upload</div>
   </button>
 );
+
 export const CustomUpload = (props: {
   max?: number;
   value?: string[] | string;
@@ -19,20 +20,25 @@ export const CustomUpload = (props: {
   accept?: string;
 }) => {
   const [status, setStatus] = useState("done");
-  // const [fileList, setFileList] = useState<UploadFile[]>([]);
   const max = props.max || 1;
+
   const values: string[] = props.value
     ? max === 1
       ? [props.value as string]
       : (props.value as string[])
     : [];
-  const defaultFileList = values.map((f) => ({
-    uid: genId(),
-    name: f,
-    url: f,
-    // status: "done"
-  }));
-  console.log(defaultFileList, "111");
+
+  const fileList = useMemo(() => {
+    return values.map((f) => ({
+      uid: genId(),
+      name: f,
+      url: f,
+      status: "done" as const,
+    }));
+  }, [values]);
+
+  console.log(values, fileList?.[0], "111");
+
   return (
     <Upload
       name="file"
@@ -42,8 +48,7 @@ export const CustomUpload = (props: {
         props.accept ||
         "image/png, image/gif, image/jpeg, image/webp, images/jpg"
       }
-      // fileList={defaultFileList}
-      defaultFileList={defaultFileList}
+      fileList={fileList}
       maxCount={max}
       customRequest={({ onSuccess, onError, file }) => {
         if (!(file instanceof File)) {
@@ -58,7 +63,6 @@ export const CustomUpload = (props: {
           onSuccess?.(res.data?.signedFileUrl?.downloadUrl);
         });
       }}
-      // action={`${baseUrl}/file`}
       onChange={(e) => {
         console.log(e);
         setStatus(e.file.status || "");
@@ -69,7 +73,7 @@ export const CustomUpload = (props: {
                 props.onChange(String(e.file.response));
               } else if (max > 1) {
                 props.onChange(
-                  e.fileList.map((v) => String(v?.response || v.name)),
+                  e.fileList.map((v) => String(v?.response || v.url || v.name)),
                 );
               }
             }
@@ -80,7 +84,7 @@ export const CustomUpload = (props: {
               return;
             }
             props.onChange?.(
-              e.fileList.map((v) => String(v?.response || v.name)),
+              e.fileList.map((v) => String(v?.response || v.url || v.name)),
             );
             break;
           case "error":

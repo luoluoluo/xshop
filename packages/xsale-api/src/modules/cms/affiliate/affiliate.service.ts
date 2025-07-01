@@ -64,11 +64,7 @@ export class AffiliateService {
       throw new ConflictException('推广员已存在');
     }
 
-    const password = await hash(createAffiliateInput.password, 10);
-    const affiliate = this.affiliateRepository.create({
-      ...createAffiliateInput,
-      password,
-    });
+    const affiliate = this.affiliateRepository.create(createAffiliateInput);
 
     return this.affiliateRepository.save(affiliate);
   }
@@ -78,10 +74,6 @@ export class AffiliateService {
     updateAffiliateDto: UpdateAffiliateInput,
   ): Promise<Affiliate> {
     const affiliate = await this.findOne(id);
-    if (updateAffiliateDto.password) {
-      const password = await hash(updateAffiliateDto.password, 10);
-      updateAffiliateDto.password = password;
-    }
 
     if (
       updateAffiliateDto.phone &&

@@ -112,8 +112,8 @@ export type Customer = {
 };
 
 export type LoginInput = {
-  password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
+  smsCode: Scalars['String']['input'];
 };
 
 export type Merchant = {
@@ -175,6 +175,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   createAffiliateWithdrawal: AffiliateWithdrawal;
   login: AuthToken;
+  register: AuthToken;
+  sendSmsCode: Scalars['Boolean']['output'];
   updateMe: Affiliate;
 };
 
@@ -186,6 +188,16 @@ export type MutationCreateAffiliateWithdrawalArgs = {
 
 export type MutationLoginArgs = {
   data: LoginInput;
+};
+
+
+export type MutationRegisterArgs = {
+  data: RegisterInput;
+};
+
+
+export type MutationSendSmsCodeArgs = {
+  data: SendSmsCodeInput;
 };
 
 
@@ -308,7 +320,6 @@ export type Query = {
   product: Product;
   products: ProductPagination;
   signedFileUrl: SignedFileUrl;
-  wechatAccessToken: WechatAccessToken;
   wechatJsConfig?: Maybe<WechatJsConfig>;
   wechatOauthUrl: Scalars['String']['output'];
   wechatVerifySignature: Scalars['Boolean']['output'];
@@ -370,11 +381,6 @@ export type QuerySignedFileUrlArgs = {
 };
 
 
-export type QueryWechatAccessTokenArgs = {
-  code: Scalars['String']['input'];
-};
-
-
 export type QueryWechatJsConfigArgs = {
   where: WechatJsConfigWhere;
 };
@@ -394,23 +400,31 @@ export type QueryWechatVerifySignatureArgs = {
   token: Scalars['String']['input'];
 };
 
+export type RegisterInput = {
+  name: Scalars['String']['input'];
+  phone: Scalars['String']['input'];
+  smsCode: Scalars['String']['input'];
+};
+
+export type SendSmsCodeInput = {
+  phone: Scalars['String']['input'];
+  type: SmsCodeType;
+};
+
 export type SignedFileUrl = {
   __typename?: 'SignedFileUrl';
   downloadUrl: Scalars['String']['output'];
   uploadUrl: Scalars['String']['output'];
 };
 
+/** 短信验证码类型 */
+export enum SmsCodeType {
+  Login = 'LOGIN',
+  Register = 'REGISTER'
+}
+
 export type UpdateMeInput = {
   name?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  phone?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type WechatAccessToken = {
-  __typename?: 'WechatAccessToken';
-  accessToken: Scalars['String']['output'];
-  expiresIn: Scalars['Float']['output'];
-  openId: Scalars['String']['output'];
 };
 
 export type WechatJsConfig = {

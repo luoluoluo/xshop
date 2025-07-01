@@ -24,6 +24,8 @@ import { Header } from "./components/header";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 
 import { Login } from "./pages/login";
+import { Register } from "./pages/register";
+import { Settings } from "./pages/settings";
 
 import { dataProvider } from "./providers/data";
 import type { I18nProvider } from "@refinedev/core";
@@ -112,6 +114,8 @@ function App() {
                       />
                     </Route>
 
+                    <Route path="/settings" element={<Settings />} />
+
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
                   <Route
@@ -125,6 +129,7 @@ function App() {
                     }
                   >
                     <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                   </Route>
                 </Routes>
 

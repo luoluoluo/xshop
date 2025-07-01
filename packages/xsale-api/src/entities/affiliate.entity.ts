@@ -10,9 +10,6 @@ export class Affiliate extends Base {
   @Column({ nullable: true })
   name?: string;
 
-  @Column({ nullable: true })
-  password?: string;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   phone?: string;

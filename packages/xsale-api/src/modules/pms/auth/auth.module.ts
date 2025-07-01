@@ -9,10 +9,12 @@ import { AuthResolver } from './auth.resolver';
 import { ConfigService } from '@nestjs/config';
 import { getJwtOptions } from '../../../core/auth.config';
 import { PMS_JWT_STRATEGY } from '@/core/constants';
+import { SmsModule } from '../../_common/sms/sms.module';
 
 @Module({
   imports: [
     MerchantModule,
+    SmsModule,
     // TypeOrmModule.forFeature([...CommonEntities]),
     PassportModule.register({ defaultStrategy: PMS_JWT_STRATEGY }),
     JwtModule.registerAsync({

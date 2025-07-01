@@ -4,22 +4,27 @@ import { request } from "../utils/request";
 export const TOKEN_KEY = "pmsAuthToken";
 export const TOKEN_EXPIRATION_KEY = "pmsTokenExpiration";
 export const USER_KEY = "pmsAuthUser";
-import { Merchant, AuthToken, LoginInput } from "../generated/graphql";
+import {
+  Merchant,
+  AuthToken,
+  LoginInput,
+  RegisterInput,
+} from "../generated/graphql";
 // import { gql } from "../generated/gql";
 import { AuthProvider } from "@refinedev/core";
-import { login, me } from "../requests/auth";
+import { login, register, me } from "../requests/auth";
 import Cookies from "js-cookie";
 import dayjs from "dayjs";
 
 export const authProvider: AuthProvider = {
-  login: async ({ phone, password }: LoginInput) => {
+  login: async ({ phone, smsCode }: LoginInput) => {
     console.log(phone);
-    if (!phone || !password) {
+    if (!phone || !smsCode) {
       return {
         success: false,
         error: {
           name: "LoginError",
-          message: "手机号和密码不能为空",
+          message: "手机号和验证码不能为空",
         },
       };
     }
@@ -28,7 +33,7 @@ export const authProvider: AuthProvider = {
       variables: {
         data: {
           phone,
-          password,
+          smsCode,
         },
       },
     });
@@ -53,6 +58,53 @@ export const authProvider: AuthProvider = {
     Cookies.set(USER_KEY, JSON.stringify(res.data?.login?.merchant), {
       expires: expires,
     });
+    return {
+      success: true,
+      redirectTo: "/",
+    };
+  },
+  register: async (params: RegisterInput) => {
+    console.log(params);
+    if (!params.phone || !params.smsCode || !params.name) {
+      return {
+        success: false,
+        error: {
+          name: "RegisterError",
+          message: "手机号、验证码和商户名称不能为空",
+        },
+      };
+    }
+
+    const res = await request<{ register?: AuthToken }>({
+      query: register,
+      variables: {
+        data: params,
+      },
+    });
+
+    if (res.errors) {
+      return {
+        success: false,
+        error: {
+          name: "RegisterError",
+          message: res.errors[0].message,
+        },
+      };
+    }
+
+    const expires = dayjs()
+      .add(res.data?.register?.expiresIn || 0, "seconds")
+      .toDate();
+    Cookies.set(TOKEN_KEY, res.data?.register?.token || "", {
+      expires,
+    });
+    Cookies.set(TOKEN_EXPIRATION_KEY, expires.toString(), {
+      expires,
+    });
+    Cookies.set(USER_KEY, JSON.stringify(res.data?.register?.merchant), {
+      expires: expires,
+    });
+
     return {
       success: true,
       redirectTo: "/",
@@ -97,7 +149,7 @@ export const authProvider: AuthProvider = {
     if (!merchant) {
       return [];
     }
-    // CRM应用中Merchant没有roles，返回空数组
+    // PMS应用中Merchant没有roles，返回空数组
     return [];
   },
   getIdentity: async () => {
@@ -111,7 +163,7 @@ export const authProvider: AuthProvider = {
     const merchant = res.data?.me as Merchant;
     if (merchant) {
       const expires = dayjs(Cookies.get(TOKEN_EXPIRATION_KEY)).toDate();
-      Cookies.set(USER_KEY, JSON.stringify(me), {
+      Cookies.set(USER_KEY, JSON.stringify(merchant), {
         expires,
       });
       return merchant;

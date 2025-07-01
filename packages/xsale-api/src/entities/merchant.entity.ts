@@ -47,9 +47,6 @@ export class Merchant extends Base {
   @Column({ type: 'float', precision: 10, scale: 2, default: 0 })
   balance: number;
 
-  @Column({ nullable: true })
-  password?: string;
-
   @Field(() => String, { nullable: true })
   @Column({ name: 'affiliate_id', nullable: true })
   affiliateId: string;

@@ -66,18 +66,6 @@ export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
       </Form.Item>
 
       <Form.Item
-        label={t("merchant.fields.password")}
-        name={["password"]}
-        required={!formProps.initialValues?.id}
-        rules={
-          // eslint-disable-next-line prettier/prettier
-          formProps.initialValues?.id ? undefined : [{ required: true }]
-        }
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
         label={t("merchant.fields.address")}
         name={["address"]}
         rules={[{ required: true }]}

@@ -10,11 +10,9 @@ import { ConfigService } from '@nestjs/config';
 import { CRM_JWT_STRATEGY } from '@/core/constants';
 import { getJwtOptions } from '../../../core/auth.config';
 import { SmsModule } from '../../_common/sms/sms.module';
-import { WechatModule } from '@/modules/_common/wechat/wechat.module';
 
 @Module({
   imports: [
-    WechatModule,
     AffiliateModule,
     SmsModule,
     // TypeOrmModule.forFeature([...CommonEntities]),

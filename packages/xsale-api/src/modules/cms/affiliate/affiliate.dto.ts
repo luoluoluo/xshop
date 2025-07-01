@@ -14,9 +14,6 @@ export class CreateAffiliateInput {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
-
-  @Field()
-  password: string;
 }
 
 @InputType()
@@ -33,9 +30,6 @@ export class UpdateAffiliateInput {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
-
-  @Field({ nullable: true })
-  password?: string;
 }
 
 @InputType()

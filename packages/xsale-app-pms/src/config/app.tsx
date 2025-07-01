@@ -5,7 +5,9 @@ import {
   DashboardOutlined,
   DollarOutlined,
   GiftOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
+
 export const getResources = (): ResourceProps[] => {
   return [
     {
@@ -46,6 +48,14 @@ export const getResources = (): ResourceProps[] => {
       meta: {
         parent: "finance",
         icon: <></>,
+      },
+    },
+    {
+      name: "settings",
+      list: "/settings",
+      meta: {
+        icon: <SettingOutlined />,
+        label: "设置",
       },
     },
   ];

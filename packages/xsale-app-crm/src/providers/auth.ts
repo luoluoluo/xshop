@@ -4,22 +4,27 @@ import { request } from "../utils/request";
 export const TOKEN_KEY = "crmAuthToken";
 export const TOKEN_EXPIRATION_KEY = "crmTokenExpiration";
 export const USER_KEY = "crmAuthUser";
-import { Affiliate, AuthToken, LoginInput } from "../generated/graphql";
+import {
+  Affiliate,
+  AuthToken,
+  LoginInput,
+  RegisterInput,
+} from "../generated/graphql";
 // import { gql } from "../generated/gql";
 import { AuthProvider } from "@refinedev/core";
-import { forgotPassword, login, me, resetPassword } from "../requests/auth";
+import { login, register, me } from "../requests/auth";
 import Cookies from "js-cookie";
 import dayjs from "dayjs";
 
 export const authProvider: AuthProvider = {
-  login: async ({ phone, password }: LoginInput) => {
+  login: async ({ phone, smsCode }: LoginInput) => {
     console.log(phone);
-    if (!phone || !password) {
+    if (!phone || !smsCode) {
       return {
         success: false,
         error: {
           name: "LoginError",
-          message: "手机号和密码不能为空",
+          message: "手机号和验证码不能为空",
         },
       };
     }
@@ -28,7 +33,7 @@ export const authProvider: AuthProvider = {
       variables: {
         data: {
           phone,
-          password,
+          smsCode,
         },
       },
     });
@@ -53,6 +58,53 @@ export const authProvider: AuthProvider = {
     Cookies.set(USER_KEY, JSON.stringify(res.data?.login?.affiliate), {
       expires: expires,
     });
+    return {
+      success: true,
+      redirectTo: "/",
+    };
+  },
+  register: async (params: RegisterInput) => {
+    console.log(params);
+    if (!params.phone || !params.smsCode || !params.name) {
+      return {
+        success: false,
+        error: {
+          name: "RegisterError",
+          message: "手机号、验证码和姓名不能为空",
+        },
+      };
+    }
+
+    const res = await request<{ register?: AuthToken }>({
+      query: register,
+      variables: {
+        data: params,
+      },
+    });
+
+    if (res.errors) {
+      return {
+        success: false,
+        error: {
+          name: "RegisterError",
+          message: res.errors[0].message,
+        },
+      };
+    }
+
+    const expires = dayjs()
+      .add(res.data?.register?.expiresIn || 0, "seconds")
+      .toDate();
+    Cookies.set(TOKEN_KEY, res.data?.register?.token || "", {
+      expires,
+    });
+    Cookies.set(TOKEN_EXPIRATION_KEY, expires.toString(), {
+      expires,
+    });
+    Cookies.set(USER_KEY, JSON.stringify(res.data?.register?.affiliate), {
+      expires: expires,
+    });
+
     return {
       success: true,
       redirectTo: "/",
@@ -111,7 +163,7 @@ export const authProvider: AuthProvider = {
     const affiliate = res.data?.me as Affiliate;
     if (affiliate) {
       const expires = dayjs(Cookies.get(TOKEN_EXPIRATION_KEY)).toDate();
-      Cookies.set(USER_KEY, JSON.stringify(me), {
+      Cookies.set(USER_KEY, JSON.stringify(affiliate), {
         expires,
       });
       return affiliate;
@@ -137,72 +189,5 @@ export const authProvider: AuthProvider = {
     return new Promise((resolve) => {
       resolve({ error });
     });
-  },
-  forgotPassword: async ({ email }: { email: string }) => {
-    const res = await request({
-      query: forgotPassword,
-      variables: {
-        data: {
-          email,
-        },
-      },
-    });
-    if (res.errors) {
-      return {
-        success: false,
-        // redirectTo: `/update-password`,
-        error: {
-          statusCode: 500,
-          message: res.errors[0].message,
-        },
-      };
-    }
-
-    // ...
-    return {
-      success: true,
-      // redirectTo: `/update-password`,
-      successNotification: {
-        message: "Password reset successful",
-        description: "Your password has been successfully reset.",
-      },
-    };
-  },
-  updatePassword: async (params: {
-    password: string;
-    confirmPassword: string;
-    token: string;
-  }) => {
-    const res = await request({
-      query: resetPassword,
-      variables: {
-        data: {
-          token: params.token,
-          password: params.password,
-        },
-      },
-    });
-    if (res.errors) {
-      return {
-        success: false,
-        // redirectTo: `/login`,
-        error: {
-          statusCode: 500,
-          // name: "Error",
-          message: res.errors[0].message,
-        },
-      };
-    }
-    // you can access query strings from params.queryStrings
-    return {
-      success: true,
-      redirectTo: `/login`,
-      // redirectTo: redirectPath,
-      successNotification: {
-        message: "Update password successful",
-        description: "You have successfully updated password.",
-      },
-    };
-    // ...
   },
 };

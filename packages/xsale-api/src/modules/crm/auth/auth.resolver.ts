@@ -3,14 +3,14 @@ import { AuthService } from './auth.service';
 import {
   AuthToken,
   LoginInput,
+  RegisterInput,
+  SendSmsCodeInput,
   UpdateMeInput,
-  WechatAccessToken,
 } from './auth.dto';
 import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
 import { Affiliate } from '@/entities/affiliate.entity';
 import { AffiliateService } from '../affiliate/affiliate.service';
-import { WechatService } from '@/modules/_common/wechat/wechat.service';
 import { CrmContext } from '@/types/graphql-context';
 
 @Resolver()
@@ -18,13 +18,22 @@ export class AuthResolver {
   constructor(
     private readonly authService: AuthService,
     private readonly affiliateService: AffiliateService,
-    private readonly wechatService: WechatService,
   ) {}
+
+  @Mutation(() => Boolean)
+  sendSmsCode(@Args('data') data: SendSmsCodeInput) {
+    return this.authService.sendSmsCode(data);
+  }
 
   @Mutation(() => AuthToken)
   @UsePipes(new ValidationPipe({ transform: true }))
   login(@Args('data') data: LoginInput): Promise<AuthToken> {
     return this.authService.login(data);
+  }
+
+  @Mutation(() => AuthToken)
+  register(@Args('data') data: RegisterInput) {
+    return this.authService.register(data);
   }
 
   @Query(() => Affiliate)
@@ -41,19 +50,5 @@ export class AuthResolver {
     @Context() ctx: CrmContext,
   ): Promise<Affiliate> {
     return this.affiliateService.updateMe(ctx.req.user!.id, data);
-  }
-
-  @Query(() => WechatAccessToken)
-  async wechatAccessToken(
-    @Args('code') code: string,
-  ): Promise<WechatAccessToken> {
-    // 获取微信用户信息
-    const wechatAffiliateInfo =
-      await this.wechatService.getOauthAccessToken(code);
-    return {
-      openId: wechatAffiliateInfo.openid,
-      accessToken: wechatAffiliateInfo.access_token,
-      expiresIn: wechatAffiliateInfo.expires_in,
-    };
   }
 }

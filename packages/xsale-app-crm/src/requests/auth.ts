@@ -1,3 +1,5 @@
+import { gql } from "graphql-tag";
+
 export const me = /* GraphQL */ `
   query me {
     me {
@@ -9,29 +11,52 @@ export const me = /* GraphQL */ `
     }
   }
 `;
-export const login = /* GraphQL */ `
+
+export const sendSmsCode = gql`
+  mutation sendSmsCode($data: SendSmsCodeInput!) {
+    sendSmsCode(data: $data)
+  }
+`;
+
+export const login = gql`
   mutation login($data: LoginInput!) {
     login(data: $data) {
       token
+      expiresIn
       affiliate {
         id
         name
         phone
         balance
       }
-      expiresIn
     }
   }
 `;
 
-export const forgotPassword = /* GraphQL */ `
-  mutation forgotPassword($data: ForgotPasswordData) {
-    forgotPassword(data: $data)
+export const register = gql`
+  mutation register($data: RegisterInput!) {
+    register(data: $data) {
+      token
+      expiresIn
+      affiliate {
+        id
+        name
+        phone
+        balance
+      }
+    }
   }
 `;
 
-export const resetPassword = /* GraphQL */ `
-  mutation resetPassword($data: ResetPasswordData) {
-    resetPassword(data: $data)
+export const updateMe = /* GraphQL */ `
+  mutation updateMe($data: UpdateMeInput!) {
+    updateMe(data: $data) {
+      id
+      name
+      phone
+      balance
+      createdAt
+      updatedAt
+    }
   }
 `;

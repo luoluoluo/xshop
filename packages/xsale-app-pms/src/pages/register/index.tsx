@@ -1,16 +1,25 @@
 import { useState } from "react";
-import { useLogin } from "@refinedev/core";
+import { useRegister } from "@refinedev/core";
 import { Form, Input, Button, Card, Typography, message } from "antd";
-import { LockOutlined, MobileOutlined } from "@ant-design/icons";
+import {
+  LockOutlined,
+  MobileOutlined,
+  EnvironmentOutlined,
+  ShopOutlined,
+  FileTextOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { Title } from "../../components/title";
 import { request } from "../../utils/request";
 import { sendSmsCode } from "../../requests/auth";
 import { useNavigate } from "react-router-dom";
+import { CustomEditor } from "../../components/custom-editor";
+import { CustomUpload } from "../../components/custom-upload";
 
 const { Text } = Typography;
 
-export const Login = () => {
-  const { mutate: login } = useLogin();
+export const Register = () => {
+  const { mutate: register } = useRegister();
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [form] = Form.useForm();
@@ -26,12 +35,12 @@ export const Login = () => {
 
       const res = await request({
         query: sendSmsCode,
-        variables: { data: { phone, type: "LOGIN" } },
+        variables: { data: { phone, type: "REGISTER" } },
       });
 
       if (res.errors) {
         console.error("Send SMS error:", res.errors);
-        message.error(res.errors[0].message || "发送验证码失败");
+        message.error("发送验证码失败");
         return;
       }
 
@@ -54,14 +63,31 @@ export const Login = () => {
     }
   };
 
-  const onFinish = (values: { phone: string; smsCode: string }) => {
+  const onFinish = (values: {
+    name: string;
+    phone: string;
+    smsCode: string;
+    address?: string;
+    businessScope?: string;
+    description?: string;
+    logo?: string;
+    wechatQrcode?: string;
+  }) => {
     setLoading(true);
-    login(values, {
+    // Remove undefined values
+    const registerData = Object.fromEntries(
+      Object.entries(values).filter(
+        ([_, value]) => value !== undefined && value !== "",
+      ),
+    );
+
+    register(registerData, {
       onSuccess: () => {
         setLoading(false);
+        message.success("注册成功");
       },
       onError: (error) => {
-        console.error("Login error:", error);
+        console.error("Register error:", error);
         setLoading(false);
       },
     });
@@ -76,6 +102,7 @@ export const Login = () => {
         alignItems: "center",
         minHeight: "100vh",
         backgroundColor: "#f5f5f5",
+        padding: "20px 0",
       }}
     >
       <div style={{ marginBottom: 32 }}>
@@ -84,20 +111,39 @@ export const Login = () => {
 
       <Card className="w-full lg:w-[500px]">
         <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <Typography.Title level={3}>登录</Typography.Title>
-          <Text type="secondary">请输入您的手机号和验证码</Text>
+          <Typography.Title level={3}>商户注册</Typography.Title>
+          <Text type="secondary">请填写您的商户信息</Text>
         </div>
 
         <Form
           form={form}
-          name="login"
+          name="register"
           onFinish={onFinish}
           autoComplete="off"
           layout="vertical"
           size="large"
         >
           <Form.Item
+            name="affiliateId"
+            label="推广者"
+            rules={[{ required: true, message: "请选择推广者" }]}
+          >
+            <Input prefix={<UserOutlined />} placeholder="请输入推广者ID" />
+          </Form.Item>
+          <Form.Item
+            name="name"
+            label="商户名称"
+            rules={[
+              { required: true, message: "请输入商户名称" },
+              { min: 2, message: "商户名称至少2个字符" },
+            ]}
+          >
+            <Input prefix={<ShopOutlined />} placeholder="请输入商户名称" />
+          </Form.Item>
+
+          <Form.Item
             name="phone"
+            label="手机号"
             rules={[
               { required: true, message: "请输入手机号" },
               { pattern: /^1\d{10}$/, message: "请输入有效的手机号" },
@@ -112,6 +158,7 @@ export const Login = () => {
 
           <Form.Item
             name="smsCode"
+            label="验证码"
             rules={[
               { required: true, message: "请输入验证码" },
               { len: 4, message: "验证码为4位数字" },
@@ -135,6 +182,46 @@ export const Login = () => {
             />
           </Form.Item>
 
+          <Form.Item
+            name="businessScope"
+            label="经营范围"
+            rules={[{ required: true, message: "请输入经营范围" }]}
+          >
+            <Input prefix={<FileTextOutlined />} placeholder="请输入经营范围" />
+          </Form.Item>
+
+          <Form.Item
+            name="address"
+            label="地址"
+            rules={[{ required: true, message: "请输入地址" }]}
+          >
+            <Input prefix={<EnvironmentOutlined />} placeholder="请输入地址" />
+          </Form.Item>
+
+          <Form.Item
+            name="description"
+            label="商户简介"
+            rules={[{ required: true, message: "请输入商户简介" }]}
+          >
+            <CustomEditor />
+          </Form.Item>
+
+          <Form.Item
+            name="logo"
+            label="商户Logo"
+            rules={[{ required: true, message: "请上传商户Logo" }]}
+          >
+            <CustomUpload />
+          </Form.Item>
+
+          <Form.Item
+            name="wechatQrcode"
+            label="微信二维码"
+            rules={[{ required: true, message: "请上传微信二维码" }]}
+          >
+            <CustomUpload />
+          </Form.Item>
+
           <Form.Item>
             <Button
               type="primary"
@@ -142,19 +229,19 @@ export const Login = () => {
               loading={loading}
               style={{ width: "100%", height: 40 }}
             >
-              登录
+              注册
             </Button>
           </Form.Item>
 
           <Form.Item style={{ textAlign: "center", marginBottom: 0 }}>
             <Text type="secondary">
-              还没有账号？{" "}
+              已有账号？{" "}
               <Button
                 type="link"
                 style={{ padding: 0 }}
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/login")}
               >
-                立即注册
+                立即登录
               </Button>
             </Text>
           </Form.Item>

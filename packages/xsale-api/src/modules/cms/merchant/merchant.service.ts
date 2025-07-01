@@ -69,11 +69,7 @@ export class MerchantService {
     if (existingMerchant) {
       throw new ConflictException('商户已存在');
     }
-    const password = await hash(createMerchantInput.password, 10);
-    const merchant = this.merchantRepository.create({
-      ...createMerchantInput,
-      password,
-    });
+    const merchant = this.merchantRepository.create(createMerchantInput);
 
     return this.merchantRepository.save(merchant);
   }
@@ -83,10 +79,6 @@ export class MerchantService {
     updateMerchantDto: UpdateMerchantInput,
   ): Promise<Merchant> {
     const merchant = await this.findOne(id);
-    if (updateMerchantDto.password) {
-      const password = await hash(updateMerchantDto.password, 10);
-      updateMerchantDto.password = password;
-    }
 
     if (updateMerchantDto.phone && updateMerchantDto.phone !== merchant.phone) {
       const existingMerchant = await this.merchantRepository.findOne({

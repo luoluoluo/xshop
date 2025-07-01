@@ -1,5 +1,20 @@
-import { Field, ObjectType, InputType } from '@nestjs/graphql';
+import {
+  Field,
+  ObjectType,
+  InputType,
+  registerEnumType,
+} from '@nestjs/graphql';
 import { Merchant } from '@/entities/merchant.entity';
+
+export enum SmsCodeType {
+  LOGIN = 'LOGIN',
+  REGISTER = 'REGISTER',
+}
+
+registerEnumType(SmsCodeType, {
+  name: 'SmsCodeType',
+  description: '短信验证码类型',
+});
 
 @InputType()
 export class LoginInput {
@@ -7,7 +22,46 @@ export class LoginInput {
   phone: string;
 
   @Field()
-  password: string;
+  smsCode: string;
+}
+
+@InputType()
+export class RegisterInput {
+  @Field()
+  affiliateId: string;
+
+  @Field()
+  phone: string;
+
+  @Field()
+  smsCode: string;
+
+  @Field()
+  name: string;
+
+  @Field()
+  description: string;
+
+  @Field()
+  logo: string;
+
+  @Field()
+  address: string;
+
+  @Field()
+  businessScope: string;
+
+  @Field()
+  wechatQrcode: string;
+}
+
+@InputType()
+export class SendSmsCodeInput {
+  @Field()
+  phone: string;
+
+  @Field(() => SmsCodeType)
+  type: SmsCodeType;
 }
 
 @ObjectType()
@@ -44,12 +98,6 @@ export class UpdateMeInput {
 
   @Field({ nullable: true })
   address?: string;
-
-  @Field({ nullable: true })
-  phone?: string;
-
-  @Field({ nullable: true })
-  password?: string;
 
   @Field({ nullable: true })
   businessScope?: string;

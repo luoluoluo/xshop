@@ -53,7 +53,7 @@ export class SmsService {
       // 60s 无法重新发送
       const ttl = await this.redisService.getRedis().ttl(codeRedisKey);
 
-      if (ttl > 0 && ttl < this.codeExpirationSeconds - this.resendSeconds) {
+      if (ttl > 0 && ttl > this.codeExpirationSeconds - this.resendSeconds) {
         throw new BadRequestException(`请勿频繁发送验证码`);
       }
       // 生成验证码

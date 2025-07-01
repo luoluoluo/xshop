@@ -1,8 +1,23 @@
-import { Field, ObjectType, InputType } from '@nestjs/graphql';
-import { IsString, MinLength, IsOptional, Matches } from 'class-validator';
+import {
+  Field,
+  ObjectType,
+  InputType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import { IsString, IsOptional, Matches } from 'class-validator';
 import { Affiliate } from '@/entities/affiliate.entity';
 
 const phoneReg = /^1\d{10}$/;
+
+export enum SmsCodeType {
+  LOGIN = 'LOGIN',
+  REGISTER = 'REGISTER',
+}
+
+registerEnumType(SmsCodeType, {
+  name: 'SmsCodeType',
+  description: '短信验证码类型',
+});
 
 export interface AuthPayload {
   sub: string;
@@ -17,9 +32,35 @@ export class LoginInput {
   phone: string;
 
   @Field()
-  @IsString({ message: '密码不能为空' })
-  @MinLength(6, { message: '密码长度至少为6位' })
-  password: string;
+  @IsString({ message: '验证码不能为空' })
+  smsCode: string;
+}
+
+@InputType()
+export class RegisterInput {
+  @Field()
+  @IsString({ message: '手机号不能为空' })
+  @Matches(phoneReg, { message: '请输入有效的手机号' })
+  phone: string;
+
+  @Field()
+  @IsString({ message: '验证码不能为空' })
+  smsCode: string;
+
+  @Field()
+  @IsString({ message: '姓名不能为空' })
+  name: string;
+}
+
+@InputType()
+export class SendSmsCodeInput {
+  @Field()
+  @IsString({ message: '手机号不能为空' })
+  @Matches(phoneReg, { message: '请输入有效的手机号' })
+  phone: string;
+
+  @Field(() => SmsCodeType)
+  type: SmsCodeType;
 }
 
 @InputType()
@@ -28,18 +69,6 @@ export class UpdateMeInput {
   @IsOptional()
   @IsString({ message: '姓名不能为空' })
   name?: string;
-
-  @Field({ nullable: true })
-  @IsOptional()
-  @IsString()
-  @Matches(phoneReg, { message: '请输入有效的手机号' })
-  phone?: string;
-
-  @Field({ nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(6, { message: '密码长度至少为6位' })
-  password?: string;
 }
 
 @ObjectType()
@@ -49,18 +78,6 @@ export class AuthToken {
 
   @Field(() => Affiliate)
   affiliate: Affiliate;
-
-  @Field()
-  expiresIn: number;
-}
-
-@ObjectType()
-export class WechatAccessToken {
-  @Field()
-  accessToken: string;
-
-  @Field()
-  openId: string;
 
   @Field()
   expiresIn: number;
