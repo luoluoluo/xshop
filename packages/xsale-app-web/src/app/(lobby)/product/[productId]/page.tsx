@@ -10,7 +10,6 @@ import { getProduct } from "@/requests/product";
 import { getAffiliateId } from "@/utils/index.server";
 import { getLogger } from "@/utils/logger";
 import { request } from "@/utils/request.server";
-import Image from "next/image";
 export async function generateMetadata({
   params,
 }: {
@@ -70,13 +69,10 @@ export default async function Page({
       <main className="lg:flex lg:gap-8">
         <div className="w-full lg:mt-8 lg:p-4 lg:rounded lg:shadow">
           <div className="px-0 lg:px-4 flex flex-col lg:flex-row gap-4">
-            <Image
-              priority
-              width={480}
-              height={480}
-              src={`${product?.image}?w=960&h=960`}
+            <img
+              src={`${product?.image}`}
               alt=""
-              className="w-full lg:w-32 lg:rounded"
+              className="w-full h-auto lg:w-32 lg:rounded"
             />
             <div className="px-4 lg:px-0">
               <div className="text-2xl font-bold">
