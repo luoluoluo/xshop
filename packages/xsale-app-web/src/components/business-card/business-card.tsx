@@ -213,7 +213,7 @@ export const BusinessCard = function ({
           {merchant?.description ? (
             <div className="shadow mt-4 p-4 rounded">
               <div
-                className="w-full overflow-hidden transition-[max-height] ease-in-out duration-200 max-h-32 lg:max-h-fit whitespace-pre-wrap wysiwyg"
+                className="w-full wysiwyg"
                 dangerouslySetInnerHTML={{
                   __html: merchant?.description || "",
                 }}
