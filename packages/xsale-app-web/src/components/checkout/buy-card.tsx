@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Product } from "@/generated/graphql";
 import { cn } from "@/utils";
-import Image from "next/image";
 import { useState } from "react";
 import { AmountFormat } from "../amount";
 import { BuyNumber } from "./buy-number";
@@ -15,13 +14,10 @@ export const BuyCard = ({ product }: { product: Product }) => {
     <div className="fixed z-10 bottom-0 left-0 w-full border-t shadow-inner">
       <div className="container flex items-center justify-between bg-white  px-4 h-14 lg:h-16  box-border">
         <div className="flex gap-2">
-          <Image
-            priority
-            width={128}
-            height={128}
-            src={`${product.image}?w=960&h=960`}
+          <img
+            src={`${product.image}`}
             alt=""
-            className="w-12 h-12 rounded  object-cover object-center hidden lg:block"
+            className="w-12 h-12 rounded  object-contain object-center hidden lg:block"
           />
           <div className="flex flex-col justify-center">
             <div className="text-black hidden lg:block max-w-md overflow-hidden text-nowrap h-6 leading-6">
