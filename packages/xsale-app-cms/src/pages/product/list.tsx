@@ -3,7 +3,7 @@ import { useTranslate, type BaseRecord } from "@refinedev/core";
 import { Space, Table } from "antd";
 import { parse } from "graphql";
 import { deleteProduct, getProducts } from "../../requests/product";
-import { Merchant } from "../../generated/graphql";
+import { Merchant, Product } from "../../generated/graphql";
 
 export const ProductList = () => {
   const t = useTranslate();
@@ -21,7 +21,28 @@ export const ProductList = () => {
           dataIndex="merchant"
           title={t("product.fields.merchant")}
           render={(merchant: Merchant) => {
-            return merchant?.name;
+            return (
+              <div>
+                <div>{merchant?.name || "-"}</div>
+                <div className="text-sm text-gray-500">
+                  {merchant?.phone || "-"}
+                </div>
+              </div>
+            );
+          }}
+        />
+        <Table.Column
+          dataIndex="merchantAffiliate"
+          title={t("product.fields.merchantAffiliate")}
+          render={(_, record: Product) => {
+            return (
+              <div>
+                <div>{record?.merchant?.affiliate?.name || "-"}</div>
+                <div className="text-sm text-gray-500">
+                  {record?.merchant?.affiliate?.phone || "-"}
+                </div>
+              </div>
+            );
           }}
         />
         <Table.Column
@@ -32,6 +53,31 @@ export const ProductList = () => {
           }}
         />
         <Table.Column dataIndex="title" title={t("product.fields.title")} />
+        <Table.Column
+          dataIndex="price"
+          title={t("product.fields.price")}
+          render={(price: number) => {
+            return <span>{price?.toFixed(2)}</span>;
+          }}
+        />
+        <Table.Column
+          dataIndex="commission"
+          title={t("product.fields.commission")}
+          render={(commission: number) => {
+            return <span>{commission?.toFixed(2)}</span>;
+          }}
+        />
+        <Table.Column
+          dataIndex="link"
+          title={"链接"}
+          render={(_, record: Product) => {
+            return (
+              <span style={{ fontSize: "12px" }}>
+                {`${window.location.origin}/product/${record.id}`}
+              </span>
+            );
+          }}
+        />
         <Table.Column dataIndex="sort" title={t("fields.sort")} />
         <Table.Column
           dataIndex="isActive"

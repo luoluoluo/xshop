@@ -476,7 +476,12 @@
       "price": "价格",
       "category": "分类",
       "images": "相册",
-      "createdAt": "创建时间"
+      "createdAt": "创建时间",
+      "platformCommission": "平台佣金",
+      "merchantAffiliateCommission": "招商经理佣金",
+      "affiliateCommission": "推广员佣金",
+      "merchantAffiliate": "招商经理",
+      "link": "链接"
     },
     "filter": {
       "title": "筛选",

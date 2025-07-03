@@ -7,6 +7,12 @@ export const getProducts = /* GraphQL */ `
         merchant {
           id
           name
+          phone
+          affiliate {
+            id
+            name
+            phone
+          }
         }
         title
         image

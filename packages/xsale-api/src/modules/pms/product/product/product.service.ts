@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  ConflictException,
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
@@ -43,7 +42,9 @@ export class ProductService {
       skip,
       take,
       relations: {
-        merchant: true,
+        merchant: {
+          affiliate: true,
+        },
       },
     });
 
@@ -57,7 +58,9 @@ export class ProductService {
     const product = await this.productRepository.findOne({
       where: { id, merchantId },
       relations: {
-        merchant: true,
+        merchant: {
+          affiliate: true,
+        },
       },
     });
     if (!product) {

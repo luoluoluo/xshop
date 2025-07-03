@@ -19,18 +19,15 @@ const QRCodeImage: React.FC<{ content: string; size: number }> = ({
 }) => {
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     const generateQRCode = async () => {
       if (!content) {
-        setError("没有内容");
         setLoading(false);
         return;
       }
 
       setLoading(true);
-      setError("");
 
       try {
         const dataUrl = await QRCode.toDataURL(content, {
@@ -39,10 +36,8 @@ const QRCodeImage: React.FC<{ content: string; size: number }> = ({
         });
 
         setQrCodeUrl(dataUrl);
-        setError("");
       } catch (err) {
         console.error("Failed to generate QR code:", err);
-        setError("生成失败: " + (err as Error).message);
         setQrCodeUrl("");
       } finally {
         setLoading(false);
@@ -336,7 +331,14 @@ export const ProductList = () => {
             dataIndex="merchant"
             title={t("product.fields.merchant")}
             render={(merchant: Merchant) => {
-              return merchant?.name;
+              return (
+                <div>
+                  <div>{merchant?.name || "-"}</div>
+                  <div className="text-sm text-gray-500">
+                    {merchant?.phone || "-"}
+                  </div>
+                </div>
+              );
             }}
           />
           <Table.Column
@@ -348,7 +350,14 @@ export const ProductList = () => {
               </Tooltip>
             }
             render={(_, record: Product) => {
-              return record?.merchant?.affiliate?.name;
+              return (
+                <div>
+                  <div>{record?.merchant?.affiliate?.name || "-"}</div>
+                  <div className="text-sm text-gray-500">
+                    {record?.merchant?.affiliate?.phone || "-"}
+                  </div>
+                </div>
+              );
             }}
           />
           <Table.Column dataIndex="title" title={t("product.fields.title")} />
