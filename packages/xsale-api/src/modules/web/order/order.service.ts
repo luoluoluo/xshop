@@ -19,6 +19,7 @@ import {
 } from '@/core/constants';
 import { Affiliate } from '@/entities/affiliate.entity';
 import { Logger } from '@nestjs/common';
+import { CommonOrderService } from '@/modules/_common/order/order.service';
 
 @Injectable()
 export class OrderService {
@@ -28,6 +29,7 @@ export class OrderService {
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
     private readonly dataSource: DataSource,
+    private readonly commonOrderService: CommonOrderService,
   ) {}
 
   async findAll({
@@ -197,55 +199,28 @@ export class OrderService {
   }
 
   async cancel(id: string, customerId?: string): Promise<Order> {
-    const queryRunner = this.dataSource.createQueryRunner();
-
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
     try {
-      const order = await queryRunner.manager.findOne(Order, {
-        where: {
-          id,
-          customerId: customerId,
+      // 使用通用的订单取消服务，并添加自定义验证
+      return await this.commonOrderService.cancelOrder(id, {
+        customValidation: (order) => {
+          // 如果指定了customerId，验证订单归属
+          if (customerId && order.customerId !== customerId) {
+            throw new NotFoundException(`Order ${id} not found`);
+          }
         },
       });
-
-      if (!order) {
-        throw new NotFoundException(`Order ${id} not found`);
-      }
-
-      if (order.status !== OrderStatus.CREATED) {
-        throw new BadRequestException('只有已创建的订单才能取消');
-      }
-
-      // 更新订单状态
-      order.status = OrderStatus.CANCELLED;
-      const savedOrder = await queryRunner.manager.save(order);
-
-      // 加回库存
-      await queryRunner.manager.update(
-        Product,
-        { id: order.productId },
-        { stock: () => `stock + ${order.quantity}` },
-      );
-
-      // 提交事务
-      await queryRunner.commitTransaction();
-
-      return savedOrder;
     } catch (error) {
       this.logger.error(`取消订单失败`, {
         error,
         orderId: id,
+        customerId,
         reason:
-          error instanceof BadRequestException ? error.message : undefined,
+          error instanceof BadRequestException ||
+          error instanceof NotFoundException
+            ? error.message
+            : undefined,
       });
-      // 回滚事务
-      await queryRunner.rollbackTransaction();
       throw error;
-    } finally {
-      // 释放连接
-      await queryRunner.release();
     }
   }
 
@@ -268,63 +243,25 @@ export class OrderService {
     customerId?: string,
     reason?: string,
   ): Promise<Order> {
-    const queryRunner = this.dataSource.createQueryRunner();
-
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
     try {
-      const order = await queryRunner.manager.findOne(Order, {
-        where: {
-          id,
-          customerId: customerId,
+      // 使用通用的订单退款服务，并添加自定义验证
+      return await this.commonOrderService.refundOrder(id, {
+        customValidation: (order) => {
+          // 如果指定了customerId，验证订单归属
+          if (customerId && order.customerId !== customerId) {
+            throw new NotFoundException(`Order ${id} not found`);
+          }
         },
-        relations: {
-          product: true,
-        },
+        reason,
       });
-
-      if (!order) {
-        throw new NotFoundException(`Order ${id} not found`);
-      }
-
-      if (order.status !== OrderStatus.PAID) {
-        throw new BadRequestException('只有已支付的订单才能退款');
-      }
-
-      // 更新订单状态
-      order.status = OrderStatus.REFUNDED;
-      order.refundedAt = new Date();
-      if (reason) {
-        order.note = order.note
-          ? `${order.note} [退款原因: ${reason}]`
-          : `退款原因: ${reason}`;
-      }
-      const savedOrder = await queryRunner.manager.save(order);
-
-      // 加回库存
-      await queryRunner.manager.update(
-        Product,
-        { id: order.productId },
-        { stock: () => `stock + ${order.quantity}` },
-      );
-
-      // 提交事务
-      await queryRunner.commitTransaction();
-
-      return savedOrder;
     } catch (error) {
       this.logger.error(`退款失败`, {
         error,
         orderId: id,
+        customerId,
         reason,
       });
-      // 回滚事务
-      await queryRunner.rollbackTransaction();
       throw error;
-    } finally {
-      // 释放连接
-      await queryRunner.release();
     }
   }
 

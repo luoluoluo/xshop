@@ -5,10 +5,14 @@ import { OrderService } from './order.service';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { OrderPagination, OrderWhereInput } from './order.dto';
 import { PmsContext } from '@/types/graphql-context';
+import { CommonOrderService } from '@/modules/_common/order/order.service';
 
 @Resolver(() => Order)
 export class OrderResolver {
-  constructor(private readonly orderService: OrderService) {}
+  constructor(
+    private readonly orderService: OrderService,
+    private readonly commonOrderService: CommonOrderService,
+  ) {}
 
   @Query(() => OrderPagination)
   @UseGuards(GqlAuthGuard)
@@ -43,5 +47,28 @@ export class OrderResolver {
     @Args('id') id: string,
   ): Promise<Order> {
     return this.orderService.complete(id, ctx.req.user?.id);
+  }
+
+  @Mutation(() => Order)
+  @UseGuards(GqlAuthGuard)
+  async refundOrder(
+    @Context() ctx: PmsContext,
+    @Args('id') id: string,
+  ): Promise<Order> {
+    const merchantId = ctx.req.user?.id;
+    try {
+      return await this.commonOrderService.refundOrder(id, {
+        customValidation: (order) => {
+          if (merchantId && order.merchantId !== merchantId) {
+            throw new Error(`Order ${id} not found`);
+          }
+        },
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('退款失败');
+    }
   }
 }

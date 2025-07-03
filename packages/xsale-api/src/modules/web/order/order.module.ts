@@ -8,14 +8,17 @@ import { Customer } from '@/entities/customer.entity';
 import { MerchantModule } from '../merchant/merchant.module';
 import { Merchant } from '@/entities/merchant.entity';
 import { PaymentListener } from '@/listeners/payment.listener';
-import { WechatPayService } from '@/modules/_common/wechat-pay/wechat-pay.service';
+import { OrderModule as CommonOrderModule } from '@/modules/_common/order/order.module';
+import { WechatPayModule } from '@/modules/_common/wechat-pay/wechat-pay.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Order, Product, Customer, Merchant]),
     MerchantModule,
+    CommonOrderModule,
+    WechatPayModule,
   ],
-  providers: [OrderService, OrderResolver, PaymentListener, WechatPayService],
+  providers: [OrderService, OrderResolver, PaymentListener],
   exports: [OrderService],
 })
 export class OrderModule {}

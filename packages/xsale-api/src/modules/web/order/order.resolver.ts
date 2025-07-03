@@ -1,13 +1,12 @@
 import { Resolver, Query, Mutation, Args, Context, Int } from '@nestjs/graphql';
 import { OrderService } from './order.service';
 import { Order, OrderStatus } from '@/entities/order.entity';
-import { UseGuards, Logger } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '@/modules/web/auth/guards/gql-auth.guard';
 import {
   CreateOrderInput,
   OrderPagination,
   OrderWhereInput,
-  RefundOrderInput,
 } from './order.dto';
 import { WebContext } from '@/types/graphql-context';
 import {
@@ -18,14 +17,14 @@ import {
   CreatePaymentInput,
   Payment,
 } from '@/modules/_common/wechat-pay/wechat-pay.dto';
+import { CommonOrderService } from '@/modules/_common/order/order.service';
 
 @Resolver(() => Order)
 export class OrderResolver {
-  private readonly logger = new Logger(OrderResolver.name);
-
   constructor(
-    private readonly orderService: OrderService,
-    private readonly wechatPayService: WechatPayService,
+    private readonly webOrderService: OrderService,
+    protected readonly wechatPayService: WechatPayService,
+    protected readonly commonOrderService: CommonOrderService,
   ) {}
 
   @Query(() => OrderPagination)
@@ -37,7 +36,7 @@ export class OrderResolver {
     @Args('where', { type: () => OrderWhereInput, defaultValue: {} })
     where?: OrderWhereInput,
   ): Promise<OrderPagination> {
-    return this.orderService.findAll({
+    return this.webOrderService.findAll({
       take,
       skip,
       where,
@@ -54,7 +53,7 @@ export class OrderResolver {
     @Args('where', { type: () => OrderWhereInput, defaultValue: {} })
     where?: OrderWhereInput,
   ): Promise<OrderPagination> {
-    return this.orderService.findAll({
+    return this.webOrderService.findAll({
       take,
       skip,
       where,
@@ -68,7 +67,7 @@ export class OrderResolver {
     @Context() ctx: WebContext,
     @Args('id') id: string,
   ): Promise<Order> {
-    return this.orderService.findOne(id, {
+    return this.webOrderService.findOne(id, {
       affiliateId: ctx.req.user?.id,
     });
   }
@@ -79,7 +78,7 @@ export class OrderResolver {
     @Context() ctx: WebContext,
     @Args('id') id: string,
   ): Promise<Order> {
-    return this.orderService.findOne(id, {
+    return this.webOrderService.findOne(id, {
       customerId: ctx.req.user?.id,
     });
   }
@@ -90,16 +89,7 @@ export class OrderResolver {
     @Context() ctx: WebContext,
     @Args('data') data: CreateOrderInput,
   ): Promise<Order> {
-    try {
-      return this.orderService.create(ctx.req.user!.id, data);
-    } catch (error) {
-      this.logger.error(`创建订单失败`, {
-        error,
-        customerId: ctx.req.user?.id,
-        createOrderInput: data,
-      });
-      throw error;
-    }
+    return this.webOrderService.create(ctx.req.user!.id, data);
   }
 
   @Mutation(() => Order)
@@ -108,45 +98,7 @@ export class OrderResolver {
     @Context() ctx: WebContext,
     @Args('id') id: string,
   ): Promise<Order> {
-    return this.orderService.cancel(id, ctx.req.user?.id);
-  }
-
-  @Mutation(() => Order)
-  @UseGuards(GqlAuthGuard)
-  async refundOrder(
-    @Context() ctx: WebContext,
-    @Args('data') data: RefundOrderInput,
-  ): Promise<Order> {
-    const customerId = ctx.req.user?.id;
-
-    // 先验证订单
-    const order = await this.orderService.findOne(data.orderId, {
-      customerId,
-    });
-
-    if (order.status !== OrderStatus.PAID) {
-      throw new Error('Only paid orders can be refunded');
-    }
-
-    // 调用微信退款接口
-    try {
-      const refundParams = {
-        out_refund_no: `REFUND-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        amount: {
-          total: order.amount,
-          currency: 'CNY',
-          refund: order.amount,
-        },
-        out_trade_no: order.id,
-      };
-
-      await this.wechatPayService.refund(refundParams);
-    } catch (error) {
-      throw new Error(`退款失败: ${error.message}`);
-    }
-
-    // 更新订单状态
-    return this.orderService.refund(data.orderId, customerId, data.reason);
+    return this.webOrderService.cancel(id, ctx.req.user?.id);
   }
 
   @Mutation(() => Payment)
@@ -155,7 +107,7 @@ export class OrderResolver {
     @Args('data') data: CreatePaymentInput,
   ): Promise<Payment> {
     // 验证订单
-    const order = await this.orderService.findOne(data.orderId);
+    const order = await this.webOrderService.findOne(data.orderId);
 
     if (order.status !== OrderStatus.CREATED) {
       throw new Error('Only created orders can be paid');
@@ -200,6 +152,6 @@ export class OrderResolver {
 
   @Query(() => OrderStatus)
   async orderStatus(@Args('id') id: string): Promise<OrderStatus> {
-    return this.orderService.findOne(id).then((order) => order.status);
+    return this.webOrderService.findOne(id).then((order) => order.status);
   }
 }

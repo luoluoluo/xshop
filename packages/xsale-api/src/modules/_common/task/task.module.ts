@@ -6,6 +6,7 @@ import { TaskService } from './task.service';
 import { createTypeOrmConfig } from '@/core/type-orm.config';
 import { ConfigModule } from '@nestjs/config';
 import { Product } from '@/entities/product.entity';
+import { OrderModule } from '../order/order.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { Product } from '@/entities/product.entity';
     TypeOrmModule.forRoot(createTypeOrmConfig()),
     TypeOrmModule.forFeature([Order, Product]),
     ScheduleModule.forRoot(),
+    OrderModule,
   ],
   providers: [TaskService],
   exports: [TaskService],
