@@ -17,7 +17,10 @@ export type Scalars = {
 
 export type Affiliate = {
   __typename?: 'Affiliate';
+  accountName?: Maybe<Scalars['String']['output']>;
   balance?: Maybe<Scalars['Float']['output']>;
+  bankAccount?: Maybe<Scalars['String']['output']>;
+  bankName?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   name?: Maybe<Scalars['String']['output']>;
@@ -131,9 +134,12 @@ export type LoginInput = {
 
 export type Merchant = {
   __typename?: 'Merchant';
+  accountName?: Maybe<Scalars['String']['output']>;
   address?: Maybe<Scalars['String']['output']>;
   affiliate?: Maybe<Affiliate>;
   affiliateId?: Maybe<Scalars['String']['output']>;
+  bankAccount?: Maybe<Scalars['String']['output']>;
+  bankName?: Maybe<Scalars['String']['output']>;
   businessScope?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -190,7 +196,6 @@ export type Mutation = {
   createOrder: Order;
   createOrderPayment: Payment;
   login: AuthToken;
-  refundOrder: Order;
   updateMe: Customer;
 };
 
@@ -212,11 +217,6 @@ export type MutationCreateOrderPaymentArgs = {
 
 export type MutationLoginArgs = {
   data: LoginInput;
-};
-
-
-export type MutationRefundOrderArgs = {
-  data: RefundOrderInput;
 };
 
 
@@ -288,6 +288,21 @@ export type Payment = {
   timeStamp: Scalars['String']['output'];
 };
 
+export type PosterQrcodeConfig = {
+  __typename?: 'PosterQrcodeConfig';
+  h?: Maybe<Scalars['Float']['output']>;
+  w?: Maybe<Scalars['Float']['output']>;
+  x?: Maybe<Scalars['Float']['output']>;
+  y?: Maybe<Scalars['Float']['output']>;
+};
+
+export type PosterQrcodeConfigInput = {
+  h?: InputMaybe<Scalars['Float']['input']>;
+  w?: InputMaybe<Scalars['Float']['input']>;
+  x?: InputMaybe<Scalars['Float']['input']>;
+  y?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type Product = {
   __typename?: 'Product';
   affiliateCommission?: Maybe<Scalars['Float']['output']>;
@@ -300,6 +315,8 @@ export type Product = {
   merchantAffiliateCommission?: Maybe<Scalars['Float']['output']>;
   merchantId?: Maybe<Scalars['String']['output']>;
   platformCommission?: Maybe<Scalars['Float']['output']>;
+  poster?: Maybe<Scalars['String']['output']>;
+  posterQrcodeConfig?: Maybe<PosterQrcodeConfig>;
   price?: Maybe<Scalars['Float']['output']>;
   sort?: Maybe<Scalars['Int']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;
@@ -441,11 +458,6 @@ export type QueryWechatVerifySignatureArgs = {
   signature: Scalars['String']['input'];
   timestamp: Scalars['String']['input'];
   token: Scalars['String']['input'];
-};
-
-export type RefundOrderInput = {
-  orderId: Scalars['String']['input'];
-  reason?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateMeInput = {

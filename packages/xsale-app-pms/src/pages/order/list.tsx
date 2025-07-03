@@ -11,7 +11,7 @@ import {
   message,
 } from "antd";
 import { parse } from "graphql";
-import { getOrders, completeOrder } from "../../requests/order";
+import { getOrders, completeOrder, refundOrder } from "../../requests/order";
 import {
   Affiliate,
   Customer,
@@ -66,6 +66,34 @@ export const OrderList = () => {
       });
   };
 
+  const handleRefundOrder = (orderId: string) => {
+    if (loading) return;
+    setLoading(true);
+    request({
+      query: refundOrder,
+      variables: {
+        id: orderId,
+      },
+    })
+      .then((res) => {
+        if (res.errors) {
+          notification?.open?.({
+            type: "error",
+            message: res.errors[0].message,
+          });
+        } else {
+          notification?.open?.({
+            type: "success",
+            message: "订单退款成功",
+          });
+          tableQuery?.refetch();
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <>
       <Form layout="inline" className="mb-4">
@@ -95,12 +123,14 @@ export const OrderList = () => {
           <Table.Column
             dataIndex="customer"
             title={t("order.fields.customer")}
-            render={(customer: Customer) => {
+            render={(_, record: Order) => {
               return (
                 <div>
-                  <div className="font-medium">{customer?.name || "-"}</div>
+                  <div className="font-medium">
+                    {record?.receiverName || "-"}
+                  </div>
                   <div className="text-sm text-gray-500">
-                    {customer?.phone || "-"}
+                    {record?.receiverPhone || "-"}
                   </div>
                 </div>
               );
@@ -144,6 +174,9 @@ export const OrderList = () => {
               return (
                 <div>
                   <div className="font-medium">{affiliate?.name || "-"}</div>
+                  <div className="text-sm text-gray-500">
+                    {affiliate?.phone || "-"}
+                  </div>
                 </div>
               );
             }}
@@ -161,8 +194,13 @@ export const OrderList = () => {
             title={t("order.fields.merchantAffiliate")}
             render={(merchantAffiliate: Affiliate) => {
               return (
-                <div className="font-medium">
-                  {merchantAffiliate?.name || "-"}
+                <div>
+                  <div className="font-medium">
+                    {merchantAffiliate?.name || "-"}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {merchantAffiliate?.phone || "-"}
+                  </div>
                 </div>
               );
             }}
@@ -208,14 +246,24 @@ export const OrderList = () => {
             render={(_, record: Order) => (
               <Space>
                 {record.status === OrderStatus.Paid && (
-                  <Button
-                    type="primary"
-                    size="small"
-                    loading={loading}
-                    onClick={() => handleCompleteOrder(record.id)}
-                  >
-                    完成订单
-                  </Button>
+                  <>
+                    <Button
+                      type="primary"
+                      size="small"
+                      loading={loading}
+                      onClick={() => handleCompleteOrder(record.id)}
+                    >
+                      完成订单
+                    </Button>
+                    <Button
+                      danger
+                      size="small"
+                      loading={loading}
+                      onClick={() => handleRefundOrder(record.id)}
+                    >
+                      退款
+                    </Button>
+                  </>
                 )}
               </Space>
             )}

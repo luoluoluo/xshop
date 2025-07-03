@@ -24,18 +24,23 @@ export const getOrders = /* GraphQL */ `
         merchant {
           id
           name
+          phone
         }
         merchantAffiliate {
           id
           name
+          phone
         }
         affiliate {
           id
           name
+          phone
         }
         productTitle
         productImage
         productPrice
+        receiverName
+        receiverPhone
       }
       total
     }
@@ -67,15 +72,20 @@ export const getOrder = /* GraphQL */ `
       merchant {
         id
         name
+        phone
       }
       merchantAffiliate {
         id
         name
+        phone
       }
       affiliate {
         id
         name
+        phone
       }
+      receiverName
+      receiverPhone
     }
   }
 `;
@@ -84,39 +94,14 @@ export const completeOrder = /* GraphQL */ `
   mutation completeOrder($id: String!) {
     completeOrder(id: $id) {
       id
-      amount
-      affiliateAmount
-      merchantAmount
-      merchantAffiliateAmount
-      platformAmount
-      quantity
-      status
-      note
-      createdAt
-      paidAt
-      completedAt
-      cancelledAt
-      refundedAt
-      customer {
-        id
-        name
-        phone
-      }
-      merchant {
-        id
-        name
-      }
-      merchantAffiliate {
-        id
-        name
-      }
-      affiliate {
-        id
-        name
-      }
-      productTitle
-      productImage
-      productPrice
+    }
+  }
+`;
+
+export const refundOrder = /* GraphQL */ `
+  mutation refundOrder($id: String!) {
+    refundOrder(id: $id) {
+      id
     }
   }
 `;
