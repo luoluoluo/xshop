@@ -17,7 +17,10 @@ export type Scalars = {
 
 export type Affiliate = {
   __typename?: 'Affiliate';
+  accountName?: Maybe<Scalars['String']['output']>;
   balance?: Maybe<Scalars['Float']['output']>;
+  bankAccount?: Maybe<Scalars['String']['output']>;
+  bankName?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   name?: Maybe<Scalars['String']['output']>;
@@ -118,9 +121,12 @@ export type LoginInput = {
 
 export type Merchant = {
   __typename?: 'Merchant';
+  accountName?: Maybe<Scalars['String']['output']>;
   address?: Maybe<Scalars['String']['output']>;
   affiliate?: Maybe<Affiliate>;
   affiliateId?: Maybe<Scalars['String']['output']>;
+  bankAccount?: Maybe<Scalars['String']['output']>;
+  bankName?: Maybe<Scalars['String']['output']>;
   businessScope?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;

@@ -24,18 +24,23 @@ export const getOrders = /* GraphQL */ `
         merchant {
           id
           name
+          phone
         }
         merchantAffiliate {
           id
           name
+          phone
         }
         affiliate {
           id
           name
+          phone
         }
         productTitle
         productImage
         productPrice
+        receiverName
+        receiverPhone
       }
       total
     }
@@ -67,15 +72,20 @@ export const getOrder = /* GraphQL */ `
       merchant {
         id
         name
+        phone
       }
       merchantAffiliate {
         id
         name
+        phone
       }
       affiliate {
         id
         name
+        phone
       }
+      receiverName
+      receiverPhone
     }
   }
 `;

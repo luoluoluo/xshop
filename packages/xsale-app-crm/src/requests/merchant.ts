@@ -15,6 +15,7 @@ export const getMerchants = /* GraphQL */ `
         affiliate {
           id
           name
+          phone
         }
       }
       total

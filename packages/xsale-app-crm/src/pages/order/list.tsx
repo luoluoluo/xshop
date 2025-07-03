@@ -83,18 +83,27 @@ export const OrderList = () => {
             dataIndex="merchant"
             title={t("order.fields.merchant")}
             render={(merchant: Merchant) => {
-              return <div className="font-medium">{merchant?.name || "-"}</div>;
+              return (
+                <div>
+                  <div className="font-medium">{merchant?.name || "-"}</div>
+                  <div className="text-sm text-gray-500">
+                    {merchant?.phone || "-"}
+                  </div>
+                </div>
+              );
             }}
           />
           <Table.Column
             dataIndex="customer"
             title={t("order.fields.customer")}
-            render={(customer: Customer) => {
+            render={(_, record: Order) => {
               return (
                 <div>
-                  <div className="font-medium">{customer?.name || "-"}</div>
+                  <div className="font-medium">
+                    {record?.receiverName || "-"}
+                  </div>
                   <div className="text-sm text-gray-500">
-                    {customer?.phone || "-"}
+                    {record?.receiverPhone || "-"}
                   </div>
                 </div>
               );
@@ -138,6 +147,9 @@ export const OrderList = () => {
               return (
                 <div>
                   <div className="font-medium">{affiliate?.name || "-"}</div>
+                  <div className="text-sm text-gray-500">
+                    {affiliate?.phone || "-"}
+                  </div>
                 </div>
               );
             }}
@@ -155,8 +167,13 @@ export const OrderList = () => {
             title={t("order.fields.merchantAffiliate")}
             render={(merchantAffiliate: Affiliate) => {
               return (
-                <div className="font-medium">
-                  {merchantAffiliate?.name || "-"}
+                <div>
+                  <div className="font-medium">
+                    {merchantAffiliate?.name || "-"}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {merchantAffiliate?.phone || "-"}
+                  </div>
                 </div>
               );
             }}
@@ -169,11 +186,6 @@ export const OrderList = () => {
             }
           />
 
-          <Table.Column
-            dataIndex="quantity"
-            title={t("order.fields.quantity")}
-            width={80}
-          />
           <Table.Column
             dataIndex="note"
             title={t("order.fields.note")}

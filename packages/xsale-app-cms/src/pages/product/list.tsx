@@ -25,13 +25,6 @@ export const ProductList = () => {
           }}
         />
         <Table.Column
-          dataIndex="category"
-          title={t("product.fields.category")}
-          render={(category: { name: string }) => {
-            return category?.name || "-";
-          }}
-        />
-        <Table.Column
           dataIndex="image"
           title={t("product.fields.image")}
           render={(image: string) => {

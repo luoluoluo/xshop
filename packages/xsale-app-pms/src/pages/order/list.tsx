@@ -214,11 +214,6 @@ export const OrderList = () => {
           />
 
           <Table.Column
-            dataIndex="quantity"
-            title={t("order.fields.quantity")}
-            width={80}
-          />
-          <Table.Column
             dataIndex="note"
             title={t("order.fields.note")}
             render={(note: string) => (
