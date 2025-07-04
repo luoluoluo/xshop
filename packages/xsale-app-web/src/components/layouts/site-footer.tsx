@@ -6,6 +6,9 @@ import { footerMenuItems, setting } from "@/config/config";
 import { cn } from "@/utils";
 import Image from "next/image";
 
+// 在构建时确定的年份，服务端和客户端将保持一致
+const CURRENT_YEAR = new Date().getFullYear();
+
 export function SiteFooter({
   className,
   theme = "default",
@@ -87,7 +90,7 @@ export function SiteFooter({
       ) : null}
       <div className="flex flex-col lg:flex-row p-4 box-border w-full justify-center text-gray-400 text-sm gap-2">
         <div className="text-center">
-          沪ICP备19045011号-1 Copyright © 2024 xltzx.com
+          沪ICP备19045011号-1 Copyright © {CURRENT_YEAR} xltzx.com
         </div>
       </div>
     </footer>
