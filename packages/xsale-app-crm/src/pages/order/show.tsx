@@ -149,9 +149,9 @@ export const OrderShow = () => {
             </Descriptions>
           </Card>
 
-          <Card title="推广员信息" style={{ marginBottom: 16 }}>
+          <Card title="推广者信息" style={{ marginBottom: 16 }}>
             <Descriptions column={1}>
-              <Descriptions.Item label="推广员">
+              <Descriptions.Item label="推广者">
                 {record?.affiliate?.name || "-"}
               </Descriptions.Item>
               <Descriptions.Item label="邮箱">
@@ -162,7 +162,7 @@ export const OrderShow = () => {
 
           <Card title="金额分配">
             <Descriptions column={1}>
-              <Descriptions.Item label="推广员分成">
+              <Descriptions.Item label="推广者分成">
                 ¥{record?.affiliateAmount?.toFixed(2) || "0.00"}
               </Descriptions.Item>
               <Descriptions.Item label="商家分成">

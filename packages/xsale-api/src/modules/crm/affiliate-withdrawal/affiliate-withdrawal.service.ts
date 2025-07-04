@@ -57,7 +57,7 @@ export class AffiliateWithdrawalService {
       });
 
       if (!affiliate) {
-        throw new NotFoundException('推广员不存在');
+        throw new NotFoundException('推广者不存在');
       }
 
       if (affiliate.balance < createAffiliateWithdrawalInput.amount) {

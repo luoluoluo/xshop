@@ -90,7 +90,7 @@ export class MerchantService {
       where: { id: merchantData.affiliateId },
     });
     if (!affiliate) {
-      throw new NotFoundException('未找到推广员');
+      throw new NotFoundException('未找到推广者');
     }
 
     try {

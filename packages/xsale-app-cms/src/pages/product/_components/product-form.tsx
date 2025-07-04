@@ -324,7 +324,7 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
       <Form.Item
         label="海报"
         name={["poster"]}
-        extra="自动为每个推广员生成专属推广海报"
+        extra="自动为每个推广者生成专属推广海报"
       >
         <CustomUpload />
       </Form.Item>
@@ -463,10 +463,11 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
             },
           },
         ]}
-        extra={`${commission && price
+        extra={`${
+          commission && price
             ? `佣金比例：${((commission / price) * 100).toFixed(2)}%`
             : ""
-          }（包含平台服务费1%，商家客户经理1%）`}
+        }（包含平台服务费1%，商家客户经理1%）`}
       >
         <Input />
       </Form.Item>

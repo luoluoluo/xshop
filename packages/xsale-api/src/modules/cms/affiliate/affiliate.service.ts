@@ -63,7 +63,7 @@ export class AffiliateService {
       where: { phone: createAffiliateInput.phone },
     });
     if (existingAffiliate) {
-      throw new ConflictException('推广员已存在');
+      throw new ConflictException('推广者已存在');
     }
 
     const affiliate = this.affiliateRepository.create(createAffiliateInput);
@@ -93,7 +93,7 @@ export class AffiliateService {
         where: { phone: updateAffiliateDto.phone },
       });
       if (existingAffiliate) {
-        throw new ConflictException('推广员已存在');
+        throw new ConflictException('推广者已存在');
       }
     }
 

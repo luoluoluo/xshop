@@ -90,7 +90,7 @@ export class AuthService {
       throw new UnauthorizedException('验证码错误');
     }
 
-    // 查找推广员
+    // 查找推广者
     const affiliate = await this.affiliateService.findByPhone(loginInput.phone);
     if (!affiliate) {
       throw new UnauthorizedException('账号不存在，请先注册');
@@ -109,7 +109,7 @@ export class AuthService {
       throw new UnauthorizedException('验证码错误');
     }
 
-    // 创建推广员
+    // 创建推广者
     const affiliate = await this.affiliateService.create({
       phone: registerInput.phone,
       name: registerInput.name,

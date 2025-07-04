@@ -479,7 +479,7 @@
       "createdAt": "创建时间",
       "platformCommission": "平台佣金",
       "merchantAffiliateCommission": "招商经理佣金",
-      "affiliateCommission": "推广员佣金",
+      "affiliateCommission": "推广者佣金",
       "merchantAffiliate": "招商经理",
       "link": "链接"
     },
@@ -765,7 +765,7 @@
       "address": "地址",
       "phone": "电话",
       "balance": "余额",
-      "affiliate": "推广员",
+      "affiliate": "推广者",
       "description": "简介",
       "password": "密码"
     }
@@ -781,11 +781,11 @@
       "merchant": "商家",
       "product": "产品",
       "quantity": "数量",
-      "affiliate": "推广员",
+      "affiliate": "推广者",
       "merchantAffiliate": "招商经理",
       "customer": "客户",
       "amount": "金额",
-      "affiliateAmount": "推广员佣金",
+      "affiliateAmount": "推广者佣金",
       "merchantAffiliateAmount": "招商经理佣金",
       "platformAmount": "平台佣金",
       "merchantAmount": "商户收入",
@@ -803,13 +803,13 @@
     }
   },
   "affiliateWithdrawal": {
-    "affiliateWithdrawal": "推广员提现",
+    "affiliateWithdrawal": "推广者提现",
     "titles": {
-      "list": "推广员提现"
+      "list": "推广者提现"
     },
     "fields": {
       "id": "编号",
-      "affiliate": "推广员",
+      "affiliate": "推广者",
       "amount": "金额",
       "account": "账户",
       "bank": "银行",
@@ -831,7 +831,7 @@
     },
     "fields": {
       "id": "编号",
-      "affiliate": "推广员",
+      "affiliate": "推广者",
       "amount": "金额",
       "account": "账户",
       "bank": "银行",
@@ -848,9 +848,9 @@
     }
   },
   "affiliate": {
-    "affiliate": "推广员",
+    "affiliate": "推广者",
     "titles": {
-      "list": "推广员"
+      "list": "推广者"
     },
     "fields": {
       "id": "编号",

@@ -45,7 +45,7 @@ export class ProductService {
         Math.floor(
           item.price * MERCHANT_AFFILIATE_COMMISSION_PERCENTAGE * 100,
         ) / 100;
-      // 推广员佣金
+      // 推广者佣金
       item.affiliateCommission =
         item.commission -
         item.platformCommission -

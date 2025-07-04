@@ -102,7 +102,7 @@ export const Register = () => {
 
       <Card className="w-full lg:w-[500px]">
         <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <Typography.Title level={3}>推广员注册</Typography.Title>
+          <Typography.Title level={3}>推广者注册</Typography.Title>
           <Text type="secondary">请填写您的个人信息</Text>
         </div>
 

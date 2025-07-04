@@ -26,7 +26,7 @@ export const MerchantList = () => {
         />
         <Table.Column
           dataIndex="affiliate"
-          title="推广员"
+          title="推广者"
           render={(affiliate: User) => affiliate?.name || "-"}
         />
         <Table.Column dataIndex="name" title={t("merchant.fields.name")} />

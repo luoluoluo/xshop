@@ -110,7 +110,7 @@ export class OrderService {
         where: { id: order.affiliateId },
       });
       if (!affiliate) {
-        throw new BadRequestException('推广员不存在');
+        throw new BadRequestException('推广者不存在');
       }
 
       const merchant = await queryRunner.manager.findOne(Merchant, {
@@ -125,7 +125,7 @@ export class OrderService {
       order.completedAt = new Date();
       const savedOrder = await queryRunner.manager.save(order);
 
-      // 检查推广员和招商经理是否是同一个人
+      // 检查推广者和招商经理是否是同一个人
       if (affiliate.id === merchantAffiliate.id) {
         // 同一个人，累加两个金额一次性更新
         affiliate.balance =
@@ -135,7 +135,7 @@ export class OrderService {
         await queryRunner.manager.save(affiliate);
       } else {
         // 不同的人，分别更新余额
-        // 更新推广员余额
+        // 更新推广者余额
         affiliate.balance =
           Number(affiliate.balance) + Number(order.affiliateAmount || 0);
         await queryRunner.manager.save(affiliate);
