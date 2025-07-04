@@ -1,5 +1,5 @@
 import { Logger, Injectable } from '@nestjs/common';
-import crypto from 'node:crypto';
+import * as crypto from 'crypto';
 import { RedisService } from '../redis/redis.service';
 import { WechatConfigService } from './wechat-config.service';
 import { WechatJsConfig } from './wechat.dto';
