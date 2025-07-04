@@ -106,7 +106,7 @@ export default async function Page({
       <Wechat
         shareConfig={{
           title: product?.title || "",
-          desc: product.content || "",
+          desc: merchant?.name || "",
           imgUrl: `${product.image}?w=960&h=960`,
         }}
       />
