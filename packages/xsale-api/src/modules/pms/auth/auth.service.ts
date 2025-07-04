@@ -138,7 +138,7 @@ export class AuthService {
           phone: loginInput.phone,
           timestamp: new Date().toISOString(),
         });
-        throw new UnauthorizedException('商户不存在，请先注册');
+        throw new UnauthorizedException('账号不存在，请先注册');
       }
 
       // 如果提供了密码，使用密码登录
