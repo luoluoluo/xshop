@@ -52,7 +52,7 @@ export const authProvider: AuthProvider = {
     });
     return {
       success: true,
-      redirectTo: "/user",
+      redirectTo: "/",
     };
   },
   logout: async () => {

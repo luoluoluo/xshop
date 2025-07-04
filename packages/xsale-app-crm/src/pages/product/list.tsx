@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import QRCode from "qrcode";
 import React, { useState, useEffect } from "react";
+import { Clipboard } from "../../components/clipboard";
 
 // 二维码组件
 const QRCodeImage: React.FC<{ content: string; size: number }> = ({
@@ -386,10 +387,22 @@ export const ProductList = () => {
             dataIndex="affiliateLink"
             title={"分佣链接"}
             render={(_, record: Product) => {
+              const link = getAffiliateLink(record.id);
               return (
-                <span style={{ fontSize: "12px" }}>
-                  {getAffiliateLink(record.id)}
-                </span>
+                <div className="flex flex-col gap-2">
+                  <Button type="link" size="small" href={link} target="_blank">
+                    {link}
+                  </Button>
+                  <Clipboard
+                    value={link}
+                    asChild
+                    onSuccess={() => {
+                      message.success("复制成功");
+                    }}
+                  >
+                    <Button>复制链接</Button>
+                  </Clipboard>
+                </div>
               );
             }}
           />

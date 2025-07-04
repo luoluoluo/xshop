@@ -1,9 +1,10 @@
 import { DeleteButton, EditButton, List, useTable } from "@refinedev/antd";
 import { useTranslate, type BaseRecord } from "@refinedev/core";
-import { Space, Table } from "antd";
+import { Button, message, Space, Table } from "antd";
 import { parse } from "graphql";
 import { deleteProduct, getProducts } from "../../requests/product";
 import { Merchant, Product } from "../../generated/graphql";
+import { Clipboard } from "../../components/clipboard";
 
 export const ProductList = () => {
   const t = useTranslate();
@@ -71,10 +72,22 @@ export const ProductList = () => {
           dataIndex="link"
           title={"链接"}
           render={(_, record: Product) => {
+            const link = `${window.location.origin}/product/${record.id}`;
             return (
-              <span style={{ fontSize: "12px" }}>
-                {`${window.location.origin}/product/${record.id}`}
-              </span>
+              <div className="flex flex-col gap-2">
+                <Button type="link" size="small" href={link} target="_blank">
+                  {link}
+                </Button>
+                <Clipboard
+                  value={link}
+                  asChild
+                  onSuccess={() => {
+                    message.success("复制成功");
+                  }}
+                >
+                  <Button>复制链接</Button>
+                </Clipboard>
+              </div>
             );
           }}
         />

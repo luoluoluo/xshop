@@ -19,6 +19,7 @@
     "@tiptap/starter-kit": "^2.9.1",
     "@uiw/react-md-editor": "^3.19.5",
     "antd": "^5.21.6",
+    "clipboard": "^2.0.11",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "graphql": "^16.9.0",
