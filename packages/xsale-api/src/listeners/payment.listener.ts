@@ -46,6 +46,11 @@ export class PaymentListener {
         return;
       }
 
+      this.logger.log('订单状态', {
+        id: order.id,
+        status: order.status,
+      });
+
       // 更新订单状态为已支付
       order.status = OrderStatus.PAID;
       order.paidAt = new Date();
