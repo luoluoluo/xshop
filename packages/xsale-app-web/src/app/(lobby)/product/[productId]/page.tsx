@@ -92,6 +92,8 @@ export default async function Page({
 
   return (
     <div className="relative flex min-h-screen flex-col">
+      {/* 给企业微信分享看的 */}
+      <img src={`${product?.image}?w=960&h=960`} className="hidden" />
       <SiteHeader
         theme="product"
         logoAttributes={{
