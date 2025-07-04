@@ -39,17 +39,14 @@ export class PaymentListener {
         return;
       }
 
-      if (order.status === OrderStatus.PAID) {
+      if (order.status !== OrderStatus.CREATED) {
         this.logger.log('订单已支付', {
+          id: order.id,
+          status: order.status,
           outTradeNo: event.outTradeNo,
         });
         return;
       }
-
-      this.logger.log('订单状态', {
-        id: order.id,
-        status: order.status,
-      });
 
       // 更新订单状态为已支付
       order.status = OrderStatus.PAID;
@@ -57,6 +54,8 @@ export class PaymentListener {
       await this.orderRepository.save(order);
 
       this.logger.log('订单状态更新成功', {
+        id: order.id,
+        status: order.status,
         outTradeNo: event.outTradeNo,
       });
     } catch (error) {
