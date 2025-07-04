@@ -36,7 +36,10 @@ export class MerchantResolver {
           return m;
         });
       } catch (error) {
-        console.log(error);
+        this.logger.error(`獲取推广者失敗`, {
+          error,
+          affiliateId,
+        });
       }
     }
     return res;
@@ -54,11 +57,10 @@ export class MerchantResolver {
         const affiliate = await this.affiliateService.findOne(affiliateId);
         merchant.affiliate = affiliate;
       } catch (error) {
-        this.logger.error(`獲取商戶失敗`, {
+        this.logger.error(`獲取推广者失敗`, {
           error,
-          merchantId: id,
+          affiliateId,
         });
-        throw error;
       }
     }
     return merchant;
