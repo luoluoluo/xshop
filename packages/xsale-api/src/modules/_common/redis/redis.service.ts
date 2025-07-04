@@ -1,22 +1,25 @@
 import { Injectable, OnModuleDestroy, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Redis from 'ioredis';
-import { getRedisConnectionOptions } from '../../../core/redis.config';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class RedisService implements OnModuleDestroy {
-  private readonly redis: Redis;
+  private readonly client: Redis;
   private readonly logger = new Logger(RedisService.name);
 
   constructor(private readonly configService: ConfigService) {
-    const { url, options } = getRedisConnectionOptions(this.configService);
-    this.redis = new Redis(url, options);
+    this.client = new Redis({
+      host: this.configService.get('REDIS_HOST', 'localhost'),
+      port: this.configService.get('REDIS_PORT', 6379),
+      password: this.configService.get('REDIS_PASSWORD', ''),
+      db: this.configService.get('REDIS_DB', 0),
+    });
 
-    this.redis.on('error', (error) => {
+    this.client.on('error', (error) => {
       console.error('Redis connection error:', error);
     });
 
-    this.redis.on('connect', () => {
+    this.client.on('connect', () => {
       console.log('Redis connected successfully');
     });
   }
@@ -26,7 +29,7 @@ export class RedisService implements OnModuleDestroy {
    */
   async get(key: string): Promise<string | null> {
     try {
-      const value = await this.redis.get(key);
+      const value = await this.client.get(key);
       return value;
     } catch (error) {
       this.logger.error('Redis get error:', {
@@ -43,9 +46,9 @@ export class RedisService implements OnModuleDestroy {
   async set(key: string, value: string, ttl?: number): Promise<void> {
     try {
       if (ttl) {
-        await this.redis.setex(key, ttl, value);
+        await this.client.setex(key, ttl, value);
       } else {
-        await this.redis.set(key, value);
+        await this.client.set(key, value);
       }
     } catch (error) {
       this.logger.error('Redis set error:', {
@@ -62,7 +65,7 @@ export class RedisService implements OnModuleDestroy {
    */
   async del(key: string): Promise<void> {
     try {
-      await this.redis.del(key);
+      await this.client.del(key);
     } catch (error) {
       this.logger.error('Redis del error:', {
         error,
@@ -76,7 +79,7 @@ export class RedisService implements OnModuleDestroy {
    */
   async reset(): Promise<void> {
     try {
-      await this.redis.flushdb();
+      await this.client.flushdb();
     } catch (error) {
       this.logger.error('Redis reset error:', {
         error,
@@ -89,7 +92,7 @@ export class RedisService implements OnModuleDestroy {
    */
   async has(key: string): Promise<boolean> {
     try {
-      const exists = await this.redis.exists(key);
+      const exists = await this.client.exists(key);
       return exists === 1;
     } catch (error) {
       this.logger.error('Redis has error:', {
@@ -104,15 +107,54 @@ export class RedisService implements OnModuleDestroy {
    * 获取Redis实例（用于高级操作）
    */
   getRedis(): Redis {
-    return this.redis;
+    return this.client;
   }
 
   /**
    * 模块销毁时关闭Redis连接
    */
   async onModuleDestroy() {
-    if (this.redis) {
-      await this.redis.quit();
+    if (this.client) {
+      await this.client.quit();
     }
+  }
+
+  /**
+   * 获取键的剩余生存时间（秒）
+   * @param key Redis键
+   * @returns 剩余时间（秒）。-2表示键不存在，-1表示键没有过期时间
+   */
+  async ttl(key: string): Promise<number> {
+    return await this.client.ttl(key);
+  }
+
+  /**
+   * 将键的整数值加1
+   * @param key Redis键
+   * @returns 加1后的值
+   */
+  async incr(key: string): Promise<number> {
+    return await this.client.incr(key);
+  }
+
+  /**
+   * 设置键的过期时间
+   * @param key Redis键
+   * @param seconds 过期时间（秒）
+   * @returns 1表示成功，0表示键不存在或设置失败
+   */
+  async expire(key: string, seconds: number): Promise<number> {
+    return await this.client.expire(key, seconds);
+  }
+
+  /**
+   * 设置键的值和过期时间
+   * @param key Redis键
+   * @param seconds 过期时间（秒）
+   * @param value 值
+   * @returns "OK"表示成功
+   */
+  async setex(key: string, seconds: number, value: string): Promise<'OK'> {
+    return await this.client.setex(key, seconds, value);
   }
 }

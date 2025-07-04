@@ -18,6 +18,7 @@ import { Merchant } from '@/entities/merchant.entity';
 import { getJwtExpiresIn } from '../../../core/auth.config';
 import { Logger } from '@nestjs/common';
 import { compare } from 'bcrypt';
+import { CommonAuthService } from '../../_common/auth/auth.service';
 
 @Injectable()
 export class AuthService {
@@ -27,6 +28,7 @@ export class AuthService {
     private readonly merchantService: MerchantService,
     private readonly jwtService: JwtService,
     private readonly smsService: SmsService,
+    private readonly commonAuthService: CommonAuthService,
   ) {}
 
   async validateMerchant(payload: AuthPayload): Promise<Merchant> {
@@ -77,6 +79,10 @@ export class AuthService {
 
       return await this.smsService.sendCode(phone);
     } catch (error) {
+      this.logger.error('发送验证码失败', {
+        phone,
+        error,
+      });
       if (error instanceof BadRequestException) {
         throw error;
       }
@@ -93,13 +99,31 @@ export class AuthService {
 
     // 如果提供了密码，使用密码登录
     if (loginInput.password) {
+      // Check if the account is locked
+      const lockTime = await this.commonAuthService.isLocked(loginInput.phone);
+      if (lockTime > 0) {
+        throw new UnauthorizedException(
+          `账号已被锁定，请${Math.ceil(lockTime / 60)}分钟后重试`,
+        );
+      }
+
       const isPasswordValid = await compare(
         loginInput.password,
         merchant.password || '',
       );
       if (!isPasswordValid) {
-        throw new UnauthorizedException('密码错误');
+        const remainingAttempts =
+          await this.commonAuthService.recordFailedAttempt(loginInput.phone);
+        if (remainingAttempts > 0) {
+          throw new UnauthorizedException(
+            `密码错误，剩余${remainingAttempts}次尝试机会`,
+          );
+        } else {
+          throw new UnauthorizedException('登录尝试次数过多，账号已被锁定');
+        }
       }
+      // Reset attempts on successful password login
+      await this.commonAuthService.resetAttempts(loginInput.phone);
     }
     // 如果提供了验证码，使用验证码登录
     else if (loginInput.smsCode) {
@@ -110,6 +134,8 @@ export class AuthService {
       if (!isCodeValid) {
         throw new UnauthorizedException('验证码错误');
       }
+      // Reset attempts when using SMS code login
+      await this.commonAuthService.resetAttempts(loginInput.phone);
     } else {
       throw new BadRequestException('请提供密码或验证码');
     }
