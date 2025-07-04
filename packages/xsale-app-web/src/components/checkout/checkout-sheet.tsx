@@ -139,8 +139,8 @@ export function CheckoutSheet({
                 <div className="flex box-border w-full min-w-0">
                   <Image
                     priority
-                    width={480}
-                    height={480}
+                    width={960}
+                    height={960}
                     src={`${product.image}?w=960&h=960`}
                     alt=""
                     className="w-[120px] h-[120px] object-cover object-center border rounded"

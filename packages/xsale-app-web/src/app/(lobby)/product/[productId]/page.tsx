@@ -72,8 +72,8 @@ export default async function Page({
           <div className="px-0 lg:px-4 flex flex-col lg:flex-row gap-4">
             <Image
               priority
-              width={480}
-              height={480}
+              width={960}
+              height={960}
               src={`${product?.image}?w=960&h=960`}
               alt=""
               className="w-full h-auto lg:w-32 lg:rounded object-cover object-center"

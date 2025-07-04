@@ -128,8 +128,8 @@ export const OrderItem = ({
             <div className="flex box-border w-full min-w-0">
               <Image
                 priority
-                width={480}
-                height={480}
+                width={960}
+                height={960}
                 src={order.productImage || ""}
                 alt=""
                 className="w-[120px] h-[120px] object-cover object-center border rounded"

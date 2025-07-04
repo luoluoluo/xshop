@@ -14,8 +14,8 @@ export const ProductItem = ({ product }: { product: Product }) => {
       <div className="flex flex-col items-center w-full overflow-hidden relative box-border">
         <Image
           priority
-          width={480}
-          height={480}
+          width={960}
+          height={960}
           src={`${product?.image}?w=960&h960`}
           alt=""
           className="lg:group-hover:scale-110 group-active:scale-110 transition-all duration-500 ease-in-out box-border flex-shrink-0 w-full h-auto object-cover object-center aspect-square"

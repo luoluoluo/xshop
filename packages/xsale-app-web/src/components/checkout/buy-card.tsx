@@ -17,8 +17,8 @@ export const BuyCard = ({ product }: { product: Product }) => {
         <div className="flex gap-2">
           <Image
             priority
-            width={480}
-            height={480}
+            width={960}
+            height={960}
             src={`${product.image}?w=960&h=960`}
             alt=""
             className="w-12 h-12 rounded object-cover object-center hidden lg:block"
