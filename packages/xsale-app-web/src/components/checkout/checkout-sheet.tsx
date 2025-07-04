@@ -14,6 +14,7 @@ import { getLoginUrl, getMe, setToken } from "@/utils/auth.client";
 import { getAffiliateId } from "@/utils/index.client";
 import { request } from "@/utils/request.client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import { ReactNode, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -136,10 +137,13 @@ export function CheckoutSheet({
             <div className="box-border">
               <div className="flex flex-col gap-8 w-full box-border">
                 <div className="flex box-border w-full min-w-0">
-                  <img
-                    src={`${product.image}`}
+                  <Image
+                    priority
+                    width={480}
+                    height={480}
+                    src={`${product.image}?w=960&h=960`}
                     alt=""
-                    className="w-[120px] h-[120px] object-contain object-center border rounded"
+                    className="w-[120px] h-[120px] object-cover object-center border rounded"
                   />
                   <div className=" pl-4 box-border min-w-0 flex flex-col justify-between">
                     <div>

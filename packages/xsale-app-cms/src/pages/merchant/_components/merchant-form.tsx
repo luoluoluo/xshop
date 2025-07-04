@@ -45,6 +45,7 @@ export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
         label={t("merchant.fields.logo")}
         name={["logo"]}
         rules={[{ required: true }]}
+        extra="建议尺寸：正方形，宽高比为1:1"
       >
         <CustomUpload />
       </Form.Item>

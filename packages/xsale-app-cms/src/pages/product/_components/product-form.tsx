@@ -317,6 +317,7 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
         label={t("product.fields.image")}
         name={["image"]}
         rules={[{ required: true }]}
+        extra="建议尺寸：正方形，宽高比为1:1"
       >
         <CustomUpload />
       </Form.Item>

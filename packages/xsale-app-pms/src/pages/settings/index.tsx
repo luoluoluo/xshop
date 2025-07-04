@@ -122,6 +122,7 @@ export const Settings = () => {
           name="logo"
           label="商户Logo"
           rules={[{ required: true, message: "请上传商户Logo" }]}
+          extra="建议尺寸：正方形，宽高比为1:1"
         >
           <CustomUpload />
         </Form.Item>
