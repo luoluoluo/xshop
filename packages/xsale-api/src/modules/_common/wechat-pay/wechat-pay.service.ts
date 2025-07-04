@@ -258,12 +258,9 @@ export class WechatPayService {
         });
       }
     } catch (error) {
-      this.logger.error(
-        `商户公钥证书格式可能有问题`,
-        {
-          error,
-        },
-      );
+      this.logger.error(`商户公钥证书格式可能有问题`, {
+        error,
+      });
       this.logger.warn('商户公钥证书格式可能有问题', { error: error.message });
     }
 

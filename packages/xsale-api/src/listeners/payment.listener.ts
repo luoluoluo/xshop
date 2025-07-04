@@ -39,6 +39,13 @@ export class PaymentListener {
         return;
       }
 
+      if (order.status === OrderStatus.PAID) {
+        this.logger.log('订单已支付', {
+          outTradeNo: event.outTradeNo,
+        });
+        return;
+      }
+
       // 更新订单状态为已支付
       order.status = OrderStatus.PAID;
       order.paidAt = new Date();
