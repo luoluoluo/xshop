@@ -10,9 +10,11 @@ import { ConfigService } from '@nestjs/config';
 import { getJwtOptions } from '../../../core/auth.config';
 import { PMS_JWT_STRATEGY } from '@/core/constants';
 import { SmsModule } from '../../_common/sms/sms.module';
+import { AuthModule as CommonAuthModule } from '../../_common/auth/auth.module';
 
 @Module({
   imports: [
+    CommonAuthModule,
     MerchantModule,
     SmsModule,
     // TypeOrmModule.forFeature([...CommonEntities]),

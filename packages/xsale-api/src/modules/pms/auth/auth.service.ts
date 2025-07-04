@@ -2,6 +2,7 @@ import {
   Injectable,
   UnauthorizedException,
   BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { MerchantService } from '../merchant/merchant.service';
@@ -32,12 +33,29 @@ export class AuthService {
   ) {}
 
   async validateMerchant(payload: AuthPayload): Promise<Merchant> {
-    const merchant = await this.merchantService.findOne(payload.sub);
+    try {
+      const merchant = await this.merchantService.findOne(payload.sub);
 
-    if (!merchant) {
-      throw new UnauthorizedException('商户未找到');
+      if (!merchant) {
+        this.logger.warn('Merchant not found during validation', {
+          merchantId: payload.sub,
+          timestamp: new Date().toISOString(),
+        });
+        throw new UnauthorizedException('商户未找到');
+      }
+      return merchant;
+    } catch (error) {
+      this.logger.error('Error validating merchant', {
+        merchantId: payload.sub,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        timestamp: new Date().toISOString(),
+      });
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('驗證商戶時發生錯誤');
     }
-    return merchant;
   }
 
   private getAuthToken(merchant: Merchant): AuthToken {
@@ -68,20 +86,41 @@ export class AuthService {
       if (type === SmsCodeType.REGISTER) {
         // 注册验证码：检查手机号是否已注册
         if (existingMerchant) {
+          this.logger.warn('Phone already registered', {
+            phone,
+            type,
+            timestamp: new Date().toISOString(),
+          });
           throw new BadRequestException('该手机号已注册，请直接登录');
         }
       } else if (type === SmsCodeType.LOGIN) {
         // 登录验证码：检查账号是否存在
         if (!existingMerchant) {
+          this.logger.warn('Account not found for SMS login', {
+            phone,
+            type,
+            timestamp: new Date().toISOString(),
+          });
           throw new BadRequestException('账号不存在，请先注册');
         }
       }
 
-      return await this.smsService.sendCode(phone);
+      const result = await this.smsService.sendCode(phone);
+      if (result) {
+        this.logger.log('SMS code sent successfully', {
+          phone,
+          type,
+          timestamp: new Date().toISOString(),
+        });
+      }
+      return result;
     } catch (error) {
-      this.logger.error('发送验证码失败', {
+      this.logger.error('Error sending SMS code', {
         phone,
-        error,
+        type,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        timestamp: new Date().toISOString(),
       });
       if (error instanceof BadRequestException) {
         throw error;
@@ -91,56 +130,117 @@ export class AuthService {
   }
 
   async login(loginInput: LoginInput): Promise<AuthToken> {
-    // 查找商户
-    const merchant = await this.merchantService.findByPhone(loginInput.phone);
-    if (!merchant) {
-      throw new UnauthorizedException('商户不存在，请先注册');
-    }
+    try {
+      // 查找商户
+      const merchant = await this.merchantService.findByPhone(loginInput.phone);
+      if (!merchant) {
+        this.logger.warn('Account not found', {
+          phone: loginInput.phone,
+          timestamp: new Date().toISOString(),
+        });
+        throw new UnauthorizedException('商户不存在，请先注册');
+      }
 
-    // 如果提供了密码，使用密码登录
-    if (loginInput.password) {
-      // Check if the account is locked
-      const lockTime = await this.commonAuthService.isLocked(loginInput.phone);
-      if (lockTime > 0) {
-        throw new UnauthorizedException(
-          `账号已被锁定，请${Math.ceil(lockTime / 60)}分钟后重试`,
+      // 如果提供了密码，使用密码登录
+      if (loginInput.password) {
+        // Check if the account is locked
+        const lockTime = await this.commonAuthService.isLocked(
+          loginInput.phone,
         );
-      }
-
-      const isPasswordValid = await compare(
-        loginInput.password,
-        merchant.password || '',
-      );
-      if (!isPasswordValid) {
-        const remainingAttempts =
-          await this.commonAuthService.recordFailedAttempt(loginInput.phone);
-        if (remainingAttempts > 0) {
+        if (lockTime > 0) {
+          this.logger.warn('Account locked', {
+            phone: loginInput.phone,
+            lockTimeMinutes: Math.ceil(lockTime / 60),
+            timestamp: new Date().toISOString(),
+          });
           throw new UnauthorizedException(
-            `密码错误，剩余${remainingAttempts}次尝试机会`,
+            `账号已被锁定，请${Math.ceil(lockTime / 60)}分钟后重试`,
           );
-        } else {
-          throw new UnauthorizedException('登录尝试次数过多，账号已被锁定');
         }
-      }
-      // Reset attempts on successful password login
-      await this.commonAuthService.resetAttempts(loginInput.phone);
-    }
-    // 如果提供了验证码，使用验证码登录
-    else if (loginInput.smsCode) {
-      const isCodeValid = await this.smsService.verifyCode(
-        loginInput.phone,
-        loginInput.smsCode,
-      );
-      if (!isCodeValid) {
-        throw new UnauthorizedException('验证码错误');
-      }
-      // Reset attempts when using SMS code login
-      await this.commonAuthService.resetAttempts(loginInput.phone);
-    } else {
-      throw new BadRequestException('请提供密码或验证码');
-    }
 
-    return this.getAuthToken(merchant);
+        const isPasswordValid = await compare(
+          loginInput.password,
+          merchant.password || '',
+        );
+        if (!isPasswordValid) {
+          const remainingAttempts =
+            await this.commonAuthService.recordFailedAttempt(loginInput.phone);
+          this.logger.warn('Failed password login attempt', {
+            phone: loginInput.phone,
+            remainingAttempts,
+            timestamp: new Date().toISOString(),
+            attemptCount: 5 - remainingAttempts,
+          });
+          if (remainingAttempts > 0) {
+            throw new UnauthorizedException(
+              `密码错误，剩余${remainingAttempts}次尝试机会`,
+            );
+          } else {
+            throw new UnauthorizedException('登录尝试次数过多，账号已被锁定');
+          }
+        }
+        // Reset attempts on successful password login
+        await this.commonAuthService.resetAttempts(loginInput.phone);
+        this.logger.log('Successful password login', {
+          phone: loginInput.phone,
+          merchantId: merchant.id,
+          timestamp: new Date().toISOString(),
+        });
+      }
+      // 如果提供了验证码，使用验证码登录
+      else if (loginInput.smsCode) {
+        const isCodeValid = await this.smsService.verifyCode(
+          loginInput.phone,
+          loginInput.smsCode,
+        );
+        if (!isCodeValid) {
+          this.logger.warn('Invalid SMS code', {
+            phone: loginInput.phone,
+            timestamp: new Date().toISOString(),
+          });
+          throw new UnauthorizedException('验证码错误');
+        }
+        // Reset attempts when using SMS code login
+        await this.commonAuthService.resetAttempts(loginInput.phone);
+        this.logger.log('Successful SMS code login', {
+          phone: loginInput.phone,
+          merchantId: merchant.id,
+          timestamp: new Date().toISOString(),
+        });
+      } else {
+        throw new BadRequestException('请提供密码或验证码');
+      }
+
+      try {
+        const token = this.getAuthToken(merchant);
+        return token;
+      } catch (tokenError) {
+        this.logger.error('Error generating auth token', {
+          phone: loginInput.phone,
+          merchantId: merchant.id,
+          error:
+            tokenError instanceof Error ? tokenError.message : 'Unknown error',
+          stack: tokenError instanceof Error ? tokenError.stack : undefined,
+          timestamp: new Date().toISOString(),
+        });
+        throw new InternalServerErrorException('生成令牌時發生錯誤');
+      }
+    } catch (error) {
+      this.logger.error('Login error', {
+        phone: loginInput.phone,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        timestamp: new Date().toISOString(),
+      });
+      if (
+        error instanceof UnauthorizedException ||
+        error instanceof BadRequestException ||
+        error instanceof InternalServerErrorException
+      ) {
+        throw error;
+      }
+      throw new InternalServerErrorException('登錄時發生錯誤');
+    }
   }
 
   async register(registerInput: RegisterInput): Promise<AuthToken> {

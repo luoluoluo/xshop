@@ -9,9 +9,11 @@ import { AuthResolver } from './auth.resolver';
 import { ConfigService } from '@nestjs/config';
 import { CMS_JWT_STRATEGY } from '@/core/constants';
 import { getJwtOptions } from '../../../core/auth.config';
+import { AuthModule as CommonAuthModule } from '../../_common/auth/auth.module';
 
 @Module({
   imports: [
+    CommonAuthModule,
     UserModule,
     // TypeOrmModule.forFeature([...CommonEntities]),
     PassportModule.register({ defaultStrategy: CMS_JWT_STRATEGY }),
