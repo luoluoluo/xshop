@@ -224,47 +224,6 @@ export class OrderService {
     }
   }
 
-  async pay(id: string): Promise<Order> {
-    const order = await this.orderRepository.findOne({
-      where: { id },
-    });
-
-    if (!order) {
-      throw new NotFoundException(`Order ${id} not found`);
-    }
-
-    order.status = OrderStatus.PAID;
-    order.paidAt = new Date();
-    return this.orderRepository.save(order);
-  }
-
-  async refund(
-    id: string,
-    customerId?: string,
-    reason?: string,
-  ): Promise<Order> {
-    try {
-      // 使用通用的订单退款服务，并添加自定义验证
-      return await this.commonOrderService.refundOrder(id, {
-        customValidation: (order) => {
-          // 如果指定了customerId，验证订单归属
-          if (customerId && order.customerId !== customerId) {
-            throw new NotFoundException(`Order ${id} not found`);
-          }
-        },
-        reason,
-      });
-    } catch (error) {
-      this.logger.error(`退款失败`, {
-        error,
-        orderId: id,
-        customerId,
-        reason,
-      });
-      throw error;
-    }
-  }
-
   async guestToCustomer(guestId: string, customerId: string) {
     await this.orderRepository.update(
       {
