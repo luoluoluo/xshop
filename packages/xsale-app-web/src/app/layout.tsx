@@ -13,6 +13,11 @@ export function generateMetadata() {
     title: setting.title,
     keywords: setting.keywords,
     description: setting.description,
+    openGraph: {
+      title: setting.title,
+      description: setting.description,
+      images: [{ url: "/images/logo.png", width: 960, height: 960 }],
+    },
   };
 }
 

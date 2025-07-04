@@ -11,6 +11,7 @@ import { getAffiliateId } from "@/utils/index.server";
 import { getLogger } from "@/utils/logger";
 import { request } from "@/utils/request.server";
 import Image from "next/image";
+
 export async function generateMetadata({
   params,
 }: {
@@ -25,8 +26,40 @@ export async function generateMetadata({
     }
     return res.data?.product;
   });
+
+  const merchant = await request<{ merchant: Merchant }>({
+    query: getMerchant,
+    variables: { id: product?.merchantId },
+  }).then((res) => {
+    if (res.errors) {
+      getLogger().error(res.errors, "getMerchant error");
+    }
+    return res.data?.merchant;
+  });
+
+  const title = product?.title || "";
+  const description = merchant?.name || "";
+  const keywords = merchant?.businessScope || "";
+  const imageUrl = product?.image ? `${product.image}?w=960&h=960` : undefined;
+
   return {
-    title: product?.title,
+    title,
+    description,
+    keywords,
+    openGraph: {
+      title,
+      description,
+      images: imageUrl
+        ? [
+            {
+              url: imageUrl,
+              width: 960,
+              height: 960,
+              alt: title,
+            },
+          ]
+        : undefined,
+    },
   };
 }
 
@@ -111,7 +144,7 @@ export default async function Page({
         shareConfig={{
           title: product?.title || "",
           desc: merchant?.name || "",
-          imgUrl: `${product.image}?w=480&h=480`,
+          imgUrl: `${product.image}?w=960&h=960`,
         }}
       />
     </div>
