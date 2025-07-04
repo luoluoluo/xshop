@@ -17,6 +17,7 @@ import {
 import { Affiliate } from '@/entities/affiliate.entity';
 import { getJwtExpiresIn } from '../../../core/auth.config';
 import { Logger } from '@nestjs/common';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -81,19 +82,33 @@ export class AuthService {
   }
 
   async login(loginInput: LoginInput): Promise<AuthToken> {
-    // 验证验证码
-    const isCodeValid = await this.smsService.verifyCode(
-      loginInput.phone,
-      loginInput.smsCode,
-    );
-    if (!isCodeValid) {
-      throw new UnauthorizedException('验证码错误');
-    }
-
     // 查找推广者
     const affiliate = await this.affiliateService.findByPhone(loginInput.phone);
     if (!affiliate) {
       throw new UnauthorizedException('账号不存在，请先注册');
+    }
+
+    // 如果提供了密码，使用密码登录
+    if (loginInput.password) {
+      const isPasswordValid = await compare(
+        loginInput.password,
+        affiliate.password || '',
+      );
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('密码错误');
+      }
+    }
+    // 如果提供了验证码，使用验证码登录
+    else if (loginInput.smsCode) {
+      const isCodeValid = await this.smsService.verifyCode(
+        loginInput.phone,
+        loginInput.smsCode,
+      );
+      if (!isCodeValid) {
+        throw new UnauthorizedException('验证码错误');
+      }
+    } else {
+      throw new BadRequestException('请提供密码或验证码');
     }
 
     return this.getAuthToken(affiliate);
@@ -113,6 +128,7 @@ export class AuthService {
     const affiliate = await this.affiliateService.create({
       phone: registerInput.phone,
       name: registerInput.name,
+      password: registerInput.password,
     });
 
     return this.getAuthToken(affiliate);

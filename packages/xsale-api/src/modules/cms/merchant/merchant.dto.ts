@@ -22,6 +22,9 @@ export class CreateMerchantInput {
   @Field()
   affiliateId: string;
 
+  @Field()
+  password: string;
+
   @Field(() => Boolean, { nullable: true })
   @IsOptional()
   @IsBoolean()
@@ -67,6 +70,10 @@ export class UpdateMerchantInput {
 
   @Field({ nullable: true })
   affiliateId?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  password?: string;
 
   @Field(() => Boolean, { nullable: true })
   @IsOptional()

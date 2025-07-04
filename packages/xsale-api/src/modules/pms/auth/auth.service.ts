@@ -17,6 +17,7 @@ import {
 import { Merchant } from '@/entities/merchant.entity';
 import { getJwtExpiresIn } from '../../../core/auth.config';
 import { Logger } from '@nestjs/common';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -84,19 +85,33 @@ export class AuthService {
   }
 
   async login(loginInput: LoginInput): Promise<AuthToken> {
-    // 验证验证码
-    const isCodeValid = await this.smsService.verifyCode(
-      loginInput.phone,
-      loginInput.smsCode,
-    );
-    if (!isCodeValid) {
-      throw new UnauthorizedException('验证码错误');
-    }
-
     // 查找商户
     const merchant = await this.merchantService.findByPhone(loginInput.phone);
     if (!merchant) {
       throw new UnauthorizedException('商户不存在，请先注册');
+    }
+
+    // 如果提供了密码，使用密码登录
+    if (loginInput.password) {
+      const isPasswordValid = await compare(
+        loginInput.password,
+        merchant.password || '',
+      );
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('密码错误');
+      }
+    }
+    // 如果提供了验证码，使用验证码登录
+    else if (loginInput.smsCode) {
+      const isCodeValid = await this.smsService.verifyCode(
+        loginInput.phone,
+        loginInput.smsCode,
+      );
+      if (!isCodeValid) {
+        throw new UnauthorizedException('验证码错误');
+      }
+    } else {
+      throw new BadRequestException('请提供密码或验证码');
     }
 
     return this.getAuthToken(merchant);
@@ -122,6 +137,7 @@ export class AuthService {
       businessScope: registerInput.businessScope,
       wechatQrcode: registerInput.wechatQrcode,
       affiliateId: registerInput.affiliateId,
+      password: registerInput.password, // 添加密码
     });
 
     return this.getAuthToken(merchant);

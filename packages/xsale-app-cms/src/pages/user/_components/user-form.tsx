@@ -1,8 +1,5 @@
-import { Create, useForm } from "@refinedev/antd";
 import { Form, FormProps, Input, Select, Switch } from "antd";
-import { parse } from "graphql";
 import { Role, RolePagination } from "../../../generated/graphql";
-import { md5 } from "js-md5";
 import { useEffect, useState } from "react";
 import { request } from "../../../utils/request";
 import { getRoles } from "../../../requests/role";

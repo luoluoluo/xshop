@@ -115,8 +115,9 @@ export type Customer = {
 };
 
 export type LoginInput = {
+  password?: InputMaybe<Scalars['String']['input']>;
   phone: Scalars['String']['input'];
-  smsCode: Scalars['String']['input'];
+  smsCode?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Merchant = {
@@ -408,6 +409,7 @@ export type QueryWechatVerifySignatureArgs = {
 
 export type RegisterInput = {
   name: Scalars['String']['input'];
+  password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
   smsCode: Scalars['String']['input'];
 };
@@ -431,6 +433,7 @@ export enum SmsCodeType {
 
 export type UpdateMeInput = {
   name?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type WechatJsConfig = {

@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { Merchant } from '@/entities/merchant.entity';
 import { UpdateMeInput } from '../auth/auth.dto';
 import { Affiliate } from '@/entities/affiliate.entity';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class MerchantService {
@@ -47,6 +48,11 @@ export class MerchantService {
     const merchant = await this.findOne(id);
 
     try {
+      if (updateMerchantDto.password) {
+        const hashedPassword = await hash(updateMerchantDto.password, 10);
+        updateMerchantDto.password = hashedPassword;
+      }
+
       Object.assign(merchant, updateMerchantDto);
       return this.merchantRepository.save(merchant);
     } catch (err) {
@@ -79,6 +85,7 @@ export class MerchantService {
     businessScope?: string;
     wechatQrcode?: string;
     affiliateId: string;
+    password?: string;
   }): Promise<Merchant> {
     // 检查手机号是否已存在
     const existingMerchant = await this.findByPhone(merchantData.phone);
@@ -94,8 +101,14 @@ export class MerchantService {
     }
 
     try {
+      let password: string | undefined;
+      if (merchantData.password) {
+        password = await hash(merchantData.password, 10);
+      }
+
       const merchant = this.merchantRepository.create({
         ...merchantData,
+        password,
       });
 
       const savedMerchant = await this.merchantRepository.save(merchant);

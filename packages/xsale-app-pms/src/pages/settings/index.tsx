@@ -4,6 +4,7 @@ import {
   EnvironmentOutlined,
   ShopOutlined,
   FileTextOutlined,
+  LockOutlined,
 } from "@ant-design/icons";
 import { request } from "../../utils/request";
 import { updateMe } from "../../requests/auth";
@@ -131,6 +132,14 @@ export const Settings = () => {
           rules={[{ required: true, message: "请上传微信二维码" }]}
         >
           <CustomUpload />
+        </Form.Item>
+
+        <Form.Item
+          label="密码"
+          name="password"
+          extra={"非必填，填写后会修改密码"}
+        >
+          <Input.Password prefix={<LockOutlined />} placeholder="密码" />
         </Form.Item>
 
         <Form.Item>

@@ -138,6 +138,7 @@ export type CreateAffiliateInput = {
   bankName?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
+  password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
 };
 
@@ -169,6 +170,7 @@ export type CreateMerchantInput = {
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   logo: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
   wechatQrcode?: InputMaybe<Scalars['String']['input']>;
 };
@@ -765,6 +767,7 @@ export type UpdateAffiliateInput = {
   bankName?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -796,6 +799,7 @@ export type UpdateMerchantInput = {
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   logo?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
   wechatQrcode?: InputMaybe<Scalars['String']['input']>;
 };

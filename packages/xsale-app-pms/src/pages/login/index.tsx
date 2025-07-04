@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLogin } from "@refinedev/core";
-import { Form, Input, Button, Card, Typography, message } from "antd";
+import { Form, Input, Button, Card, Typography, message, Tabs } from "antd";
 import { LockOutlined, MobileOutlined } from "@ant-design/icons";
 import { Title } from "../../components/title";
 import { request } from "../../utils/request";
@@ -9,10 +9,13 @@ import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 
+type LoginType = "password" | "sms";
+
 export const Login = () => {
   const { mutate: login } = useLogin();
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
+  const [loginType, setLoginType] = useState<LoginType>("password");
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -54,7 +57,11 @@ export const Login = () => {
     }
   };
 
-  const onFinish = (values: { phone: string; smsCode: string }) => {
+  const onFinish = (values: {
+    phone: string;
+    smsCode?: string;
+    password?: string;
+  }) => {
     setLoading(true);
     login(values, {
       onSuccess: () => {
@@ -82,12 +89,28 @@ export const Login = () => {
         <Title />
       </div>
 
-      <Card className="w-full lg:w-[500px]">
+      <Card className="w-[calc(100%-32px)] lg:w-[500px]">
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <Typography.Title level={3}>登录</Typography.Title>
           <Text type="secondary">请输入您的手机号和验证码</Text>
         </div>
-
+        <Tabs
+          activeKey={loginType}
+          onChange={(key) => {
+            setLoginType(key as LoginType);
+            form.resetFields();
+          }}
+          items={[
+            {
+              key: "password",
+              label: "密码登录",
+            },
+            {
+              key: "sms",
+              label: "验证码登录",
+            },
+          ]}
+        />
         <Form
           form={form}
           name="login"
@@ -110,30 +133,41 @@ export const Login = () => {
             />
           </Form.Item>
 
-          <Form.Item
-            name="smsCode"
-            rules={[
-              { required: true, message: "请输入验证码" },
-              { len: 4, message: "验证码为4位数字" },
-            ]}
-          >
-            <Input
-              prefix={<LockOutlined />}
-              placeholder="验证码"
-              maxLength={4}
-              suffix={
-                <Button
-                  type="link"
-                  size="small"
-                  disabled={countdown > 0}
-                  onClick={() => void onSendSmsCode()}
-                  style={{ padding: 0 }}
-                >
-                  {countdown > 0 ? `${countdown}s` : "发送验证码"}
-                </Button>
-              }
-            />
-          </Form.Item>
+          {loginType === "sms" && (
+            <Form.Item
+              name="smsCode"
+              rules={[
+                { required: true, message: "请输入验证码" },
+                { len: 4, message: "验证码为4位数字" },
+              ]}
+            >
+              <Input
+                prefix={<LockOutlined />}
+                placeholder="验证码"
+                maxLength={4}
+                suffix={
+                  <Button
+                    type="link"
+                    size="small"
+                    disabled={countdown > 0}
+                    onClick={() => void onSendSmsCode()}
+                    style={{ padding: 0 }}
+                  >
+                    {countdown > 0 ? `${countdown}s` : "发送验证码"}
+                  </Button>
+                }
+              />
+            </Form.Item>
+          )}
+
+          {loginType === "password" && (
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: "请输入密码" }]}
+            >
+              <Input.Password prefix={<LockOutlined />} placeholder="密码" />
+            </Form.Item>
+          )}
 
           <Form.Item>
             <Button

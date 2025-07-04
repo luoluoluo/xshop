@@ -75,4 +75,7 @@ export class Merchant extends Base {
   @Field({ nullable: true })
   @Column({ length: 50 })
   accountName?: string;
+
+  @Column({ nullable: true })
+  password?: string;
 }

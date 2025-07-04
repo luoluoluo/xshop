@@ -66,6 +66,14 @@ export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
       </Form.Item>
 
       <Form.Item
+        label={t("merchant.fields.password")}
+        name={["password"]}
+        extra={formProps.initialValues?.id ? "非必填，填写后会修改密码" : ""}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
         label={t("merchant.fields.address")}
         name={["address"]}
         rules={[{ required: true }]}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Form, Input, Button, Card, Typography, message, Spin } from "antd";
-import { UserOutlined, MobileOutlined } from "@ant-design/icons";
+import { UserOutlined, MobileOutlined, LockOutlined } from "@ant-design/icons";
 import { request } from "../../utils/request";
 import { updateMe } from "../../requests/auth";
 import { useGetIdentity } from "@refinedev/core";
@@ -88,6 +88,14 @@ export const Settings = () => {
           ]}
         >
           <Input prefix={<UserOutlined />} placeholder="请输入姓名" />
+        </Form.Item>
+
+        <Form.Item
+          label="密码"
+          name="password"
+          extra={"非必填，填写后会修改密码"}
+        >
+          <Input.Password prefix={<LockOutlined />} placeholder="密码" />
         </Form.Item>
 
         <Form.Item>

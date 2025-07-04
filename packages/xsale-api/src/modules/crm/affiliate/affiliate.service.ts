@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Affiliate } from '@/entities/affiliate.entity';
 import { UpdateMeInput } from '../auth/auth.dto';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class AffiliateService {
@@ -40,6 +41,7 @@ export class AffiliateService {
   async create(affiliateData: {
     phone: string;
     name: string;
+    password?: string;
   }): Promise<Affiliate> {
     // 检查手机号是否已存在
     const existingAffiliate = await this.findByPhone(affiliateData.phone);
@@ -48,8 +50,14 @@ export class AffiliateService {
     }
 
     try {
+      let password: string | undefined;
+      if (affiliateData.password) {
+        password = await hash(affiliateData.password, 10);
+      }
+
       const affiliate = this.affiliateRepository.create({
         ...affiliateData,
+        password,
       });
 
       const savedAffiliate = await this.affiliateRepository.save(affiliate);
@@ -70,6 +78,11 @@ export class AffiliateService {
     const affiliate = await this.findOne(id);
 
     try {
+      if (updateAffiliateDto.password) {
+        const hashedPassword = await hash(updateAffiliateDto.password, 10);
+        updateAffiliateDto.password = hashedPassword;
+      }
+
       Object.assign(affiliate, updateAffiliateDto);
       return this.affiliateRepository.save(affiliate);
     } catch (err) {

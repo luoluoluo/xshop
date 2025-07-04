@@ -10,6 +10,9 @@ export class CreateAffiliateInput {
   @Field()
   phone: string;
 
+  @Field()
+  password: string;
+
   @Field(() => Boolean, { nullable: true })
   @IsOptional()
   @IsBoolean()
@@ -37,6 +40,10 @@ export class UpdateAffiliateInput {
   @Field({ nullable: true })
   @IsOptional()
   phone?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  password?: string;
 
   @Field(() => Boolean, { nullable: true })
   @IsOptional()

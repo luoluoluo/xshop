@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { hash } from 'bcrypt';
 import { Affiliate } from '@/entities/affiliate.entity';
 import {
   CreateAffiliateInput,
@@ -66,9 +67,17 @@ export class AffiliateService {
       throw new ConflictException('推广者已存在');
     }
 
-    const affiliate = this.affiliateRepository.create(createAffiliateInput);
-
     try {
+      let password: string | undefined;
+      if (createAffiliateInput.password) {
+        password = await hash(createAffiliateInput.password, 10);
+      }
+
+      const affiliate = this.affiliateRepository.create({
+        ...createAffiliateInput,
+        password,
+      });
+
       return this.affiliateRepository.save(affiliate);
     } catch (err) {
       this.logger.error('創建推廣員失敗', {
@@ -98,6 +107,11 @@ export class AffiliateService {
     }
 
     try {
+      if (updateAffiliateDto.password) {
+        const hashedPassword = await hash(updateAffiliateDto.password, 10);
+        updateAffiliateDto.password = hashedPassword;
+      }
+
       Object.assign(affiliate, updateAffiliateDto);
       return this.affiliateRepository.save(affiliate);
     } catch (err) {

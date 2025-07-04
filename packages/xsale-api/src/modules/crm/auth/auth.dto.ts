@@ -31,9 +31,15 @@ export class LoginInput {
   @Matches(phoneReg, { message: '请输入有效的手机号' })
   phone: string;
 
-  @Field()
+  @Field({ nullable: true })
+  @IsOptional()
   @IsString({ message: '验证码不能为空' })
-  smsCode: string;
+  smsCode?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString({ message: '密码不能为空' })
+  password?: string;
 }
 
 @InputType()
@@ -50,6 +56,10 @@ export class RegisterInput {
   @Field()
   @IsString({ message: '姓名不能为空' })
   name: string;
+
+  @Field()
+  @IsString({ message: '密码不能为空' })
+  password: string;
 }
 
 @InputType()
@@ -69,6 +79,11 @@ export class UpdateMeInput {
   @IsOptional()
   @IsString({ message: '姓名不能为空' })
   name?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString({ message: '密码不能为空' })
+  password?: string;
 }
 
 @ObjectType()

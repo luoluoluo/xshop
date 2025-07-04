@@ -21,8 +21,11 @@ export class LoginInput {
   @Field()
   phone: string;
 
-  @Field()
-  smsCode: string;
+  @Field({ nullable: true })
+  smsCode?: string;
+
+  @Field({ nullable: true })
+  password?: string;
 }
 
 @InputType()
@@ -35,6 +38,9 @@ export class RegisterInput {
 
   @Field()
   smsCode: string;
+
+  @Field()
+  password: string;
 
   @Field()
   name: string;
@@ -104,4 +110,7 @@ export class UpdateMeInput {
 
   @Field({ nullable: true })
   wechatQrcode?: string;
+
+  @Field({ nullable: true })
+  password?: string;
 }

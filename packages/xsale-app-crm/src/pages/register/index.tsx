@@ -166,6 +166,14 @@ export const Register = () => {
             />
           </Form.Item>
 
+          <Form.Item
+            name="password"
+            label="密码"
+            rules={[{ required: true, message: "请输入密码" }]}
+          >
+            <Input.Password prefix={<LockOutlined />} placeholder="密码" />
+          </Form.Item>
+
           <Form.Item>
             <Button
               type="primary"

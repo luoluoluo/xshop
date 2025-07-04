@@ -109,7 +109,7 @@ export const Register = () => {
         <Title />
       </div>
 
-      <Card className="w-full lg:w-[500px]">
+      <Card className="w-[calc(100%-32px)] lg:w-[500px]">
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <Typography.Title level={3}>商户注册</Typography.Title>
           <Text type="secondary">请填写您的商户信息</Text>
@@ -180,6 +180,14 @@ export const Register = () => {
                 </Button>
               }
             />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            label="密码"
+            rules={[{ required: true, message: "请输入密码" }]}
+          >
+            <Input.Password prefix={<LockOutlined />} placeholder="密码" />
           </Form.Item>
 
           <Form.Item

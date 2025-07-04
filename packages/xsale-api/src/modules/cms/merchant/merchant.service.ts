@@ -72,9 +72,18 @@ export class MerchantService {
     if (existingMerchant) {
       throw new ConflictException('商户已存在');
     }
-    const merchant = this.merchantRepository.create(createMerchantInput);
 
     try {
+      let password: string | undefined;
+      if (createMerchantInput.password) {
+        password = await hash(createMerchantInput.password, 10);
+      }
+
+      const merchant = this.merchantRepository.create({
+        ...createMerchantInput,
+        password,
+      });
+
       return this.merchantRepository.save(merchant);
     } catch (err) {
       this.logger.error('創建商戶失敗', {
@@ -101,6 +110,11 @@ export class MerchantService {
     }
 
     try {
+      if (updateMerchantDto.password) {
+        const hashedPassword = await hash(updateMerchantDto.password, 10);
+        updateMerchantDto.password = hashedPassword;
+      }
+
       Object.assign(merchant, updateMerchantDto);
       return this.merchantRepository.save(merchant);
     } catch (err) {

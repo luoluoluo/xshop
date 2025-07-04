@@ -28,6 +28,14 @@ export const AffiliateForm = ({ formProps }: { formProps: FormProps }) => {
         <Input />
       </Form.Item>
 
+      <Form.Item
+        label={t("merchant.fields.password")}
+        name={["password"]}
+        extra={formProps.initialValues?.id ? "非必填，填写后会修改密码" : ""}
+      >
+        <Input />
+      </Form.Item>
+
       <Form.Item label={t("affiliate.fields.bankName")} name={["bankName"]}>
         <Input />
       </Form.Item>

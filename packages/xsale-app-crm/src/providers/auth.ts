@@ -17,23 +17,14 @@ import Cookies from "js-cookie";
 import dayjs from "dayjs";
 
 export const authProvider: AuthProvider = {
-  login: async ({ phone, smsCode }: LoginInput) => {
-    console.log(phone);
-    if (!phone || !smsCode) {
-      return {
-        success: false,
-        error: {
-          name: "LoginError",
-          message: "手机号和验证码不能为空",
-        },
-      };
-    }
+  login: async ({ phone, smsCode, password }: LoginInput) => {
     const res = await request<{ login?: AuthToken }>({
       query: login,
       variables: {
         data: {
           phone,
-          smsCode,
+          smsCode: smsCode || undefined,
+          password: password || undefined,
         },
       },
     });
