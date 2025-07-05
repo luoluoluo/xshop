@@ -31,32 +31,18 @@ const Dashboard = () => {
       <Card title="快捷导航">
         <div className="flex flex-wrap gap-8">
           <Link
-            to="/order/order/list"
+            to="/order"
             className="flex flex-col items-center justify-center w-24 h-24 rounded shadow text-gray-700"
           >
             <Icons.GiftOutlined className="text-[32px] " />
-            <div className="text-sm mt-1">订单管理</div>
+            <div className="text-sm mt-1">订单列表</div>
           </Link>
           <Link
-            to="/product/sku/list"
+            to="/product"
             className="flex flex-col items-center justify-center w-24 h-24 rounded shadow text-gray-700"
           >
             <Icons.ProductOutlined className="text-[32px] " />
-            <div className="text-sm mt-1">产品管理</div>
-          </Link>
-          <Link
-            to="/content/banner/list"
-            className="flex flex-col items-center justify-center w-24 h-24 rounded shadow text-gray-700"
-          >
-            <Icons.FileDoneOutlined className="text-[32px] " />
-            <div className="text-sm mt-1">广告图管理</div>
-          </Link>
-          <Link
-            to="/system/business-card/edit"
-            className="flex flex-col items-center justify-center w-24 h-24 rounded shadow text-gray-700"
-          >
-            <Icons.SettingOutlined className="text-[32px] " />
-            <div className="text-sm mt-1">名片设置</div>
+            <div className="text-sm mt-1">产品列表</div>
           </Link>
         </div>
       </Card>
