@@ -25,7 +25,13 @@ export class ProductService {
     where?: ProductWhereInput;
   }): Promise<ProductPagination> {
     const [items, total] = await this.productRepository.findAndCount({
-      where,
+      where: {
+        ...where,
+        isActive: true,
+        merchant: {
+          isActive: true,
+        },
+      },
       skip,
       take,
       relations: {
