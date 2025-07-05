@@ -16,6 +16,7 @@ export class ArticleWhereInput {
   id?: string;
   @Field({ nullable: true })
   title?: string;
-  @Field()
-  categoryId?: string;
+
+  @Field({ nullable: true })
+  slug?: string;
 }

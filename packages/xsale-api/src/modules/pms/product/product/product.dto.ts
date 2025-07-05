@@ -18,9 +18,6 @@ export class CreateProductInput {
   @Field(() => Int)
   stock: number;
 
-  @Field(() => Int)
-  sort: number;
-
   @Field()
   title: string;
 
@@ -50,9 +47,6 @@ export class UpdateProductInput {
 
   @Field(() => Boolean, { nullable: true })
   isActive?: boolean;
-
-  @Field(() => Int)
-  sort: number;
 
   @Field()
   title: string;

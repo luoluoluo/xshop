@@ -8,14 +8,9 @@ export const getArticles = /* GraphQL */ `
         image
         content
         isActive
-        sort
         createdAt
         updatedAt
-        categoryId
-        category {
-          id
-          name
-        }
+        slug
       }
       total
     }
@@ -31,10 +26,9 @@ export const getArticle = /* GraphQL */ `
       image
       content
       isActive
-      sort
       createdAt
       updatedAt
-      categoryId
+      slug
     }
   }
 `;

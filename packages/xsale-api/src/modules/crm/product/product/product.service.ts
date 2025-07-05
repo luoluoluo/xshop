@@ -39,6 +39,7 @@ export class ProductService {
           affiliate: true,
         },
       },
+      order: { id: 'DESC' },
     });
 
     // 计算佣金

@@ -1,12 +1,10 @@
 import { ResourceProps } from "@refinedev/core";
-import i18n from "../i18n";
 
 import {
   UserOutlined,
   TeamOutlined,
   ProductOutlined,
   DashboardOutlined,
-  FileAddOutlined,
   ShopOutlined,
   DollarOutlined,
   GiftOutlined,
@@ -20,6 +18,22 @@ export const getResources = (): ResourceProps[] => {
       list: "/",
       meta: {
         icon: <DashboardOutlined />,
+      },
+    },
+    {
+      name: "content",
+      meta: {
+        icon: <FileImageOutlined />,
+      },
+    },
+    {
+      name: "article",
+      list: "/article",
+      create: "/article/new",
+      edit: "/article/:id/edit",
+      meta: {
+        parent: "content",
+        icon: <></>,
       },
     },
     // {

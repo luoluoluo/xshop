@@ -23,15 +23,14 @@ export class ArticleService {
     const [data, total] = await this.articleRepository.findAndCount({
       skip,
       take,
-      order: { sort: 'ASC' },
+      order: { id: 'DESC' },
       where,
-      relations: ['category'],
     });
     return { data, total };
   }
 
-  async findOne(id: string): Promise<Article> {
-    const article = await this.articleRepository.findOneBy({ id });
+  async findOneBySlug(slug: string): Promise<Article> {
+    const article = await this.articleRepository.findOneBy({ slug });
     if (!article) {
       throw new Error('Article not found');
     }

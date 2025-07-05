@@ -48,17 +48,22 @@ export const footerMenuItems = [
       // },
       {
         title: "隐私协议",
-        href: "/page/privacy-agreement",
+        href: "/article/privacy-agreement",
         external: false,
       },
       {
         title: "服务条款",
-        href: "/page/terms-of-service",
+        href: "/article/terms-of-service",
         external: false,
       },
       {
-        title: "关于我们",
-        href: "/",
+        title: "商家教程",
+        href: "/article/merchant-tutorial",
+        external: false,
+      },
+      {
+        title: "推广者教程",
+        href: "/article/affiliate-tutorial",
         external: false,
       },
     ],

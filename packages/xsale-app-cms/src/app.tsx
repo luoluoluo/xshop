@@ -45,11 +45,7 @@ import {
 } from "./pages/product";
 
 import { getResources } from "./config/app";
-import {
-  ArticleCategoryCreate,
-  ArticleCategoryEdit,
-  ArticleCategoryList,
-} from "./pages/article-category";
+
 import { ArticleCreate, ArticleEdit, ArticleList } from "./pages/article";
 import { MerchantCreate, MerchantEdit, MerchantList } from "./pages/merchant";
 import { OrderList, OrderShow } from "./pages/order";
@@ -136,14 +132,6 @@ function App() {
                       <Route path=":id" element={<RoleShow />} />
                     </Route>
 
-                    <Route path="/article-category">
-                      <Route index element={<ArticleCategoryList />} />
-                      <Route path="new" element={<ArticleCategoryCreate />} />
-                      <Route
-                        path=":id/edit"
-                        element={<ArticleCategoryEdit />}
-                      />
-                    </Route>
                     <Route path="/article">
                       <Route index element={<ArticleList />} />
                       <Route path="new" element={<ArticleCreate />} />

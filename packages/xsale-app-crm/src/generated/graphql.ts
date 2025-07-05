@@ -67,26 +67,12 @@ export type AffiliateWithdrawalWhereInput = {
 
 export type Article = {
   __typename?: 'Article';
-  category?: Maybe<ArticleCategory>;
-  categoryId?: Maybe<Scalars['String']['output']>;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   image?: Maybe<Scalars['String']['output']>;
-  sort?: Maybe<Scalars['Float']['output']>;
   title?: Maybe<Scalars['String']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-export type ArticleCategory = {
-  __typename?: 'ArticleCategory';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  name?: Maybe<Scalars['String']['output']>;
-  parent?: Maybe<ArticleCategory>;
-  parentId?: Maybe<Scalars['String']['output']>;
-  sort?: Maybe<Scalars['Float']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -297,7 +283,6 @@ export type Product = {
   poster?: Maybe<Scalars['String']['output']>;
   posterQrcodeConfig?: Maybe<PosterQrcodeConfig>;
   price?: Maybe<Scalars['Float']['output']>;
-  sort?: Maybe<Scalars['Int']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];

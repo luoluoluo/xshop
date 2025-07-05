@@ -16,13 +16,7 @@ export const ArticleList = () => {
     <List>
       <Table {...tableProps} rowKey="id">
         <Table.Column dataIndex="id" title={"ID"} />
-        <Table.Column
-          dataIndex="category"
-          title={t("article.fields.category")}
-          render={(category: { name: string }) => {
-            return category?.name;
-          }}
-        />
+        <Table.Column dataIndex="slug" title={t("article.fields.slug")} />
         <Table.Column
           dataIndex="image"
           title={t("article.fields.image")}
@@ -31,7 +25,6 @@ export const ArticleList = () => {
           }}
         />
         <Table.Column dataIndex="title" title={t("article.fields.title")} />
-        <Table.Column dataIndex="sort" title={t("fields.sort")} />
         <Table.Column
           dataIndex="isActive"
           title={t("fields.isActive.label")}

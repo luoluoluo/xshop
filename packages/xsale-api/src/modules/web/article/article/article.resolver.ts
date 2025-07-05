@@ -21,7 +21,7 @@ export class ArticleResolver {
   }
 
   @Query(() => Article)
-  async article(@Args('id') id: string): Promise<Article> {
-    return await this.articleService.findOne(id);
+  async article(@Args('slug') slug: string): Promise<Article> {
+    return await this.articleService.findOneBySlug(slug);
   }
 }

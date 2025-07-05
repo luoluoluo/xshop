@@ -9,7 +9,6 @@ export const getProduct = /* GraphQL */ `
       price
       commission
       stock
-      sort
       merchantId
       createdAt
       updatedAt
@@ -34,7 +33,6 @@ export const getProducts = /* GraphQL */ `
         price
         commission
         stock
-        sort
         merchantId
         createdAt
         updatedAt

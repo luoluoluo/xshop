@@ -28,9 +28,8 @@ export class ArticleService {
     const [data, total] = await this.articleRepository.findAndCount({
       skip,
       take,
-      order: { sort: 'ASC' },
+      order: { id: 'DESC' },
       where,
-      relations: ['category'],
     });
     return { data, total };
   }

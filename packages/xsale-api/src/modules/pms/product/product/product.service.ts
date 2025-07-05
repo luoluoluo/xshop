@@ -46,6 +46,7 @@ export class ProductService {
           affiliate: true,
         },
       },
+      order: { id: 'DESC' },
     });
 
     return {

@@ -91,7 +91,6 @@ export const ProductList = () => {
             );
           }}
         />
-        <Table.Column dataIndex="sort" title={t("fields.sort")} />
         <Table.Column
           dataIndex="isActive"
           title={t("fields.isActive.label")}

@@ -82,41 +82,15 @@ export type AffiliateWithdrawalWhereInput = {
 
 export type Article = {
   __typename?: 'Article';
-  category?: Maybe<ArticleCategory>;
-  categoryId?: Maybe<Scalars['String']['output']>;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   image?: Maybe<Scalars['String']['output']>;
   isActive?: Maybe<Scalars['Boolean']['output']>;
-  sort?: Maybe<Scalars['Float']['output']>;
+  slug?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
-};
-
-export type ArticleCategory = {
-  __typename?: 'ArticleCategory';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  isActive?: Maybe<Scalars['Boolean']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  parent?: Maybe<ArticleCategory>;
-  parentId?: Maybe<Scalars['String']['output']>;
-  sort?: Maybe<Scalars['Float']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-export type ArticleCategoryPagination = {
-  __typename?: 'ArticleCategoryPagination';
-  data: Array<ArticleCategory>;
-  total: Scalars['Int']['output'];
-};
-
-export type ArticleCategoryWhereInput = {
-  id?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  parentId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ArticlePagination = {
@@ -142,20 +116,12 @@ export type CreateAffiliateInput = {
   phone: Scalars['String']['input'];
 };
 
-export type CreateArticleCategoryInput = {
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
-  parentId?: InputMaybe<Scalars['String']['input']>;
-  sort: Scalars['Int']['input'];
-};
-
 export type CreateArticleInput = {
-  categoryId: Scalars['String']['input'];
   content: Scalars['String']['input'];
   description: Scalars['String']['input'];
   image: Scalars['String']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  sort: Scalars['Int']['input'];
+  slug: Scalars['String']['input'];
   title: Scalars['String']['input'];
 };
 
@@ -301,14 +267,12 @@ export type Mutation = {
   completeMerchantWithdrawal: MerchantWithdrawal;
   createAffiliate: Affiliate;
   createArticle: Article;
-  createArticleCategory: ArticleCategory;
   createMerchant: Merchant;
   createProduct: Product;
   createRole: Role;
   createUser: User;
   deleteAffiliate: Scalars['Boolean']['output'];
   deleteArticle: Scalars['Boolean']['output'];
-  deleteArticleCategory: Scalars['Boolean']['output'];
   deleteMerchant: Scalars['Boolean']['output'];
   deleteProduct: Scalars['Boolean']['output'];
   deleteRole: Scalars['Boolean']['output'];
@@ -318,7 +282,6 @@ export type Mutation = {
   rejectMerchantWithdrawal: MerchantWithdrawal;
   updateAffiliate: Affiliate;
   updateArticle: Article;
-  updateArticleCategory: ArticleCategory;
   updateMerchant: Merchant;
   updateProduct: Product;
   updateRole: Role;
@@ -356,11 +319,6 @@ export type MutationCreateArticleArgs = {
 };
 
 
-export type MutationCreateArticleCategoryArgs = {
-  data: CreateArticleCategoryInput;
-};
-
-
 export type MutationCreateMerchantArgs = {
   data: CreateMerchantInput;
 };
@@ -387,11 +345,6 @@ export type MutationDeleteAffiliateArgs = {
 
 
 export type MutationDeleteArticleArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type MutationDeleteArticleCategoryArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -441,12 +394,6 @@ export type MutationUpdateAffiliateArgs = {
 
 export type MutationUpdateArticleArgs = {
   data: UpdateArticleInput;
-  id: Scalars['String']['input'];
-};
-
-
-export type MutationUpdateArticleCategoryArgs = {
-  data: UpdateArticleCategoryInput;
   id: Scalars['String']['input'];
 };
 
@@ -566,7 +513,6 @@ export type Product = {
   poster?: Maybe<Scalars['String']['output']>;
   posterQrcodeConfig?: Maybe<PosterQrcodeConfig>;
   price?: Maybe<Scalars['Float']['output']>;
-  sort?: Maybe<Scalars['Int']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
@@ -591,8 +537,6 @@ export type Query = {
   affiliateWithdrawals: AffiliateWithdrawalPagination;
   affiliates: AffiliatePagination;
   article: Article;
-  articleCategories: ArticleCategoryPagination;
-  articleCategory: ArticleCategory;
   articles: ArticlePagination;
   me: User;
   merchant: Merchant;
@@ -637,18 +581,6 @@ export type QueryAffiliatesArgs = {
 
 
 export type QueryArticleArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryArticleCategoriesArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  take?: InputMaybe<Scalars['Int']['input']>;
-  where?: ArticleCategoryWhereInput;
-};
-
-
-export type QueryArticleCategoryArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -771,20 +703,12 @@ export type UpdateAffiliateInput = {
   phone?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateArticleCategoryInput = {
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  parentId?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Scalars['Int']['input']>;
-};
-
 export type UpdateArticleInput = {
-  categoryId: Scalars['String']['input'];
   content?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   image?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  sort: Scalars['Int']['input'];
+  slug?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 

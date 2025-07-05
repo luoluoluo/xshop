@@ -15,14 +15,11 @@ export class CreateArticleInput {
   @Field()
   image: string;
 
-  @Field()
-  categoryId?: string;
-
   @Field(() => Boolean, { nullable: true })
   isActive?: boolean;
 
-  @Field(() => Int)
-  sort: number;
+  @Field()
+  slug: string;
 }
 
 @InputType()
@@ -39,14 +36,11 @@ export class UpdateArticleInput {
   @Field({ nullable: true })
   image?: string;
 
-  @Field()
-  categoryId?: string;
-
   @Field(() => Boolean, { nullable: true })
   isActive?: boolean;
 
-  @Field(() => Int)
-  sort: number;
+  @Field({ nullable: true })
+  slug?: string;
 }
 
 @ObjectType()

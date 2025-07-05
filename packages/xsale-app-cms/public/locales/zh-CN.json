@@ -699,8 +699,11 @@
       "field": "此字段为必填"
     }
   },
+  "content": {
+    "content": "内容"
+  },
   "articleCategory": {
-    "articleCategory": "分类",
+    "articleCategory": "文章分类",
     "titles": {
       "list": "分类"
     },
@@ -729,7 +732,8 @@
       "content": "内容",
       "image": "图片",
       "category": "分类",
-      "createdAt": "创建时间"
+      "createdAt": "创建时间",
+      "slug": "别名"
     }
   },
   "setting": {

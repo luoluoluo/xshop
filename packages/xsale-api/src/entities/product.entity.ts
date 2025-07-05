@@ -78,10 +78,6 @@ export class Product extends Base {
   @Column({ type: 'int', default: 0, nullable: true })
   stock: number;
 
-  @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', default: 0, name: 'sort' })
-  sort: number;
-
   @Client(['cms', 'pms'])
   @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })

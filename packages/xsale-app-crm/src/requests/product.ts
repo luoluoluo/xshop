@@ -16,7 +16,6 @@ export const getProducts = /* GraphQL */ `
         }
         title
         image
-        sort
         createdAt
         price
         commission
@@ -55,7 +54,6 @@ export const getProduct = /* GraphQL */ `
       title
       content
       image
-      sort
       createdAt
       price
       commission

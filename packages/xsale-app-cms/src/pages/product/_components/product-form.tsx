@@ -488,14 +488,7 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
       >
         <CustomEditor />
       </Form.Item>
-      <Form.Item
-        label={t("fields.sort")}
-        name={["sort"]}
-        rules={[{ required: true }]}
-        initialValue={0}
-      >
-        <Input />
-      </Form.Item>
+
       <Form.Item label={t("fields.isActive.label")} name={["isActive"]}>
         <Switch />
       </Form.Item>

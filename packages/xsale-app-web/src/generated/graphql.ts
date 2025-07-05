@@ -56,39 +56,13 @@ export enum AffiliateWithdrawalStatus {
 
 export type Article = {
   __typename?: 'Article';
-  category?: Maybe<ArticleCategory>;
-  categoryId?: Maybe<Scalars['String']['output']>;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   image?: Maybe<Scalars['String']['output']>;
-  sort?: Maybe<Scalars['Float']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
-};
-
-export type ArticleCategory = {
-  __typename?: 'ArticleCategory';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  name?: Maybe<Scalars['String']['output']>;
-  parent?: Maybe<ArticleCategory>;
-  parentId?: Maybe<Scalars['String']['output']>;
-  sort?: Maybe<Scalars['Float']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-export type ArticleCategoryPagination = {
-  __typename?: 'ArticleCategoryPagination';
-  data: Array<ArticleCategory>;
-  total: Scalars['Int']['output'];
-};
-
-export type ArticleCategoryWhereInput = {
-  id?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  parentId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ArticlePagination = {
@@ -318,7 +292,6 @@ export type Product = {
   poster?: Maybe<Scalars['String']['output']>;
   posterQrcodeConfig?: Maybe<PosterQrcodeConfig>;
   price?: Maybe<Scalars['Float']['output']>;
-  sort?: Maybe<Scalars['Int']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
@@ -341,8 +314,6 @@ export type Query = {
   affiliateOrder: Order;
   affiliateOrders: OrderPagination;
   article: Article;
-  articleCategories: ArticleCategoryPagination;
-  articleCategory: ArticleCategory;
   articles: ArticlePagination;
   merchant: Merchant;
   merchants: MerchantPagination;
@@ -371,18 +342,6 @@ export type QueryAffiliateOrdersArgs = {
 
 
 export type QueryArticleArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryArticleCategoriesArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  take?: InputMaybe<Scalars['Int']['input']>;
-  where?: ArticleCategoryWhereInput;
-};
-
-
-export type QueryArticleCategoryArgs = {
   id: Scalars['String']['input'];
 };
 

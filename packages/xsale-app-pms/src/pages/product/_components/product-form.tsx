@@ -104,7 +104,6 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
   }, [poster, posterQrcodeConfig, debouncedGeneratePreview]);
 
   const onFinish = (values: CreateProductInput | UpdateProductInput) => {
-    values.sort = Number(values?.sort || 0);
     values.commission = Number(values?.commission || 0);
     values.price = Number(values?.price || 0);
     values.stock = Number(values?.stock || 0);
@@ -455,14 +454,6 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
         rules={[{ required: true }]}
       >
         <CustomEditor />
-      </Form.Item>
-      <Form.Item
-        label={t("fields.sort")}
-        name={["sort"]}
-        rules={[{ required: true }]}
-        initialValue={0}
-      >
-        <Input />
       </Form.Item>
       <Form.Item label={t("fields.isActive.label")} name={["isActive"]}>
         <Switch />
