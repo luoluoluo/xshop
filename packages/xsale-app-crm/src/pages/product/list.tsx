@@ -361,6 +361,13 @@ export const ProductList = () => {
               );
             }}
           />
+          <Table.Column
+            dataIndex="image"
+            title={t("product.fields.image")}
+            render={(image: string) => {
+              return <img className="w-auto h-16" src={image} />;
+            }}
+          />
           <Table.Column dataIndex="title" title={t("product.fields.title")} />
           <Table.Column
             dataIndex="price"
