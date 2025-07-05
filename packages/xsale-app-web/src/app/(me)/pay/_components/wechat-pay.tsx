@@ -26,16 +26,17 @@ export const WechatPay = ({
   const searchParams = useSearchParams();
   const state = searchParams.get("state");
   const code = searchParams.get("code");
-  // const [state, setState] = useState<OrderState>(order.state!);
   const [payQrcode, setPayQrcode] = useState<string>();
   const [payUrl, setPayUrl] = useState("");
   const [orderUrl, setOrderUrl] = useState("");
-
   const [openId, setOpenId] = useState<string>();
 
   useEffect(() => {
     setPayUrl(`${window.location.href}`);
     setOrderUrl(`${window.location.origin}/order/${orderId}`);
+
+    const orderListUrl = `${window.location.origin}/order`;
+    window.history.replaceState(null, "", orderListUrl);
   }, [orderId]);
 
   useEffect(() => {
