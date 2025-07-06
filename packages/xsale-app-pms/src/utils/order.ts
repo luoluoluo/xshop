@@ -20,9 +20,9 @@ export const getStatusColor = (status: OrderStatus) => {
 export const getStatusText = (status: OrderStatus) => {
   switch (status) {
     case OrderStatus.Created:
-      return "已创建";
+      return "待支付";
     case OrderStatus.Paid:
-      return "已支付";
+      return "待完成";
     case OrderStatus.Completed:
       return "已完成";
     case OrderStatus.Cancelled:

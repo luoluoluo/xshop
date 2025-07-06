@@ -5,7 +5,6 @@ import { parse } from "graphql";
 import { getOrders } from "../../requests/order";
 import {
   Affiliate,
-  Customer,
   Merchant,
   Order,
   OrderStatus,
@@ -31,49 +30,63 @@ export const OrderList = () => {
 
   return (
     <>
-      <Form layout="inline" className="mb-4">
-        <Form.Item
-          name="isMerchantAffiliate"
-          label={t("order.filter.affiliateType.label")}
-          initialValue={where.isMerchantAffiliate ? "true" : "false"}
-        >
-          <Radio.Group
-            options={[
-              {
-                label: t("order.filter.affiliateType.affiliate"),
-                value: "false",
-              },
-              {
-                label: t("order.filter.affiliateType.merchantAffiliate"),
-                value: "true",
-              },
-            ]}
-            onChange={(e) => {
-              setWhere({
-                ...where,
-                isMerchantAffiliate: e.target.value === "true",
-              });
-            }}
-          />
-        </Form.Item>
-        <Form.Item name="status" label={t("order.filter.status.label")}>
-          <Select
-            placeholder="订单状态"
-            onChange={(value) => {
-              setWhere({
-                ...where,
-                status: value as OrderStatus,
-              });
-            }}
-            options={Object.values(OrderStatus).map((status) => ({
-              label: getStatusText(status),
-              value: status,
-            }))}
-          />
-        </Form.Item>
-      </Form>
       <List>
-        <Table {...tableProps} rowKey="id">
+        <Form className="mb-4">
+          <Form.Item
+            name="isMerchantAffiliate"
+            label={t("order.filter.affiliateType.label")}
+            initialValue={where.isMerchantAffiliate ? "true" : "false"}
+          >
+            <Radio.Group
+              options={[
+                {
+                  label: t("order.filter.affiliateType.affiliate"),
+                  value: "false",
+                },
+                {
+                  label: t("order.filter.affiliateType.merchantAffiliate"),
+                  value: "true",
+                },
+              ]}
+              onChange={(e) => {
+                setWhere({
+                  ...where,
+                  isMerchantAffiliate: e.target.value === "true",
+                });
+              }}
+            />
+          </Form.Item>
+          <Form.Item name="status" label={t("order.filter.status.label")}>
+            <Radio.Group
+              optionType="button"
+              options={[
+                {
+                  label: "全部",
+                  value: undefined,
+                },
+                {
+                  label: getStatusText(OrderStatus.Created),
+                  value: OrderStatus.Created,
+                },
+                {
+                  label: getStatusText(OrderStatus.Paid),
+                  value: OrderStatus.Paid,
+                },
+                {
+                  label: getStatusText(OrderStatus.Completed),
+                  value: OrderStatus.Completed,
+                },
+              ]}
+              onChange={(e) => {
+                setWhere({
+                  ...where,
+                  status: e.target.value as OrderStatus,
+                });
+              }}
+            />
+          </Form.Item>
+        </Form>
+        <Table {...tableProps} rowKey="id" className="mt-4">
           <Table.Column
             dataIndex="id"
             title={t("order.fields.id")}

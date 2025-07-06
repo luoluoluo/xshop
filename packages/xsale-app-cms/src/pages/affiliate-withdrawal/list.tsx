@@ -9,6 +9,8 @@ import {
   Modal,
   Input,
   message,
+  Form,
+  Radio,
 } from "antd";
 import { parse } from "graphql";
 import { useState } from "react";
@@ -18,7 +20,11 @@ import {
   getAffiliateWithdrawals,
   rejectAffiliateWithdrawal,
 } from "../../requests/affiliate-withdrawal";
-import { Affiliate, AffiliateWithdrawalStatus } from "../../generated/graphql";
+import {
+  Affiliate,
+  AffiliateWithdrawalStatus,
+  AffiliateWithdrawalWhereInput,
+} from "../../generated/graphql";
 import { request } from "../../utils/request";
 import dayjs from "dayjs";
 
@@ -32,10 +38,14 @@ export const AffiliateWithdrawalList = () => {
     useState<any>(null);
   const [rejectReason, setRejectReason] = useState("");
   const [loading, setLoading] = useState(false);
+  const [where, setWhere] = useState<AffiliateWithdrawalWhereInput>();
 
   const { tableProps, tableQuery } = useTable({
     meta: {
       gqlQuery: parse(getAffiliateWithdrawals),
+      variables: {
+        where,
+      },
     },
   });
 
@@ -164,7 +174,7 @@ export const AffiliateWithdrawalList = () => {
       case AffiliateWithdrawalStatus.Created:
         return "待审核";
       case AffiliateWithdrawalStatus.Approved:
-        return "已审核";
+        return "待打款";
       case AffiliateWithdrawalStatus.Completed:
         return "已打款";
       case AffiliateWithdrawalStatus.Rejected:
@@ -216,7 +226,43 @@ export const AffiliateWithdrawalList = () => {
   return (
     <>
       <List>
-        <Table {...tableProps} rowKey="id">
+        <Form className="mt-4">
+          <Form.Item name="status" label="状态">
+            <Radio.Group
+              optionType="button"
+              options={[
+                {
+                  label: "全部",
+                  value: undefined,
+                },
+                {
+                  label: getStatusText(AffiliateWithdrawalStatus.Created),
+                  value: AffiliateWithdrawalStatus.Created,
+                },
+                {
+                  label: getStatusText(AffiliateWithdrawalStatus.Approved),
+                  value: AffiliateWithdrawalStatus.Approved,
+                },
+                {
+                  label: getStatusText(AffiliateWithdrawalStatus.Completed),
+                  value: AffiliateWithdrawalStatus.Completed,
+                },
+                {
+                  label: getStatusText(AffiliateWithdrawalStatus.Rejected),
+                  value: AffiliateWithdrawalStatus.Rejected,
+                },
+              ]}
+              onChange={(e) => {
+                setWhere({
+                  ...where,
+                  status: e.target.value as AffiliateWithdrawalStatus,
+                });
+              }}
+            />
+          </Form.Item>
+        </Form>
+
+        <Table {...tableProps} rowKey="id" className="mt-4">
           <Table.Column
             dataIndex="id"
             title={t("affiliateWithdrawal.fields.id")}

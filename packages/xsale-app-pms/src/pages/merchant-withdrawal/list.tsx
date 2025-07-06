@@ -1,18 +1,27 @@
 import { List, useTable } from "@refinedev/antd";
 import { useGetIdentity, useTranslate } from "@refinedev/core";
-import { Table, Tag, Tooltip } from "antd";
+import { Form, Radio, Table, Tag, Tooltip } from "antd";
 import { parse } from "graphql";
 
-import { Merchant, MerchantWithdrawalStatus } from "../../generated/graphql";
+import {
+  Merchant,
+  MerchantWithdrawalStatus,
+  MerchantWithdrawalWhereInput,
+} from "../../generated/graphql";
 import { getMerchantWithdrawals } from "../../requests/merchant-withdrawal";
 import dayjs from "dayjs";
+import { useState } from "react";
 
 export const MerchantWithdrawalList = () => {
   const t = useTranslate();
+  const [where, setWhere] = useState<MerchantWithdrawalWhereInput>();
 
   const { tableProps } = useTable({
     meta: {
       gqlQuery: parse(getMerchantWithdrawals),
+      variables: {
+        where,
+      },
     },
   });
 
@@ -38,7 +47,7 @@ export const MerchantWithdrawalList = () => {
       case MerchantWithdrawalStatus.Created:
         return "待处理";
       case MerchantWithdrawalStatus.Approved:
-        return "已通过";
+        return "待打款";
       case MerchantWithdrawalStatus.Completed:
         return "已完成";
       case MerchantWithdrawalStatus.Rejected:
@@ -50,9 +59,44 @@ export const MerchantWithdrawalList = () => {
 
   return (
     <>
-      <div className="text-2xl font-bold mb-4">我的余额：¥{me?.balance}</div>
       <List>
-        <Table {...tableProps} rowKey="id">
+        <div className="text-xl font-bold mb-4">我的余额：¥{me?.balance}</div>
+        <Form className="mt-4">
+          <Form.Item name="status" label="状态">
+            <Radio.Group
+              optionType="button"
+              options={[
+                {
+                  label: "全部",
+                  value: undefined,
+                },
+                {
+                  label: getStatusText(MerchantWithdrawalStatus.Created),
+                  value: MerchantWithdrawalStatus.Created,
+                },
+                {
+                  label: getStatusText(MerchantWithdrawalStatus.Approved),
+                  value: MerchantWithdrawalStatus.Approved,
+                },
+                {
+                  label: getStatusText(MerchantWithdrawalStatus.Completed),
+                  value: MerchantWithdrawalStatus.Completed,
+                },
+                {
+                  label: getStatusText(MerchantWithdrawalStatus.Rejected),
+                  value: MerchantWithdrawalStatus.Rejected,
+                },
+              ]}
+              onChange={(e) => {
+                setWhere({
+                  ...where,
+                  status: e.target.value as MerchantWithdrawalStatus,
+                });
+              }}
+            />
+          </Form.Item>
+        </Form>
+        <Table {...tableProps} rowKey="id" className="mt-4">
           <Table.Column
             dataIndex="id"
             title={t("merchantWithdrawal.fields.id")}
