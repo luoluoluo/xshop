@@ -35,8 +35,12 @@ export const WechatPay = ({
     setPayUrl(`${window.location.href}`);
     setOrderUrl(`${window.location.origin}/order/${orderId}`);
 
-    const orderListUrl = `${window.location.origin}/order`;
-    window.history.replaceState(null, "", orderListUrl);
+    // 只在组件首次挂载时执行一次 URL 替换
+    const currentPath = window.location.pathname;
+    if (!currentPath.includes("/order")) {
+      const orderListUrl = `${window.location.origin}/order`;
+      window.history.replaceState(null, "", orderListUrl);
+    }
   }, [orderId]);
 
   useEffect(() => {
