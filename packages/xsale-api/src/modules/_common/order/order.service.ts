@@ -4,12 +4,16 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
-import { DataSource, QueryRunner } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { Order, OrderStatus } from '@/entities/order.entity';
 import { Product } from '@/entities/product.entity';
-import { WechatPayService } from '../wechat-pay/wechat-pay.service';
+import {
+  TransactionRequest,
+  WechatPayService,
+} from '../wechat-pay/wechat-pay.service';
 import { Affiliate } from '@/entities/affiliate.entity';
 import { Merchant } from '@/entities/merchant.entity';
+import { Payment } from '../wechat-pay/wechat-pay.dto';
 
 export interface CancelOrderOptions {
   /** 自定义验证函数 */
@@ -32,6 +36,7 @@ export class CommonOrderService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly wechatPayService: WechatPayService,
+    private readonly orderRepository: Repository<Order>,
   ) {}
 
   /**
@@ -313,5 +318,85 @@ export class CommonOrderService {
       // 释放连接
       await queryRunner.release();
     }
+  }
+
+  async createOrderPayment(options: {
+    orderId: string;
+    notifyUrl: string;
+    openId: string;
+  }): Promise<Payment> {
+    // 验证订单
+    const order = await this.orderRepository.findOne({
+      where: { id: options.orderId },
+    });
+
+    if (!order) {
+      throw new NotFoundException(`Order ${options.orderId} not found`);
+    }
+
+    if (order.status !== OrderStatus.CREATED) {
+      throw new Error('Only created orders can be paid');
+    }
+
+    // 构建支付参数
+    const paymentParams: TransactionRequest = {
+      description: `Order payment for ${order.id}`,
+      out_trade_no: order.id,
+      amount: {
+        total: Math.floor(order.amount * 100),
+        currency: 'CNY',
+      },
+      payer: {
+        openid: options.openId,
+      },
+      notify_url: options.notifyUrl,
+    };
+
+    // 调用微信支付接口
+    const paymentResult =
+      await this.wechatPayService.createTransactionsJsapi(paymentParams);
+
+    return {
+      appId: paymentResult.appId,
+      timeStamp: paymentResult.timeStamp,
+      nonceStr: paymentResult.nonceStr,
+      package: paymentResult.package,
+      signType: paymentResult.signType,
+      paySign: paymentResult.paySign,
+    };
+  }
+
+  /**
+   * 处理支付成功逻辑
+   * @param orderId 订单ID
+   */
+  async handlePaymentSuccess(orderId: string): Promise<Order> {
+    const order = await this.orderRepository.findOne({
+      where: { id: orderId },
+    });
+
+    if (!order) {
+      throw new NotFoundException(`Order ${orderId} not found`);
+    }
+
+    if (order.status !== OrderStatus.CREATED) {
+      this.logger.log('订单已支付', {
+        id: order.id,
+        status: order.status,
+      });
+      return order;
+    }
+
+    // 更新订单状态为已支付
+    order.status = OrderStatus.PAID;
+    order.paidAt = new Date();
+    const savedOrder = await this.orderRepository.save(order);
+
+    this.logger.log('订单状态更新成功', {
+      id: order.id,
+      status: order.status,
+    });
+
+    return savedOrder;
   }
 }

@@ -106,12 +106,6 @@ export class OrderResolver {
     @Context() context: WebContext,
     @Args('data') data: CreatePaymentInput,
   ): Promise<Payment> {
-    // 验证订单
-    const order = await this.webOrderService.findOne(data.orderId);
-
-    if (order.status !== OrderStatus.CREATED) {
-      throw new Error('Only created orders can be paid');
-    }
     /** notify url  */
     const { req } = context;
     const host = req.get('host');
@@ -122,32 +116,11 @@ export class OrderResolver {
     const notifyUrl = `${baseUrl}/wechat-pay/notify`;
     /** notify url end */
 
-    // 构建支付参数
-    const paymentParams: TransactionRequest = {
-      description: `Order payment for ${order.id}`,
-      out_trade_no: order.id,
-      amount: {
-        total: Math.floor(order.amount * 100),
-        currency: 'CNY',
-      },
-      payer: {
-        openid: data.openId,
-      },
-      notify_url: notifyUrl,
-    };
-
-    // 调用微信支付接口
-    const paymentResult =
-      await this.wechatPayService.createTransactionsJsapi(paymentParams);
-
-    return {
-      appId: paymentResult.appId,
-      timeStamp: paymentResult.timeStamp,
-      nonceStr: paymentResult.nonceStr,
-      package: paymentResult.package,
-      signType: paymentResult.signType,
-      paySign: paymentResult.paySign,
-    };
+    return this.commonOrderService.createOrderPayment({
+      orderId: data.orderId,
+      notifyUrl,
+      openId: data.openId,
+    });
   }
 
   @Query(() => OrderStatus)
