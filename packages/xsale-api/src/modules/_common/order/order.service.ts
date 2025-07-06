@@ -308,7 +308,7 @@ export class CommonOrderService {
               amount:
                 Math.floor((order.affiliateAmount || 0) * 100) +
                 Math.floor((order.merchantAffiliateAmount || 0) * 100),
-              description: '招商经理和推广者佣金',
+              description: `订单${order.id}佣金`,
             },
           ];
         } else {
@@ -318,14 +318,14 @@ export class CommonOrderService {
               type: 'PERSONAL_OPENID',
               account: affiliate.wechatOAuth.openId,
               amount: Math.floor((order.affiliateAmount || 0) * 100),
-              description: '推广者佣金',
+              description: `订单${order.id}佣金`,
             },
             // 商户客户经理分账
             {
               type: 'PERSONAL_OPENID',
               account: merchantAffiliate.wechatOAuth.openId,
               amount: Math.floor((order.merchantAffiliateAmount || 0) * 100),
-              description: '招商经理佣金',
+              description: `订单${order.id}佣金`,
             },
           ];
         }
@@ -432,7 +432,7 @@ export class CommonOrderService {
 
     // 构建支付参数
     const paymentParams: TransactionRequest = {
-      description: `Order payment for ${order.id}`,
+      description: `订单${order.id}支付`,
       out_trade_no: order.id,
       amount: {
         total: Math.floor(order.amount * 100),
