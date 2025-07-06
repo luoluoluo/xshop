@@ -96,7 +96,7 @@ export const AffiliateWithdrawalList = () => {
             />
           </Form.Item>
         </Form>
-        <Table {...tableProps} rowKey="id">
+        <Table {...tableProps} rowKey="id" className="mt-4">
           <Table.Column
             dataIndex="id"
             title={t("affiliateWithdrawal.fields.id")}
