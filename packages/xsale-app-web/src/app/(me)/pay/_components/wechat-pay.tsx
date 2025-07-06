@@ -34,14 +34,14 @@ export const WechatPay = ({
   useEffect(() => {
     setPayUrl(`${window.location.href}`);
     setOrderUrl(`${window.location.origin}/order/${orderId}`);
-
-    // 只在组件首次挂载时执行一次 URL 替换
-    const currentPath = window.location.pathname;
-    if (!currentPath.includes("/order")) {
-      const orderListUrl = `${window.location.origin}/order`;
-      window.history.replaceState(null, "", orderListUrl);
-    }
   }, [orderId]);
+
+  // 跳转到订单页面前更新 URL
+  const redirectToOrder = (withContact = false) => {
+    const orderListUrl = `${window.location.origin}/order`;
+    window.history.replaceState(null, "", orderListUrl);
+    window.location.replace(`${orderUrl}${withContact ? "?contact=true" : ""}`);
+  };
 
   useEffect(() => {
     if (!payUrl || !orderUrl) {
@@ -103,10 +103,10 @@ export const WechatPay = ({
               res.data?.createOrderPayment,
               (res: any) => {
                 if (res.err_msg == "get_brand_wcpay_request:ok") {
-                  window.location.replace(`${orderUrl}?contact=true`);
+                  redirectToOrder(true);
                 } else {
                   toast({ title: "支付失败", variant: "destructive" });
-                  window.location.replace(orderUrl);
+                  redirectToOrder();
                 }
               },
             );
@@ -137,7 +137,7 @@ export const WechatPay = ({
           const state = res.data?.orderStatus;
           if (state === OrderStatus.Paid) {
             clearInterval(t);
-            window.location.replace(orderUrl);
+            redirectToOrder();
             return;
           }
         });
