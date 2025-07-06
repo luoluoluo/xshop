@@ -183,4 +183,8 @@ export class Order extends Base {
   @Field({ nullable: true })
   @Column({ name: 'is_wechat_profit_sharing', default: false })
   isWechatProfitSharing: boolean;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true, name: 'wechat_transaction_id' })
+  wechatTransactionId?: string;
 }

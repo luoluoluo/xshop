@@ -23,7 +23,10 @@ export class PaymentListener {
         openid: event.openid,
       });
 
-      await this.orderService.handlePaymentSuccess(event.outTradeNo);
+      await this.orderService.handlePaymentSuccess(
+        event.outTradeNo,
+        event.transactionId,
+      );
     } catch (error) {
       this.logger.error('处理支付成功事件失败', {
         error,

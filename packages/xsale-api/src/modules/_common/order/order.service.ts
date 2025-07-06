@@ -288,9 +288,13 @@ export class CommonOrderService {
 
       // 如果开启了微信分账且有openId，通过微信分账
       if (order.isWechatProfitSharing) {
+        if (!order.wechatTransactionId) {
+          throw new Error('微信支付订单号不存在，无法进行分账');
+        }
+
         // 推广者分账
         const affiliateProfitSharingParams: ProfitsharingCreateOrdersRequest = {
-          transaction_id: order.id,
+          transaction_id: order.wechatTransactionId,
           out_order_no: `PS-${order.id}-${Date.now()}`,
           receivers: [
             {
@@ -309,7 +313,7 @@ export class CommonOrderService {
         // 商户客户经理分账
         const merchantAffiliateProfitSharingParams: ProfitsharingCreateOrdersRequest =
           {
-            transaction_id: order.id,
+            transaction_id: order.wechatTransactionId,
             out_order_no: `PS-${order.id}-${Date.now()}-MA`,
             receivers: [
               {
@@ -450,8 +454,12 @@ export class CommonOrderService {
   /**
    * 处理支付成功逻辑
    * @param orderId 订单ID
+   * @param transactionId 微信支付订单号
    */
-  async handlePaymentSuccess(orderId: string): Promise<Order> {
+  async handlePaymentSuccess(
+    orderId: string,
+    transactionId: string,
+  ): Promise<Order> {
     const order = await this.orderRepository.findOne({
       where: { id: orderId },
     });
@@ -471,11 +479,13 @@ export class CommonOrderService {
     // 更新订单状态为已支付
     order.status = OrderStatus.PAID;
     order.paidAt = new Date();
+    order.wechatTransactionId = transactionId;
     const savedOrder = await this.orderRepository.save(order);
 
     this.logger.log('订单状态更新成功', {
       id: order.id,
       status: order.status,
+      wechatTransactionId: transactionId,
     });
 
     return savedOrder;
