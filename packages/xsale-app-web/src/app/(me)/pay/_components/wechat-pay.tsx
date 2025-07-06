@@ -36,11 +36,16 @@ export const WechatPay = ({
     setOrderUrl(`${window.location.origin}/order/${orderId}`);
   }, [orderId]);
 
-  // 跳转到订单页面前更新 URL
+  // 跳转到订单页面前更新历史记录
   const redirectToOrder = (withContact = false) => {
     const orderListUrl = `${window.location.origin}/order`;
+    // 先将当前页面替换为订单列表页
     window.history.replaceState(null, "", orderListUrl);
-    window.location.replace(`${orderUrl}${withContact ? "?contact=true" : ""}`);
+    // 然后将订单详情页推入历史记录
+    const targetUrl = `${orderUrl}${withContact ? "?contact=true" : ""}`;
+    window.history.pushState(null, "", targetUrl);
+    // 最后进行跳转
+    window.location.href = targetUrl;
   };
 
   useEffect(() => {
