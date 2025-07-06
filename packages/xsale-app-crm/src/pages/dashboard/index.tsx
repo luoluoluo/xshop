@@ -73,22 +73,13 @@ const Dashboard = () => {
                 复制
               </Clipboard>
             </div>
-            {!wechatOAuth?.openId ? (
-              <div className="mt-4 flex flex-col gap-2">
-                <Button type="primary" href={wechatOauthUrl}>
-                  绑定微信
-                </Button>
-                <div className="text-sm text-gray-500">
-                  绑定微信后，佣金将自动提现到微信钱包，无需手动提现
-                </div>
-              </div>
-            ) : (
+            {wechatOAuth?.openId ? (
               <div className="mt-4">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     已与
-                    <Avatar src={me?.wechatOAuth?.avatar} size={24} />
-                    <span>{me?.wechatOAuth?.nickName}绑定</span>
+                    <Avatar src={wechatOAuth?.avatar} size={24} />
+                    <span>{wechatOAuth?.nickName}绑定</span>
                     {wechatOauthUrl && (
                       <Button type="link" danger href={wechatOauthUrl}>
                         重新绑定
@@ -99,6 +90,17 @@ const Dashboard = () => {
                   <div className="text-sm text-gray-500">
                     绑定微信后，佣金将自动提现到微信钱包，无需手动提现
                   </div>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-4 flex flex-col gap-2">
+                {wechatOauthUrl && (
+                  <Button type="primary" href={wechatOauthUrl}>
+                    绑定微信
+                  </Button>
+                )}
+                <div className="text-sm text-gray-500">
+                  绑定微信后，佣金将自动提现到微信钱包，无需手动提现
                 </div>
               </div>
             )}
