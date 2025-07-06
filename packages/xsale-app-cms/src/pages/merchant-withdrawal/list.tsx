@@ -226,7 +226,7 @@ export const MerchantWithdrawalList = () => {
   return (
     <>
       <List>
-        <Form>
+        <Form layout="inline">
           <Form.Item name="status" label="状态">
             <Radio.Group
               optionType="button"

@@ -31,7 +31,7 @@ export const OrderList = () => {
   return (
     <>
       <List>
-        <Form className="mb-4">
+        <Form layout="inline" className="mb-4">
           <Form.Item
             name="isMerchantAffiliate"
             label={t("order.filter.affiliateType.label")}

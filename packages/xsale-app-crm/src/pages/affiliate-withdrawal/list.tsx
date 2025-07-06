@@ -61,7 +61,7 @@ export const AffiliateWithdrawalList = () => {
     <>
       <List>
         <div className="text-xl font-bold mb-4">我的余额：¥{me?.balance}</div>
-        <Form className="mt-4">
+        <Form layout="inline" className="mt-4">
           <Form.Item name="status" label="状态">
             <Radio.Group
               optionType="button"
