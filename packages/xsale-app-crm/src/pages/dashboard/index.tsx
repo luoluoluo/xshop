@@ -75,11 +75,13 @@ const Dashboard = () => {
             </div>
             {wechatOAuth?.openId ? (
               <div className="mt-4">
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col items-center gap-2">
                   <div className="flex items-center gap-2">
-                    已与
-                    <Avatar src={wechatOAuth?.avatar} size={24} />
-                    <span>{wechatOAuth?.nickName}绑定</span>
+                    <div className="flex items-center">
+                      <span>已与</span>
+                      <Avatar src={wechatOAuth?.avatar} size={24} />
+                      <span>{wechatOAuth?.nickName}绑定</span>
+                    </div>
                     {wechatOauthUrl && (
                       <Button type="link" danger href={wechatOauthUrl}>
                         重新绑定
@@ -93,7 +95,7 @@ const Dashboard = () => {
                 </div>
               </div>
             ) : (
-              <div className="mt-4 flex flex-col gap-2">
+              <div className="mt-4 flex flex-col items-center gap-2">
                 {wechatOauthUrl && (
                   <Button type="primary" href={wechatOauthUrl}>
                     绑定微信

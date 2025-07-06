@@ -83,6 +83,9 @@ export const updateMeWechatOAuth = gql`
   mutation updateMeWechatOAuth($code: String!) {
     updateMeWechatOAuth(code: $code) {
       openId
+      nickName
+      avatar
+      createdAt
     }
   }
 `;
