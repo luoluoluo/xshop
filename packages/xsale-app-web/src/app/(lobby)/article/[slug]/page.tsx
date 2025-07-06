@@ -1,5 +1,6 @@
 import { SiteFooter } from "@/components/layouts/site-footer";
 import { SiteHeader } from "@/components/layouts/site-header";
+import { Wechat } from "@/components/wechat";
 import { Article } from "@/generated/graphql";
 import { getArticle } from "@/requests/article";
 import { getLogger } from "@/utils/logger";
@@ -22,6 +23,21 @@ export async function generateMetadata({
   });
   return {
     title: article?.title || "",
+    description: article?.description || "",
+    openGraph: {
+      title: article?.title || "",
+      description: article?.description || "",
+      images: article?.image
+        ? [
+            {
+              url: article?.image,
+              width: 960,
+              height: 960,
+              alt: article?.title || "",
+            },
+          ]
+        : undefined,
+    },
   };
 }
 
@@ -38,6 +54,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   });
   return (
     <div className="relative flex min-h-screen flex-col">
+      <img src={`${article?.image}?w=960&h=960`} className="hidden" />
       <SiteHeader />
       <main className="flex-1">
         <div className="container">
@@ -51,6 +68,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </div>
       </main>
       <SiteFooter />
+      <Wechat
+        shareConfig={{
+          title: article?.title || "",
+          desc: article?.description || "",
+          imgUrl: `${article?.image}?w=960&h=960`,
+        }}
+      />
     </div>
   );
 }

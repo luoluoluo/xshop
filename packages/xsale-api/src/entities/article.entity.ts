@@ -15,8 +15,8 @@ export class Article extends Base {
   title: string;
 
   @Field({ nullable: true })
-  @Column()
-  description: string;
+  @Column({ nullable: true })
+  description?: string;
 
   @Field({ nullable: true })
   @Column('text')

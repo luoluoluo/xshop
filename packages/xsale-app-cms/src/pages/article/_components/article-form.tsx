@@ -20,11 +20,7 @@ export const ArticleForm = ({ formProps }: { formProps: FormProps }) => {
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        label={t("article.fields.image")}
-        name={["image"]}
-        rules={[{ required: true }]}
-      >
+      <Form.Item label={t("article.fields.image")} name={["image"]}>
         <CustomUpload />
       </Form.Item>
       <Form.Item
@@ -35,11 +31,7 @@ export const ArticleForm = ({ formProps }: { formProps: FormProps }) => {
         <Input />
       </Form.Item>
 
-      <Form.Item
-        label={t("article.fields.description")}
-        name={["description"]}
-        rules={[{ required: true }]}
-      >
+      <Form.Item label={t("article.fields.description")} name={["description"]}>
         <Input.TextArea rows={4} />
       </Form.Item>
 

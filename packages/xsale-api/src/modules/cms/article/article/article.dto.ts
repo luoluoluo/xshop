@@ -6,14 +6,14 @@ export class CreateArticleInput {
   @Field()
   title: string;
 
-  @Field()
-  description: string;
+  @Field({ nullable: true })
+  description?: string;
 
   @Field()
   content: string;
 
-  @Field()
-  image: string;
+  @Field({ nullable: true })
+  image?: string;
 
   @Field(() => Boolean, { nullable: true })
   isActive?: boolean;

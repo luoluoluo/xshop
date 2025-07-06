@@ -17,13 +17,6 @@ export const ArticleList = () => {
       <Table {...tableProps} rowKey="id">
         <Table.Column dataIndex="id" title={"ID"} />
         <Table.Column dataIndex="slug" title={t("article.fields.slug")} />
-        <Table.Column
-          dataIndex="image"
-          title={t("article.fields.image")}
-          render={(image: string) => {
-            return <img className="w-auto h-16" src={image} />;
-          }}
-        />
         <Table.Column dataIndex="title" title={t("article.fields.title")} />
         <Table.Column
           dataIndex="isActive"
