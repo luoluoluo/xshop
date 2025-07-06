@@ -291,25 +291,48 @@ export class CommonOrderService {
         if (!order.wechatTransactionId) {
           throw new Error('微信支付订单号不存在，无法进行分账');
         }
-        const affiliateProfitSharingParams: ProfitsharingCreateOrdersRequest = {
-          transaction_id: order.wechatTransactionId,
-          out_order_no: order.id,
-          receivers: [
+        let receivers: ProfitsharingCreateOrdersRequest['receivers'] = [];
+        if (
+          !affiliate?.wechatOAuth?.openId ||
+          !merchantAffiliate?.wechatOAuth?.openId
+        ) {
+          throw new Error('推广者或招商经理的微信openId不存在，无法进行分账');
+        }
+        if (
+          affiliate.wechatOAuth.openId === merchantAffiliate.wechatOAuth.openId
+        ) {
+          receivers = [
+            {
+              type: 'PERSONAL_OPENID',
+              account: affiliate.wechatOAuth.openId,
+              amount:
+                Math.floor((order.affiliateAmount || 0) * 100) +
+                Math.floor((order.merchantAffiliateAmount || 0) * 100),
+              description: '招商经理和推广者佣金',
+            },
+          ];
+        } else {
+          receivers = [
             // 推广者分账
             {
               type: 'PERSONAL_OPENID',
-              account: affiliate?.wechatOAuth?.openId || '',
+              account: affiliate.wechatOAuth.openId,
               amount: Math.floor((order.affiliateAmount || 0) * 100),
               description: '推广者佣金',
             },
             // 商户客户经理分账
             {
               type: 'PERSONAL_OPENID',
-              account: merchantAffiliate?.wechatOAuth?.openId || '',
+              account: merchantAffiliate.wechatOAuth.openId,
               amount: Math.floor((order.merchantAffiliateAmount || 0) * 100),
               description: '招商经理佣金',
             },
-          ],
+          ];
+        }
+        const affiliateProfitSharingParams: ProfitsharingCreateOrdersRequest = {
+          transaction_id: order.wechatTransactionId,
+          out_order_no: order.id,
+          receivers,
           unfreeze_unsplit: true,
         };
         await this.wechatPayService.profitsharingCreateOrders(
