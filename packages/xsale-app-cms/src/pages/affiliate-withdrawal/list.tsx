@@ -261,7 +261,6 @@ export const AffiliateWithdrawalList = () => {
             />
           </Form.Item>
         </Form>
-
         <Table {...tableProps} rowKey="id" className="mt-4">
           <Table.Column
             dataIndex="id"
