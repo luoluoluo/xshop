@@ -57,7 +57,7 @@ const Dashboard = () => {
     }
   }, [me?.id]);
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-4">
       <Card title="我的推广ID">
         <div className="mt-4">
           <div className="flex flex-col gap-2 items-center">
