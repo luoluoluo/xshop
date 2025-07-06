@@ -12,7 +12,7 @@ import { getChannel } from "@/utils/index.client";
 import { request } from "@/utils/request.client";
 import { useSearchParams } from "next/navigation";
 import QRCode from "qrcode";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const WechatPay = ({
   orderId,
@@ -27,31 +27,56 @@ export const WechatPay = ({
   const state = searchParams.get("state");
   const code = searchParams.get("code");
   const [payQrcode, setPayQrcode] = useState<string>();
-  const [payUrl, setPayUrl] = useState("");
-  const [orderUrl, setOrderUrl] = useState("");
   const [openId, setOpenId] = useState<string>();
+  const [orderStatus, setOrderStatus] = useState<OrderStatus>();
 
-  useEffect(() => {
-    if (!orderUrl && !payUrl) {
-      setPayUrl(`${window.location.href}`);
-      setOrderUrl(`${window.location.origin}/order/${orderId}`);
-    }
+  // // 跳转到订单页面前更新历史记录
+  // const redirectToOrder = (withContact = false) => {
+  //   const orderListUrl = `${window.location.origin}/order`;
+  //   // 先将当前页面替换为订单列表页
+  //   window.history.replaceState(null, "", orderListUrl);
+  //   // 然后将订单详情页推入历史记录
+  //   const targetUrl = `${orderUrl}${withContact ? "?contact=true" : ""}`;
+  //   window.history.pushState(null, "", targetUrl);
+  //   // 最后进行跳转
+  //   window.location.href = targetUrl;
+  // };
+
+  const loadOrderStatus = useCallback(() => {
+    void request<{
+      orderStatus: OrderStatus;
+    }>({
+      query: getOrderStatus,
+      variables: {
+        id: orderId,
+      },
+    }).then((res) => {
+      if (res.errors) {
+        console.log(res.errors);
+        return;
+      }
+      setOrderStatus(res.data?.orderStatus);
+    });
   }, [orderId]);
 
-  // 跳转到订单页面前更新历史记录
-  const redirectToOrder = (withContact = false) => {
-    const orderListUrl = `${window.location.origin}/order`;
-    // 先将当前页面替换为订单列表页
-    window.history.replaceState(null, "", orderListUrl);
-    // 然后将订单详情页推入历史记录
-    const targetUrl = `${orderUrl}${withContact ? "?contact=true" : ""}`;
-    window.history.pushState(null, "", targetUrl);
-    // 最后进行跳转
-    window.location.href = targetUrl;
-  };
+  useEffect(() => {
+    loadOrderStatus();
+    const t = setInterval(() => {
+      loadOrderStatus();
+    }, 1000);
+    return () => {
+      clearInterval(t);
+    };
+  }, [loadOrderStatus]);
 
   useEffect(() => {
-    if (!payUrl || !orderUrl) {
+    if (!orderStatus) {
+      return;
+    }
+    const payUrl = `${window.location.href}`;
+    const orderUrl = `${window.location.origin}/order/${orderId}`;
+    if (orderStatus !== OrderStatus.Created) {
+      window.location.href = orderUrl;
       return;
     }
     const channel = getChannel();
@@ -110,10 +135,10 @@ export const WechatPay = ({
               res.data?.createOrderPayment,
               (res: any) => {
                 if (res.err_msg == "get_brand_wcpay_request:ok") {
-                  redirectToOrder(true);
+                  window.location.href = `${orderUrl}?contact=true`;
                 } else {
                   toast({ title: "支付失败", variant: "destructive" });
-                  redirectToOrder();
+                  window.location.href = orderUrl;
                 }
               },
             );
@@ -131,31 +156,9 @@ export const WechatPay = ({
         .catch((e) => {
           console.log(e, 111);
         });
-
-      const t = setInterval(() => {
-        void request<{
-          orderStatus: OrderStatus;
-        }>({
-          query: getOrderStatus,
-          variables: {
-            id: orderId,
-          },
-        }).then((res) => {
-          const state = res.data?.orderStatus;
-          if (state === OrderStatus.Paid) {
-            clearInterval(t);
-            redirectToOrder();
-            return;
-          }
-        });
-      }, 1000);
-      // 300 秒后删除定时器
-      setTimeout(() => {
-        clearInterval(t);
-      }, 300000);
       return;
     }
-  }, [openId, code, state, payUrl, orderUrl, orderId]);
+  }, [openId, code, state, orderId, orderStatus]);
 
   return (
     <>
@@ -187,7 +190,7 @@ export const WechatPay = ({
       <Dialog
         open={!!payQrcode}
         onOpenChange={() => {
-          window.location.replace(orderUrl);
+          window.location.href = "/order";
         }}
       >
         <DialogContent
