@@ -25,15 +25,15 @@ export class Affiliate extends Base {
   balance: number;
 
   @Field({ nullable: true })
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: true })
   bankName?: string;
 
   @Field({ nullable: true })
-  @Column({ length: 50 })
+  @Column({ length: 50, nullable: true })
   bankAccount?: string;
 
   @Field({ nullable: true })
-  @Column({ length: 50 })
+  @Column({ length: 50, nullable: true })
   accountName?: string;
 
   @Column({ nullable: true })
