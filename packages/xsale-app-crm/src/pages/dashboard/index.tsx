@@ -4,7 +4,6 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Clipboard } from "../../components/clipboard";
 import { useGetIdentity } from "@refinedev/core";
 import { Affiliate, WechatOAuth } from "../../generated/graphql";
-import { getChannel } from "../../utils/channel";
 import { useEffect, useState } from "react";
 import { updateMeWechatOAuth, getWechatOauthUrl } from "../../requests/auth";
 import { request } from "../../utils/request";
@@ -15,8 +14,12 @@ const Dashboard = () => {
   const code = searchParams.get("code");
   const state = searchParams.get("state");
   const [wechatOauthUrl, setWechatOauthUrl] = useState<string>();
+  const [wechatOAuth, setWechatOAuth] = useState<WechatOAuth>();
   useEffect(() => {
     if (me?.id) {
+      if (me.wechatOAuth) {
+        setWechatOAuth(me.wechatOAuth);
+      }
       // 微信oauth 回调
       if (code && state && state === "wechat") {
         void request<{
@@ -31,11 +34,9 @@ const Dashboard = () => {
             message.error(res.errors?.[0]?.message);
             return;
           } else {
-            message.success("绑定微信成功");
+            setWechatOAuth(res.data?.updateMeWechatOAuth);
             setWechatOauthUrl(undefined);
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
+            message.success("绑定微信成功");
           }
         });
       } else {
@@ -72,7 +73,7 @@ const Dashboard = () => {
                 复制
               </Clipboard>
             </div>
-            {!me?.wechatOAuth?.openId ? (
+            {!wechatOAuth?.openId ? (
               <div className="mt-4 flex flex-col gap-2">
                 <Button type="primary" href={wechatOauthUrl}>
                   绑定微信
@@ -88,10 +89,13 @@ const Dashboard = () => {
                     已与
                     <Avatar src={me?.wechatOAuth?.avatar} size={24} />
                     <span>{me?.wechatOAuth?.nickName}绑定</span>
+                    {wechatOauthUrl && (
+                      <Button type="link" danger href={wechatOauthUrl}>
+                        重新绑定
+                      </Button>
+                    )}
                   </div>
-                  <Button type="link" danger href={wechatOauthUrl}>
-                    重新绑定
-                  </Button>
+
                   <div className="text-sm text-gray-500">
                     绑定微信后，佣金将自动提现到微信钱包，无需手动提现
                   </div>

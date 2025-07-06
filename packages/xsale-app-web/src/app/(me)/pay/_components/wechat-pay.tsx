@@ -32,8 +32,10 @@ export const WechatPay = ({
   const [openId, setOpenId] = useState<string>();
 
   useEffect(() => {
-    setPayUrl(`${window.location.href}`);
-    setOrderUrl(`${window.location.origin}/order/${orderId}`);
+    if (!orderUrl && !payUrl) {
+      setPayUrl(`${window.location.href}`);
+      setOrderUrl(`${window.location.origin}/order/${orderId}`);
+    }
   }, [orderId]);
 
   // 跳转到订单页面前更新历史记录
