@@ -46,7 +46,13 @@ export class OrderResolver {
     @Context() ctx: PmsContext,
     @Args('id') id: string,
   ): Promise<Order> {
-    return this.orderService.complete(id, ctx.req.user?.id);
+    return this.commonOrderService.completeOrder(id, {
+      customValidation: (order) => {
+        if (ctx.req.user?.id && order.merchantId !== ctx.req.user?.id) {
+          throw new Error(`Order ${id} not found`);
+        }
+      },
+    });
   }
 
   @Mutation(() => Order)
