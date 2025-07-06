@@ -4,12 +4,14 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { Order, OrderStatus } from '@/entities/order.entity';
 import { Product } from '@/entities/product.entity';
 import {
   TransactionRequest,
   WechatPayService,
+  ProfitsharingCreateOrdersRequest,
 } from '../wechat-pay/wechat-pay.service';
 import { Affiliate } from '@/entities/affiliate.entity';
 import { Merchant } from '@/entities/merchant.entity';
@@ -36,6 +38,7 @@ export class CommonOrderService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly wechatPayService: WechatPayService,
+    @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
   ) {}
 
@@ -232,7 +235,9 @@ export class CommonOrderService {
         relations: {
           product: true,
           merchant: true,
-          affiliate: true,
+          affiliate: {
+            wechatOAuth: true,
+          },
           customer: true,
         },
       });
@@ -249,6 +254,7 @@ export class CommonOrderService {
 
       const merchantAffiliate = await queryRunner.manager.findOne(Affiliate, {
         where: { id: order.merchantAffiliateId },
+        relations: ['wechatOAuth'],
       });
 
       if (!merchantAffiliate) {
@@ -257,6 +263,7 @@ export class CommonOrderService {
 
       const affiliate = await queryRunner.manager.findOne(Affiliate, {
         where: { id: order.affiliateId },
+        relations: ['wechatOAuth'],
       });
       if (!affiliate) {
         throw new BadRequestException('推广者不存在');
@@ -264,6 +271,11 @@ export class CommonOrderService {
 
       const merchant = await queryRunner.manager.findOne(Merchant, {
         where: { id: order.merchantId },
+        relations: {
+          affiliate: {
+            wechatOAuth: true,
+          },
+        },
       });
       if (!merchant) {
         throw new BadRequestException('商户不存在');
@@ -274,26 +286,66 @@ export class CommonOrderService {
       order.completedAt = new Date();
       const savedOrder = await queryRunner.manager.save(order);
 
-      // 检查推广者和招商经理是否是同一个人
-      if (affiliate.id === merchantAffiliate.id) {
-        // 同一个人，累加两个金额一次性更新
-        affiliate.balance =
-          Number(affiliate.balance) +
-          Number(order.affiliateAmount || 0) +
-          Number(order.merchantAffiliateAmount || 0);
-        await queryRunner.manager.save(affiliate);
-      } else {
-        // 不同的人，分别更新余额
-        // 更新推广者余额
-        affiliate.balance =
-          Number(affiliate.balance) + Number(order.affiliateAmount || 0);
-        await queryRunner.manager.save(affiliate);
+      // 如果开启了微信分账且有openId，通过微信分账
+      if (order.isWechatProfitSharing) {
+        // 推广者分账
+        const affiliateProfitSharingParams: ProfitsharingCreateOrdersRequest = {
+          transaction_id: order.id,
+          out_order_no: `PS-${order.id}-${Date.now()}`,
+          receivers: [
+            {
+              type: 'PERSONAL_OPENID',
+              account: affiliate?.wechatOAuth?.openId || '',
+              amount: Math.floor((order.affiliateAmount || 0) * 100),
+              description: '推广者佣金',
+            },
+          ],
+          unfreeze_unsplit: true,
+        };
+        await this.wechatPayService.profitsharingCreateOrders(
+          affiliateProfitSharingParams,
+        );
 
-        // 更新商户客户经理余额
-        merchantAffiliate.balance =
-          Number(merchantAffiliate.balance) +
-          Number(order.merchantAffiliateAmount || 0);
-        await queryRunner.manager.save(merchantAffiliate);
+        // 商户客户经理分账
+        const merchantAffiliateProfitSharingParams: ProfitsharingCreateOrdersRequest =
+          {
+            transaction_id: order.id,
+            out_order_no: `PS-${order.id}-${Date.now()}-MA`,
+            receivers: [
+              {
+                type: 'PERSONAL_OPENID',
+                account: merchantAffiliate?.wechatOAuth?.openId || '',
+                amount: Math.floor((order.merchantAffiliateAmount || 0) * 100),
+                description: '招商经理佣金',
+              },
+            ],
+            unfreeze_unsplit: true,
+          };
+        await this.wechatPayService.profitsharingCreateOrders(
+          merchantAffiliateProfitSharingParams,
+        );
+      } else {
+        // 检查推广者和招商经理是否是同一个人
+        if (affiliate.id === merchantAffiliate.id) {
+          // 同一个人，累加两个金额一次性更新
+          affiliate.balance =
+            Number(affiliate.balance) +
+            Number(order.affiliateAmount || 0) +
+            Number(order.merchantAffiliateAmount || 0);
+          await queryRunner.manager.save(affiliate);
+        } else {
+          // 不同的人，分别更新余额
+          // 更新推广者余额
+          affiliate.balance =
+            Number(affiliate.balance) + Number(order.affiliateAmount || 0);
+          await queryRunner.manager.save(affiliate);
+
+          // 更新商户客户经理余额
+          merchantAffiliate.balance =
+            Number(merchantAffiliate.balance) +
+            Number(order.merchantAffiliateAmount || 0);
+          await queryRunner.manager.save(merchantAffiliate);
+        }
       }
 
       if (order.merchantId) {
@@ -302,6 +354,7 @@ export class CommonOrderService {
           Number(merchant.balance) + Number(order.merchantAmount || 0);
         await queryRunner.manager.save(merchant);
       }
+
       // 提交事务
       await queryRunner.commitTransaction();
 
@@ -328,6 +381,16 @@ export class CommonOrderService {
     // 验证订单
     const order = await this.orderRepository.findOne({
       where: { id: options.orderId },
+      relations: {
+        affiliate: {
+          wechatOAuth: true,
+        },
+        merchant: {
+          affiliate: {
+            wechatOAuth: true,
+          },
+        },
+      },
     });
 
     if (!order) {
@@ -336,6 +399,21 @@ export class CommonOrderService {
 
     if (order.status !== OrderStatus.CREATED) {
       throw new Error('Only created orders can be paid');
+    }
+
+    // 检查是否需要开启分账
+    const totalCommissionPercentage =
+      (((order.affiliateAmount || 0) + (order.merchantAffiliateAmount || 0)) /
+        order.amount) *
+      100;
+
+    if (
+      totalCommissionPercentage <= 30 &&
+      order.affiliate?.wechatOAuth?.openId &&
+      order.merchant?.affiliate?.wechatOAuth?.openId
+    ) {
+      order.isWechatProfitSharing = true;
+      await this.orderRepository.save(order);
     }
 
     // 构建支付参数
@@ -350,6 +428,9 @@ export class CommonOrderService {
         openid: options.openId,
       },
       notify_url: options.notifyUrl,
+      settle_info: {
+        profit_sharing: order.isWechatProfitSharing,
+      },
     };
 
     // 调用微信支付接口

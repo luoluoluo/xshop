@@ -179,4 +179,8 @@ export class Order extends Base {
     name: 'product_price',
   })
   productPrice?: number;
+
+  @Field({ nullable: true })
+  @Column({ name: 'is_wechat_profit_sharing', default: false })
+  isWechatProfitSharing: boolean;
 }

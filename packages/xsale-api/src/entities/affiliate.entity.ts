@@ -1,7 +1,8 @@
 import { ObjectType, Field, Float } from '@nestjs/graphql';
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToOne } from 'typeorm';
 import { Base } from './base.entity';
 import { Client } from '@/decorators/client.decorator';
+import { WechatOAuth } from './wechat-oauth.entity';
 
 @ObjectType()
 @Entity('affiliate')
@@ -37,4 +38,8 @@ export class Affiliate extends Base {
 
   @Column({ nullable: true })
   password?: string;
+
+  @Field(() => WechatOAuth, { nullable: true })
+  @OneToOne(() => WechatOAuth, (wechatOAuth) => wechatOAuth.affiliate)
+  wechatOAuth?: WechatOAuth;
 }
