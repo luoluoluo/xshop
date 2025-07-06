@@ -291,42 +291,29 @@ export class CommonOrderService {
         if (!order.wechatTransactionId) {
           throw new Error('微信支付订单号不存在，无法进行分账');
         }
-
-        // 推广者分账
         const affiliateProfitSharingParams: ProfitsharingCreateOrdersRequest = {
           transaction_id: order.wechatTransactionId,
-          out_order_no: `PS-${order.id}-${Date.now()}`,
+          out_order_no: order.id,
           receivers: [
+            // 推广者分账
             {
               type: 'PERSONAL_OPENID',
               account: affiliate?.wechatOAuth?.openId || '',
               amount: Math.floor((order.affiliateAmount || 0) * 100),
               description: '推广者佣金',
             },
+            // 商户客户经理分账
+            {
+              type: 'PERSONAL_OPENID',
+              account: merchantAffiliate?.wechatOAuth?.openId || '',
+              amount: Math.floor((order.merchantAffiliateAmount || 0) * 100),
+              description: '招商经理佣金',
+            },
           ],
           unfreeze_unsplit: true,
         };
         await this.wechatPayService.profitsharingCreateOrders(
           affiliateProfitSharingParams,
-        );
-
-        // 商户客户经理分账
-        const merchantAffiliateProfitSharingParams: ProfitsharingCreateOrdersRequest =
-          {
-            transaction_id: order.wechatTransactionId,
-            out_order_no: `PS-${order.id}-${Date.now()}-MA`,
-            receivers: [
-              {
-                type: 'PERSONAL_OPENID',
-                account: merchantAffiliate?.wechatOAuth?.openId || '',
-                amount: Math.floor((order.merchantAffiliateAmount || 0) * 100),
-                description: '招商经理佣金',
-              },
-            ],
-            unfreeze_unsplit: true,
-          };
-        await this.wechatPayService.profitsharingCreateOrders(
-          merchantAffiliateProfitSharingParams,
         );
       } else {
         // 检查推广者和招商经理是否是同一个人
