@@ -6,10 +6,7 @@ import { useGetIdentity } from "@refinedev/core";
 import { Affiliate, WechatOAuth } from "../../generated/graphql";
 import { getChannel } from "../../utils/channel";
 import { useEffect, useState } from "react";
-import {
-  updateMeWechatAccessToken,
-  getWechatOauthUrl,
-} from "../../requests/auth";
+import { updateMeWechatOAuth, getWechatOauthUrl } from "../../requests/auth";
 import { request } from "../../utils/request";
 
 const Dashboard = () => {
@@ -23,9 +20,9 @@ const Dashboard = () => {
       // 微信oauth 回调
       if (code && state && state === "wechat") {
         void request<{
-          updateMeWechatAccessToken: WechatOAuth;
+          updateMeWechatOAuth: WechatOAuth;
         }>({
-          query: updateMeWechatAccessToken,
+          query: updateMeWechatOAuth,
           variables: {
             code,
           },

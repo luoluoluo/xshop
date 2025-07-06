@@ -79,9 +79,9 @@ export const updateMe = /* GraphQL */ `
   }
 `;
 
-export const updateMeWechatAccessToken = gql`
-  mutation updateMeWechatAccessToken($code: String!) {
-    updateMeWechatAccessToken(code: $code) {
+export const updateMeWechatOAuth = gql`
+  mutation updateMeWechatOAuth($code: String!) {
+    updateMeWechatOAuth(code: $code) {
       openId
     }
   }
