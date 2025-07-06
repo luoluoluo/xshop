@@ -18,10 +18,8 @@ const Dashboard = () => {
   const code = searchParams.get("code");
   const state = searchParams.get("state");
   const [wechatOauthUrl, setWechatOauthUrl] = useState<string>();
-  // const channel = getChannel();
-  const channel = "wechat";
   useEffect(() => {
-    if (me?.id && channel === "wechat") {
+    if (me?.id) {
       // 微信oauth 回调
       if (code && state && state === "wechat") {
         void request<{
@@ -59,7 +57,7 @@ const Dashboard = () => {
         });
       }
     }
-  }, [me?.id, channel]);
+  }, [me?.id]);
   return (
     <div className="flex flex-col gap-4 p-4">
       <Card title="我的推广ID">
