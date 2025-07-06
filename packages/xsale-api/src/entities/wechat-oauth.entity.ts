@@ -8,15 +8,15 @@ import { Affiliate } from './affiliate.entity';
 export class WechatOAuth extends Base {
   @Field(() => String)
   @Column({ name: 'open_id' })
-  openId: string;
+  openId?: string;
 
   @Field(() => String)
   @Column({ name: 'access_token' })
-  accessToken: string;
+  accessToken?: string;
 
   @Field(() => Date)
   @Column({ name: 'expires_at' })
-  expiresAt: Date;
+  expiresAt?: Date;
 
   @Field(() => String, { nullable: true })
   @Column({ name: 'refresh_token', nullable: true })
@@ -24,10 +24,18 @@ export class WechatOAuth extends Base {
 
   @Field(() => String)
   @Column({ name: 'affiliate_id' })
-  affiliateId: string;
+  affiliateId?: string;
 
   @Field(() => Affiliate)
   @OneToOne(() => Affiliate)
   @JoinColumn({ name: 'affiliate_id' })
-  affiliate: Affiliate;
+  affiliate?: Affiliate;
+
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'nick_name', nullable: true })
+  nickName?: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'avatar', nullable: true })
+  avatar?: string;
 }

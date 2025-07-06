@@ -182,7 +182,7 @@ export class OrderService {
       // 提交事务
       await queryRunner.commitTransaction();
 
-      return this.findOne(createdOrder.id);
+      return this.findOne(createdOrder.id!);
     } catch (error) {
       this.logger.error(`创建订单失败`, {
         error,

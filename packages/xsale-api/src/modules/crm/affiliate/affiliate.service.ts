@@ -8,8 +8,9 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Affiliate } from '@/entities/affiliate.entity';
-import { UpdateMeInput } from '../auth/auth.dto';
+import { UpdateMeInput, UpdateWechatOAuthInput } from '../auth/auth.dto';
 import { hash } from 'bcrypt';
+import { WechatOAuth } from '@/entities/wechat-oauth.entity';
 
 @Injectable()
 export class AffiliateService {
@@ -18,15 +19,18 @@ export class AffiliateService {
   constructor(
     @InjectRepository(Affiliate)
     private readonly affiliateRepository: Repository<Affiliate>,
+    @InjectRepository(WechatOAuth)
+    private readonly wechatOAuthRepository: Repository<WechatOAuth>,
   ) {}
 
   async findOne(id: string): Promise<Affiliate> {
     const affiliate = await this.affiliateRepository.findOne({
       where: { id },
+      relations: ['wechatOAuth'],
     });
 
     if (!affiliate) {
-      throw new NotFoundException('商户未找到');
+      throw new NotFoundException('推广者未找到');
     }
 
     return affiliate;
@@ -35,6 +39,7 @@ export class AffiliateService {
   async findByPhone(phone: string): Promise<Affiliate | null> {
     return await this.affiliateRepository.findOne({
       where: { phone },
+      relations: ['wechatOAuth'],
     });
   }
 
@@ -104,5 +109,34 @@ export class AffiliateService {
       throw new NotFoundException(`商户ID ${id} 未找到`);
     }
     return true;
+  }
+
+  async updateMeWechatOAuth(
+    id: string,
+    data: UpdateWechatOAuthInput,
+  ): Promise<WechatOAuth> {
+    const wechatOAuthData = {
+      openId: data.openId,
+      accessToken: data.accessToken,
+      expiresAt: new Date(Date.now() + data.expiresIn * 1000),
+      refreshToken: data.refreshToken,
+      nickName: data.nickName,
+      avatar: data.avatar,
+    };
+    const wechatOAuth = await this.wechatOAuthRepository.findOne({
+      where: { affiliateId: id },
+    });
+    if (wechatOAuth) {
+      return await this.wechatOAuthRepository.save(
+        Object.assign(wechatOAuth, wechatOAuthData),
+      );
+    } else {
+      const wechatOAuth = this.wechatOAuthRepository.create(
+        Object.assign(wechatOAuthData, {
+          affiliateId: id,
+        }),
+      );
+      return await this.wechatOAuthRepository.save(wechatOAuth);
+    }
   }
 }

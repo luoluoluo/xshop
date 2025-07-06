@@ -97,3 +97,12 @@ export class AuthToken {
   @Field()
   expiresIn: number;
 }
+
+export interface UpdateWechatOAuthInput {
+  openId: string;
+  accessToken: string;
+  expiresIn: number;
+  nickName?: string;
+  avatar?: string;
+  refreshToken: string;
+}

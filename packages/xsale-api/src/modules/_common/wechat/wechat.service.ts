@@ -35,6 +35,7 @@ export interface GetOauthAccessTokenResponse extends Response {
   openid: string;
   scope?: string;
   unionid?: string;
+  refresh_token: string;
 }
 
 export interface GetAccessTokenRequest {

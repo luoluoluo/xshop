@@ -8,6 +8,12 @@ export const me = /* GraphQL */ `
       phone
       balance
       createdAt
+      wechatOAuth {
+        openId
+        nickName
+        avatar
+        createdAt
+      }
     }
   }
 `;
@@ -28,6 +34,12 @@ export const login = gql`
         name
         phone
         balance
+        wechatOAuth {
+          openId
+          nickName
+          avatar
+          createdAt
+        }
       }
     }
   }
@@ -43,6 +55,12 @@ export const register = gql`
         name
         phone
         balance
+        wechatOAuth {
+          openId
+          nickName
+          avatar
+          createdAt
+        }
       }
     }
   }
@@ -58,5 +76,18 @@ export const updateMe = /* GraphQL */ `
       createdAt
       updatedAt
     }
+  }
+`;
+
+export const updateMeWechatAccessToken = gql`
+  mutation updateMeWechatAccessToken($code: String!) {
+    updateMeWechatAccessToken(code: $code) {
+      openId
+    }
+  }
+`;
+export const getWechatOauthUrl = /* GraphQL */ `
+  query wechatOauthUrl($redirectUrl: String!, $scope: String, $state: String) {
+    wechatOauthUrl(redirectUrl: $redirectUrl, scope: $scope, state: $state)
   }
 `;

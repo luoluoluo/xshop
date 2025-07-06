@@ -1,5 +1,5 @@
 import { Base } from './base.entity';
-import { Entity, ManyToOne, Column, JoinColumn } from 'typeorm';
+import { Entity, Column } from 'typeorm';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Client } from '@/decorators/client.decorator';
 

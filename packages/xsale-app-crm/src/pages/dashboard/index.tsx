@@ -1,21 +1,74 @@
-import { Card, message, Statistic } from "antd";
+import { Avatar, Button, Card, message, Statistic } from "antd";
 import * as Icons from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Clipboard } from "../../components/clipboard";
 import { useGetIdentity } from "@refinedev/core";
-import { Affiliate } from "../../generated/graphql";
+import { Affiliate, WechatOAuth } from "../../generated/graphql";
+import { getChannel } from "../../utils/channel";
+import { useEffect, useState } from "react";
+import {
+  updateMeWechatAccessToken,
+  getWechatOauthUrl,
+} from "../../requests/auth";
+import { request } from "../../utils/request";
 
 const Dashboard = () => {
   const { data: me } = useGetIdentity<Affiliate>();
+  const [searchParams] = useSearchParams();
+  const code = searchParams.get("code");
+  const state = searchParams.get("state");
+  const [wechatOauthUrl, setWechatOauthUrl] = useState<string>();
+  // const channel = getChannel();
+  const channel = "wechat";
+  useEffect(() => {
+    if (me?.id && channel === "wechat") {
+      // 微信oauth 回调
+      if (code && state && state === "wechat") {
+        void request<{
+          updateMeWechatAccessToken: WechatOAuth;
+        }>({
+          query: updateMeWechatAccessToken,
+          variables: {
+            code,
+          },
+        }).then((res) => {
+          if (res.errors) {
+            message.error(res.errors?.[0]?.message);
+            return;
+          } else {
+            message.success("绑定微信成功");
+            setWechatOauthUrl(undefined);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }
+        });
+      } else {
+        void request<{ wechatOauthUrl: string }>({
+          query: getWechatOauthUrl,
+          variables: {
+            redirectUrl: window.location.href,
+            scope: "snsapi_userinfo",
+            state: "wechat",
+          },
+        }).then((res) => {
+          if (res.data?.wechatOauthUrl) {
+            setWechatOauthUrl(res.data?.wechatOauthUrl);
+            // window.location.href = res.data?.wechatOauthUrl;
+          }
+        });
+      }
+    }
+  }, [me?.id, channel]);
   return (
     <div className="flex flex-col gap-4 p-4">
       <Card title="我的推广ID">
         <div className="mt-4">
           <div className="flex flex-col gap-2 items-center">
             <div className="flex gap-1">
-              <div>{me!.id}</div>
+              <div>{me?.id}</div>
               <Clipboard
-                value={me!.id}
+                value={me?.id || ""}
                 onSuccess={() => {
                   message.success("推广ID复制成功");
                 }}
@@ -24,6 +77,32 @@ const Dashboard = () => {
                 复制
               </Clipboard>
             </div>
+            {!me?.wechatOAuth?.openId ? (
+              <div className="mt-4 flex flex-col gap-2">
+                <Button type="primary" href={wechatOauthUrl}>
+                  绑定微信
+                </Button>
+                <div className="text-sm text-gray-500">
+                  绑定微信后，佣金将自动提现到微信钱包，无需手动提现
+                </div>
+              </div>
+            ) : (
+              <div className="mt-4">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    已与
+                    <Avatar src={me?.wechatOAuth?.avatar} size={24} />
+                    <span>{me?.wechatOAuth?.nickName}绑定</span>
+                  </div>
+                  <Button type="link" danger href={wechatOauthUrl}>
+                    重新绑定
+                  </Button>
+                  <div className="text-sm text-gray-500">
+                    绑定微信后，佣金将自动提现到微信钱包，无需手动提现
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </Card>
