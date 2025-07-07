@@ -14,7 +14,7 @@ export class PaymentListener {
    * @param event 支付成功事件
    */
   @OnEvent('payment.success')
-  async handlePaymentSuccess(event: PaymentSuccessEvent): Promise<void> {
+  async handleSuccess(event: PaymentSuccessEvent): Promise<void> {
     try {
       this.logger.log('收到支付成功事件', {
         outTradeNo: event.outTradeNo,
@@ -23,7 +23,7 @@ export class PaymentListener {
         openid: event.openid,
       });
 
-      await this.orderService.handlePayment(
+      await this.orderService.completePayment(
         event.outTradeNo,
         event.transactionId,
       );

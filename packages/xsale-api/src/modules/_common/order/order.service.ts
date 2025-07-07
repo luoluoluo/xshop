@@ -466,7 +466,10 @@ export class CommonOrderService {
    * @param orderId 订单ID
    * @param transactionId 微信支付订单号
    */
-  async handlePayment(orderId: string, transactionId: string): Promise<Order> {
+  async completePayment(
+    orderId: string,
+    transactionId: string,
+  ): Promise<Order> {
     const order = await this.orderRepository.findOne({
       where: { id: orderId },
     });

@@ -588,7 +588,28 @@ export class WechatPayService {
       // 根据事件类型处理不同的回调
       switch (notifyData.event_type) {
         case 'TRANSACTION.SUCCESS':
-          return this.handleTransactionSuccess(decryptedData);
+          try {
+            this.logger.log('处理支付成功回调', { data: decryptedData });
+
+            // 验证支付状态
+            if (decryptedData.trade_state !== 'SUCCESS') {
+              this.logger.warn('支付状态不是成功', {
+                tradeState: decryptedData.trade_state,
+              });
+              return {
+                code: 'SUCCESS',
+                message: '支付状态不是成功，但处理完成',
+              };
+            }
+
+            // 处理支付成功业务逻辑
+            this.processPaymentSuccess(decryptedData);
+
+            return { code: 'SUCCESS', message: '处理成功' };
+          } catch (error) {
+            this.logger.error('处理支付成功回调失败', error);
+            return { code: 'FAIL', message: '处理支付成功回调失败' };
+          }
         default:
           this.logger.warn('未知的事件类型', {
             eventType: notifyData.event_type,
@@ -598,28 +619,6 @@ export class WechatPayService {
     } catch (error) {
       this.logger.error('处理微信支付回调失败', error);
       return { code: 'FAIL', message: '处理失败' };
-    }
-  };
-
-  /**
-   * 处理支付成功回调
-   */
-  private handleTransactionSuccess = (data: WechatPayTransactionResult) => {
-    try {
-      this.logger.log('处理支付成功回调', { data });
-
-      // 验证支付状态
-      if (data.trade_state !== 'SUCCESS') {
-        this.logger.warn('支付状态不是成功', { tradeState: data.trade_state });
-        return { code: 'SUCCESS', message: '支付状态不是成功，但处理完成' };
-      }
-
-      this.processPaymentSuccess(data);
-
-      return { code: 'SUCCESS', message: '处理成功' };
-    } catch (error) {
-      this.logger.error('处理支付成功回调失败', error);
-      return { code: 'FAIL', message: '处理支付成功回调失败' };
     }
   };
 
