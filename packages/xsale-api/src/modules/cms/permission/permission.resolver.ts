@@ -12,7 +12,7 @@ export class PermissionResolver {
   @Query(() => [Permission])
   @UseGuards(GqlAuthGuard)
   permissions(@I18n() i18n: I18nContext) {
-    const permissions = ['*', ...this.permissionService.getPermissions()];
+    const permissions = ['*', ...this.permissionService.findAll()];
 
     const result: Permission[] = [];
     permissions.map((permission) => {

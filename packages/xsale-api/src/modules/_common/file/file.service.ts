@@ -30,7 +30,7 @@ export class FileService {
   }
 
   // 生成唯一的文件名
-  getUniqueFilename(filename: string) {
+  getUniqueName(filename: string) {
     const dirname = path.dirname(filename);
     const basename = path.basename(filename);
     const randomString = Math.random().toString(36).substring(2, 15);
@@ -47,12 +47,12 @@ export class FileService {
     const payload = { sub: key, iat };
     return this.jwtService.sign(payload, { expiresIn });
   }
-  getFilePath(filename: string) {
+  getPath(filename: string) {
     return path.join(this.uploadDir, filename);
   }
 
-  async deleteFile(filename: string) {
-    const filePath = this.getFilePath(filename);
+  async delete(filename: string) {
+    const filePath = this.getPath(filename);
     if (fs.existsSync(filePath)) {
       await fs.promises.unlink(filePath);
       return true;
@@ -62,7 +62,7 @@ export class FileService {
   /**
    * 检查文件是否为图片
    */
-  isImageFile(filename: string): boolean {
+  isImage(filename: string): boolean {
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
     const ext = path.extname(filename).toLowerCase();
     return imageExtensions.includes(ext);
@@ -92,7 +92,7 @@ export class FileService {
     width?: number,
     height?: number,
   ): Promise<Buffer> {
-    if (!this.isImageFile(filePath)) {
+    if (!this.isImage(filePath)) {
       throw new Error('文件不是图片格式');
     }
 
@@ -117,7 +117,7 @@ export class FileService {
   /**
    * 生成缓存文件路径
    */
-  private getCacheFilePath(
+  private getCachePath(
     originalPath: string,
     width?: number,
     height?: number,
@@ -143,7 +143,7 @@ export class FileService {
     width?: number,
     height?: number,
   ): Promise<Buffer> {
-    if (!this.isImageFile(filePath)) {
+    if (!this.isImage(filePath)) {
       throw new Error('文件不是图片格式');
     }
 
@@ -157,7 +157,7 @@ export class FileService {
     }
 
     // 生成缓存文件路径
-    const cacheFilePath = this.getCacheFilePath(filePath, width, height);
+    const cacheFilePath = this.getCachePath(filePath, width, height);
 
     // 检查缓存是否存在且比原文件新
     if (await this.isCacheValid(filePath, cacheFilePath)) {
@@ -168,7 +168,7 @@ export class FileService {
     const resizedBuffer = await this.resizeImage(filePath, width, height);
 
     // 保存到缓存
-    await this.saveCacheFile(cacheFilePath, resizedBuffer);
+    await this.saveCache(cacheFilePath, resizedBuffer);
 
     return resizedBuffer;
   }
@@ -198,10 +198,7 @@ export class FileService {
   /**
    * 保存缓存文件
    */
-  private async saveCacheFile(
-    cachePath: string,
-    buffer: Buffer,
-  ): Promise<void> {
+  private async saveCache(cachePath: string, buffer: Buffer): Promise<void> {
     try {
       // 确保缓存目录存在
       const cacheDir = path.dirname(cachePath);
@@ -266,8 +263,8 @@ export class FileService {
     }
   }
 
-  async saveFile({ filename, buffer }: { filename: string; buffer: Buffer }) {
-    const filePath = this.getFilePath(filename);
+  async save({ filename, buffer }: { filename: string; buffer: Buffer }) {
+    const filePath = this.getPath(filename);
     // 确保文件目录存在
     const fileDir = path.dirname(filePath);
     if (!fs.existsSync(fileDir)) {

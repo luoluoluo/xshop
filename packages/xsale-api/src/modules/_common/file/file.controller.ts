@@ -47,7 +47,7 @@ export class FileController {
       throw new HttpException('token 驗證失敗', HttpStatus.UNAUTHORIZED);
     }
     // token验证通过，继续保存文件
-    await this.fileService.saveFile({
+    await this.fileService.save({
       filename: payload.sub,
       buffer: file.buffer,
     });
@@ -60,7 +60,7 @@ export class FileController {
     @Query('h') height?: string,
   ) {
     try {
-      const filePath = this.fileService.getFilePath(params.join('/'));
+      const filePath = this.fileService.getPath(params.join('/'));
 
       // 检查文件是否存在
       if (!fs.existsSync(filePath)) {
@@ -68,7 +68,7 @@ export class FileController {
       }
 
       // 如果有宽度或高度参数且文件是图片，进行裁剪
-      if ((width || height) && this.fileService.isImageFile(params.join('/'))) {
+      if ((width || height) && this.fileService.isImage(params.join('/'))) {
         const widthNum = width ? parseInt(width, 10) : undefined;
         const heightNum = height ? parseInt(height, 10) : undefined;
 

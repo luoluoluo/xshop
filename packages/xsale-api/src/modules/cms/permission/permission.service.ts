@@ -12,10 +12,10 @@ export class PermissionService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.discoverPermissions();
+    this.discover();
   }
 
-  private discoverPermissions() {
+  private discover() {
     const providers = this.discoveryService.getProviders();
     providers.forEach((wrapper) => {
       const { instance } = wrapper;
@@ -38,7 +38,7 @@ export class PermissionService implements OnModuleInit {
     });
   }
 
-  getPermissions(): string[] {
+  findAll(): string[] {
     return Array.from(this.permissions);
   }
 }

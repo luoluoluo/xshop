@@ -223,15 +223,4 @@ export class OrderService {
       throw error;
     }
   }
-
-  async guestToCustomer(guestId: string, customerId: string) {
-    await this.orderRepository.update(
-      {
-        customerId: guestId,
-      },
-      {
-        customerId: customerId,
-      },
-    );
-  }
 }

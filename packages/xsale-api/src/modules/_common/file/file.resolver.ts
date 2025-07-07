@@ -10,7 +10,7 @@ export class FileResolver {
     @Args('filename') filename: string,
     @Context() context,
   ): SignedFileUrl {
-    filename = this.fileService.getUniqueFilename(filename);
+    filename = this.fileService.getUniqueName(filename);
     const token = this.fileService.sign(filename);
     const { req } = context;
     const host = req.get('host');
