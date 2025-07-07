@@ -92,7 +92,12 @@ export class AffiliateService {
     id: string,
     updateAffiliateDto: UpdateAffiliateInput,
   ): Promise<Affiliate> {
-    const affiliate = await this.findOne(id);
+    const affiliate = await this.affiliateRepository.findOne({
+      where: { id },
+    });
+    if (!affiliate) {
+      throw new NotFoundException('Affiliate not found');
+    }
 
     if (
       updateAffiliateDto.phone &&
@@ -123,7 +128,12 @@ export class AffiliateService {
   }
 
   async remove(id: string): Promise<boolean> {
-    const affiliate = await this.findOne(id);
+    const affiliate = await this.affiliateRepository.findOne({
+      where: { id },
+    });
+    if (!affiliate) {
+      throw new NotFoundException('Affiliate not found');
+    }
     await this.affiliateRepository.remove(affiliate);
     return true;
   }

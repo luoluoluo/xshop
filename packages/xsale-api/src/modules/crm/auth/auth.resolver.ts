@@ -53,7 +53,7 @@ export class AuthResolver {
     @Args('data') data: UpdateMeInput,
     @Context() ctx: CrmContext,
   ): Promise<Affiliate> {
-    return this.affiliateService.updateMe(ctx.req.user!.id, data);
+    return this.affiliateService.update(ctx.req.user!.id, data);
   }
 
   @Mutation(() => WechatOAuth)
@@ -85,6 +85,6 @@ export class AuthResolver {
       data.nickName = userInfo.nickname;
       data.avatar = userInfo.headimgurl;
     }
-    return this.affiliateService.updateMeWechatOAuth(ctx.req.user!.id, data);
+    return this.affiliateService.updateWechatOAuth(ctx.req.user!.id, data);
   }
 }

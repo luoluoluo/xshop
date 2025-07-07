@@ -47,6 +47,6 @@ export class AuthResolver {
     @Args('data') data: UpdateMeInput,
     @Context() ctx: PmsContext,
   ): Promise<Merchant> {
-    return this.merchantService.updateMe(ctx.req.user!.id, data);
+    return this.merchantService.update(ctx.req.user!.id, data);
   }
 }

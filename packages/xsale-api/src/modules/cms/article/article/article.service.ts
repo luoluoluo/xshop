@@ -37,7 +37,7 @@ export class ArticleService {
   async findOne(id: string): Promise<Article> {
     const article = await this.articleRepository.findOneBy({ id });
     if (!article) {
-      throw new Error('Article not found');
+      throw new NotFoundException(`Article ${id} not found`);
     }
     return article;
   }
@@ -48,7 +48,10 @@ export class ArticleService {
   }
 
   async update(id: string, data: UpdateArticleInput): Promise<Article> {
-    const article = await this.findOne(id);
+    const article = await this.articleRepository.findOneBy({ id });
+    if (!article) {
+      throw new NotFoundException(`Article ${id} not found`);
+    }
     Object.assign(article, data);
     return await this.articleRepository.save(article);
   }

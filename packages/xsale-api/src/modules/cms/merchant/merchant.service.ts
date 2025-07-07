@@ -98,7 +98,15 @@ export class MerchantService {
     id: string,
     updateMerchantDto: UpdateMerchantInput,
   ): Promise<Merchant> {
-    const merchant = await this.findOne(id);
+    const merchant = await this.merchantRepository.findOne({
+      where: { id },
+      relations: {
+        affiliate: true,
+      },
+    });
+    if (!merchant) {
+      throw new NotFoundException('Merchant not found');
+    }
 
     if (updateMerchantDto.phone && updateMerchantDto.phone !== merchant.phone) {
       const existingMerchant = await this.merchantRepository.findOne({
@@ -126,7 +134,15 @@ export class MerchantService {
   }
 
   async remove(id: string): Promise<boolean> {
-    const merchant = await this.findOne(id);
+    const merchant = await this.merchantRepository.findOne({
+      where: { id },
+      relations: {
+        affiliate: true,
+      },
+    });
+    if (!merchant) {
+      throw new NotFoundException('Merchant not found');
+    }
     await this.merchantRepository.remove(merchant);
     return true;
   }

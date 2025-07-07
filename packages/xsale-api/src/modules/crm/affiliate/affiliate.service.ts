@@ -76,11 +76,17 @@ export class AffiliateService {
     }
   }
 
-  async updateMe(
+  async update(
     id: string,
     updateAffiliateDto: UpdateMeInput,
   ): Promise<Affiliate> {
-    const affiliate = await this.findOne(id);
+    const affiliate = await this.affiliateRepository.findOne({
+      where: { id },
+      relations: ['wechatOAuth'],
+    });
+    if (!affiliate) {
+      throw new NotFoundException('推广者未找到');
+    }
 
     try {
       if (updateAffiliateDto.password) {
@@ -111,7 +117,7 @@ export class AffiliateService {
     return true;
   }
 
-  async updateMeWechatOAuth(
+  async updateWechatOAuth(
     id: string,
     data: UpdateWechatOAuthInput,
   ): Promise<WechatOAuth> {

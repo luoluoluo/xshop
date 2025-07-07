@@ -17,12 +17,12 @@ import { Affiliate } from '@/entities/affiliate.entity';
 import { Merchant } from '@/entities/merchant.entity';
 import { Payment } from '../wechat-pay/wechat-pay.dto';
 
-export interface CancelOrderOptions {
+export interface CancelOptions {
   /** 自定义验证函数 */
   customValidation?: (order: Order) => void | Promise<void>;
 }
 
-export interface RefundOrderOptions {
+export interface RefundOptions {
   /** 自定义验证函数 */
   customValidation?: (order: Order) => void | Promise<void>;
   /** 退款原因 */
@@ -45,9 +45,9 @@ export class CommonOrderService {
   /**
    * 取消单个订单
    */
-  async cancelOrder(
+  async cancel(
     orderId: string,
-    options: CancelOrderOptions = {},
+    options: CancelOptions = {},
     queryRunner?: QueryRunner,
   ): Promise<Order> {
     const { customValidation } = options;
@@ -117,9 +117,9 @@ export class CommonOrderService {
   /**
    * 退款订单
    */
-  async refundOrder(
+  async refund(
     orderId: string,
-    options: RefundOrderOptions = {},
+    options: RefundOptions = {},
     queryRunner?: QueryRunner,
   ): Promise<Order> {
     const { customValidation, reason, skipWechatRefund } = options;
@@ -218,7 +218,7 @@ export class CommonOrderService {
   /**
    * 完成订单并处理相关余额更新
    */
-  async completeOrder(
+  async complete(
     orderId: string,
     options: {
       customValidation?: (order: Order) => void | Promise<void>;
@@ -387,7 +387,7 @@ export class CommonOrderService {
     }
   }
 
-  async createOrderPayment(options: {
+  async createPayment(options: {
     orderId: string;
     notifyUrl: string;
     openId: string;
@@ -466,10 +466,7 @@ export class CommonOrderService {
    * @param orderId 订单ID
    * @param transactionId 微信支付订单号
    */
-  async handlePaymentSuccess(
-    orderId: string,
-    transactionId: string,
-  ): Promise<Order> {
+  async handlePayment(orderId: string, transactionId: string): Promise<Order> {
     const order = await this.orderRepository.findOne({
       where: { id: orderId },
     });

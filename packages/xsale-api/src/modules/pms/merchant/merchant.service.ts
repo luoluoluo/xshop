@@ -41,11 +41,16 @@ export class MerchantService {
     });
   }
 
-  async updateMe(
+  async update(
     id: string,
     updateMerchantDto: UpdateMeInput,
   ): Promise<Merchant> {
-    const merchant = await this.findOne(id);
+    const merchant = await this.merchantRepository.findOne({
+      where: { id },
+    });
+    if (!merchant) {
+      throw new NotFoundException('商户未找到');
+    }
 
     try {
       if (updateMerchantDto.password) {

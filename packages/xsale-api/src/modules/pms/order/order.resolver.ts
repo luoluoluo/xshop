@@ -1,5 +1,5 @@
 import { Resolver, Query, Args, Int, Context, Mutation } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, NotFoundException } from '@nestjs/common';
 import { Order } from '@/entities/order.entity';
 import { OrderService } from './order.service';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
@@ -42,14 +42,14 @@ export class OrderResolver {
 
   @Mutation(() => Order)
   @UseGuards(GqlAuthGuard)
-  async completeOrder(
+  async complete(
     @Context() ctx: PmsContext,
     @Args('id') id: string,
   ): Promise<Order> {
-    return this.commonOrderService.completeOrder(id, {
+    return this.commonOrderService.complete(id, {
       customValidation: (order) => {
-        if (ctx.req.user?.id && order.merchantId !== ctx.req.user?.id) {
-          throw new Error(`Order ${id} not found`);
+        if (order.merchantId !== ctx.req.user?.id) {
+          throw new NotFoundException(`Order ${id} not found`);
         }
       },
     });
@@ -57,24 +57,18 @@ export class OrderResolver {
 
   @Mutation(() => Order)
   @UseGuards(GqlAuthGuard)
-  async refundOrder(
+  async refund(
     @Context() ctx: PmsContext,
     @Args('id') id: string,
+    @Args('reason', { nullable: true }) reason?: string,
   ): Promise<Order> {
-    const merchantId = ctx.req.user?.id;
-    try {
-      return await this.commonOrderService.refundOrder(id, {
-        customValidation: (order) => {
-          if (merchantId && order.merchantId !== merchantId) {
-            throw new Error(`Order ${id} not found`);
-          }
-        },
-      });
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw new Error('退款失败');
-    }
+    return await this.commonOrderService.refund(id, {
+      customValidation: (order) => {
+        if (ctx.req.user?.id && order.merchantId !== ctx.req.user?.id) {
+          throw new Error(`Order ${id} not found`);
+        }
+      },
+      reason,
+    });
   }
 }

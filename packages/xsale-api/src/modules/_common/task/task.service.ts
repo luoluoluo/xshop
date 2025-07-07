@@ -42,7 +42,7 @@ export class TaskService {
       await Promise.all(
         expiredOrders.map(async (order) => {
           try {
-            await this.commonOrderService.cancelOrder(order.id);
+            await this.commonOrderService.cancel(order.id);
           } catch (error) {
             this.logger.error(`Failed to cancel order ${order.id}`, error);
           }

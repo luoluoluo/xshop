@@ -100,7 +100,13 @@ export class UserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserInput): Promise<User> {
-    const user = await this.findOne(id);
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: { roles: true },
+    });
+    if (!user) {
+      throw new NotFoundException(`用戶ID ${id} 未找到`);
+    }
 
     try {
       if (updateUserDto.password) {

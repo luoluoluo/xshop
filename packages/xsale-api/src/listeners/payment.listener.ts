@@ -23,7 +23,7 @@ export class PaymentListener {
         openid: event.openid,
       });
 
-      await this.orderService.handlePaymentSuccess(
+      await this.orderService.handlePayment(
         event.outTradeNo,
         event.transactionId,
       );

@@ -94,7 +94,7 @@ export class OrderResolver {
 
   @Mutation(() => Order)
   @UseGuards(GqlAuthGuard)
-  async cancelOrder(
+  async cancel(
     @Context() ctx: WebContext,
     @Args('id') id: string,
   ): Promise<Order> {
@@ -102,7 +102,7 @@ export class OrderResolver {
   }
 
   @Mutation(() => Payment)
-  async createOrderPayment(
+  async createPayment(
     @Context() context: WebContext,
     @Args('data') data: CreatePaymentInput,
   ): Promise<Payment> {
@@ -116,7 +116,7 @@ export class OrderResolver {
     const notifyUrl = `${baseUrl}/wechat-pay/notify`;
     /** notify url end */
 
-    return this.commonOrderService.createOrderPayment({
+    return this.commonOrderService.createPayment({
       orderId: data.orderId,
       notifyUrl,
       openId: data.openId,

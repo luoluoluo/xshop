@@ -182,7 +182,7 @@ export class OrderService {
       // 提交事务
       await queryRunner.commitTransaction();
 
-      return this.findOne(createdOrder.id!);
+      return this.findOne(createdOrder.id);
     } catch (error) {
       this.logger.error(`创建订单失败`, {
         error,
@@ -201,7 +201,7 @@ export class OrderService {
   async cancel(id: string, customerId?: string): Promise<Order> {
     try {
       // 使用通用的订单取消服务，并添加自定义验证
-      return await this.commonOrderService.cancelOrder(id, {
+      return await this.commonOrderService.cancel(id, {
         customValidation: (order) => {
           // 如果指定了customerId，验证订单归属
           if (customerId && order.customerId !== customerId) {

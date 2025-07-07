@@ -80,7 +80,10 @@ export class RoleService {
       isActive?: boolean;
     },
   ): Promise<Role> {
-    const role = await this.findOne(id);
+    const role = await this.roleRepository.findOne({ where: { id } });
+    if (!role) {
+      throw new NotFoundException(`角色ID ${id} 未找到`);
+    }
 
     if (updateRoleDto.name && updateRoleDto.name !== role.name) {
       const existingRole = await this.roleRepository.findOne({

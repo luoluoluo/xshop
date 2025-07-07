@@ -68,7 +68,12 @@ export class CustomerService {
     id: string,
     updateCustomerDto: UpdateMeInput,
   ): Promise<Customer> {
-    const customer = await this.findOne(id);
+    const customer = await this.customerRepository.findOne({
+      where: { id },
+    });
+    if (!customer) {
+      throw new NotFoundException('客戶未找到');
+    }
 
     try {
       if (

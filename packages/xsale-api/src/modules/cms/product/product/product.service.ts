@@ -82,7 +82,17 @@ export class ProductService {
     id: string,
     updateProductDto: UpdateProductInput,
   ): Promise<Product> {
-    const product = await this.findOne(id);
+    const product = await this.productRepository.findOne({
+      where: { id },
+      relations: {
+        merchant: {
+          affiliate: true,
+        },
+      },
+    });
+    if (!product) {
+      throw new NotFoundException(`產品ID ${id} 未找到`);
+    }
 
     try {
       // 更新产品基本信息
