@@ -197,30 +197,4 @@ export class OrderService {
       await queryRunner.release();
     }
   }
-
-  async cancel(id: string, customerId?: string): Promise<Order> {
-    try {
-      // 使用通用的订单取消服务，并添加自定义验证
-      return await this.commonOrderService.cancel(id, {
-        customValidation: (order) => {
-          // 如果指定了customerId，验证订单归属
-          if (customerId && order.customerId !== customerId) {
-            throw new NotFoundException(`Order ${id} not found`);
-          }
-        },
-      });
-    } catch (error) {
-      this.logger.error(`取消订单失败`, {
-        error,
-        orderId: id,
-        customerId,
-        reason:
-          error instanceof BadRequestException ||
-          error instanceof NotFoundException
-            ? error.message
-            : undefined,
-      });
-      throw error;
-    }
-  }
 }

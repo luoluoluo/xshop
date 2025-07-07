@@ -31,17 +31,6 @@ export const createOrder = /* GraphQL */ `
   }
 `;
 
-export const cancelOrder = /* GraphQL */ `
-  mutation cancelOrder($id: String!) {
-    cancelOrder(id: $id) {
-      id
-      status
-      cancelledAt
-      updatedAt
-    }
-  }
-`;
-
 export const createOrderPayment = /* GraphQL */ `
   mutation createOrderPayment($data: CreatePaymentInput!) {
     createOrderPayment(data: $data) {

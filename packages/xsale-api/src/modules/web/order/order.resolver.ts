@@ -92,15 +92,6 @@ export class OrderResolver {
     return this.webOrderService.create(ctx.req.user!.id, data);
   }
 
-  @Mutation(() => Order)
-  @UseGuards(GqlAuthGuard)
-  async cancel(
-    @Context() ctx: WebContext,
-    @Args('id') id: string,
-  ): Promise<Order> {
-    return this.webOrderService.cancel(id, ctx.req.user?.id);
-  }
-
   @Mutation(() => Payment)
   async createOrderPayment(
     @Context() context: WebContext,
