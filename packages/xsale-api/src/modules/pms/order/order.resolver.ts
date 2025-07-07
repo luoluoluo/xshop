@@ -42,7 +42,7 @@ export class OrderResolver {
 
   @Mutation(() => Order)
   @UseGuards(GqlAuthGuard)
-  async complete(
+  async completeOrder(
     @Context() ctx: PmsContext,
     @Args('id') id: string,
   ): Promise<Order> {
@@ -57,7 +57,7 @@ export class OrderResolver {
 
   @Mutation(() => Order)
   @UseGuards(GqlAuthGuard)
-  async refund(
+  async refundOrder(
     @Context() ctx: PmsContext,
     @Args('id') id: string,
     @Args('reason', { nullable: true }) reason?: string,
