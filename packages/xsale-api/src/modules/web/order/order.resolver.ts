@@ -102,7 +102,7 @@ export class OrderResolver {
   }
 
   @Mutation(() => Payment)
-  async createPayment(
+  async createOrderPayment(
     @Context() context: WebContext,
     @Args('data') data: CreatePaymentInput,
   ): Promise<Payment> {
