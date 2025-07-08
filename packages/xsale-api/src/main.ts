@@ -54,6 +54,7 @@ async function bootstrap() {
           optionsSuccessStatus: 204,
           credentials: true,
         },
+        rawBody: true,
         // logger,
       });
       await app.listen(server.port, () => {

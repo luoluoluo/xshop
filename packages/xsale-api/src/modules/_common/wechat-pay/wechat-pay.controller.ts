@@ -1,4 +1,12 @@
-import { Controller, Post, Headers, Logger, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Headers,
+  Logger,
+  Body,
+  Req,
+  RawBodyRequest,
+} from '@nestjs/common';
 import {
   WechatPayService,
   WechatPayNotifyResponse,
@@ -16,9 +24,10 @@ export class WechatPayController {
    */
   @Post('notify')
   async handlePaymentNotify(
-    @Body() body: any,
+    @Req() req: RawBodyRequest<Request>,
     @Headers() headers: Record<string, string>,
   ): Promise<WechatPayNotifyResponse> {
+    const bodyString = req.rawBody?.toString() || '';
     this.logger.log('收到微信支付回调请求', {
       headers: {
         'wechatpay-timestamp': headers['wechatpay-timestamp'],
@@ -27,27 +36,8 @@ export class WechatPayController {
         'wechatpay-serial': headers['wechatpay-serial'],
       },
       contentType: headers['content-type'],
-      bodyType: typeof body,
-      bodyIsObject: typeof body === 'object',
-      bodyKeys: typeof body === 'object' ? Object.keys(body) : 'N/A',
+      bodyString,
     });
-
-    // 将对象转换为字符串用于签名验证
-    let bodyString: string;
-    if (typeof body === 'string') {
-      bodyString = body;
-      this.logger.log('Body已经是字符串');
-    } else if (typeof body === 'object' && body !== null) {
-      // 重新序列化对象，保持字段顺序
-      bodyString = JSON.stringify(body);
-      this.logger.log('将对象序列化为字符串', {
-        originalLength: bodyString.length,
-        preview: bodyString.substring(0, 150),
-      });
-    } else {
-      this.logger.error('无效的body类型', { bodyType: typeof body });
-      return { code: 'FAIL', message: '无效的请求体' };
-    }
 
     try {
       const result = await this.wechatPayService.handlePaymentNotify(
@@ -62,7 +52,7 @@ export class WechatPayController {
       this.logger.error(`处理微信支付回调失败`, {
         error,
         headers,
-        body: body?.length > 500 ? body.substring(0, 500) + '...' : body,
+        bodyString,
       });
       throw error;
     }
