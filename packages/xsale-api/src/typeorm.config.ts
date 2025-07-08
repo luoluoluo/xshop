@@ -10,7 +10,7 @@ const config: DataSourceOptions = {
   logging: process.env.DB_LOGGING?.toLowerCase() === 'true',
   bigNumberStrings: true,
   entities: ['src/**/*.entity{.ts,.js}'],
-  migrations: ['migrations/*{.ts,.js}'],
+  migrations: ['src/migrations/*{.ts,.js}'],
   migrationsTableName: 'migration',
   synchronize: process.env.DB_SYNCHORNIZE?.toLowerCase() === 'true',
   namingStrategy: new SnakeNamingStrategy(),
