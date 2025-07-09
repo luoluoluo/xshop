@@ -10,6 +10,15 @@ import { BuyNumber } from "./buy-number";
 import { CheckoutSheet } from "./checkout-sheet";
 
 export const BuyCard = ({ product }: { product: Product }) => {
+  let btnText = "立即购买";
+  let btnDisabled = false;
+  if ((product?.stock ?? 0) <= 0) {
+    btnText = "已售罄";
+    btnDisabled = true;
+  } else if (!product.isActive) {
+    btnText = "已下架";
+    btnDisabled = true;
+  }
   const [quantity, setQuantity] = useState(1);
   return (
     <div className="fixed z-10 bottom-0 left-0 w-full border-t shadow-inner">
@@ -44,8 +53,12 @@ export const BuyCard = ({ product }: { product: Product }) => {
             />
           </div>
           <CheckoutSheet product={product} quantity={quantity}>
-            <Button size="sm" className={cn("w-full")}>
-              立即购买
+            <Button
+              size="sm"
+              className={cn("w-full", btnDisabled ? "bg-gray-300" : "")}
+              disabled={btnDisabled}
+            >
+              {btnText}
             </Button>
           </CheckoutSheet>
         </div>

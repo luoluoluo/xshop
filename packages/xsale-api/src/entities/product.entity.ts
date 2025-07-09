@@ -82,7 +82,6 @@ export class Product extends Base {
   @Column({ type: 'int', default: 0, nullable: true })
   stock: number;
 
-  @Client(['cms', 'pms'])
   @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive: boolean;

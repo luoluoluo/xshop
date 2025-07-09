@@ -284,6 +284,7 @@ export type Product = {
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   image?: Maybe<Scalars['String']['output']>;
+  isActive?: Maybe<Scalars['Boolean']['output']>;
   merchant?: Maybe<Merchant>;
   merchantAffiliateCommission?: Maybe<Scalars['Float']['output']>;
   merchantId?: Maybe<Scalars['String']['output']>;

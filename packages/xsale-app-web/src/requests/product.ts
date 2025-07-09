@@ -13,6 +13,7 @@ export const getProduct = /* GraphQL */ `
       merchantId
       createdAt
       updatedAt
+      isActive
       merchant {
         id
         name
