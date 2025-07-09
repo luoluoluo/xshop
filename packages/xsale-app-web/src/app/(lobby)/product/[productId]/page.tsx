@@ -102,36 +102,40 @@ export default async function Page({
           logo: merchant?.logo || undefined,
         }}
       />
-      <main className="lg:flex lg:gap-8">
-        <div className="w-full lg:mt-8 lg:p-4 lg:rounded lg:shadow">
-          <div className="px-0 lg:px-4 flex flex-col lg:flex-row gap-4">
-            <Image
-              priority
-              width={960}
-              height={960}
-              src={`${product?.image}?w=960&h=960`}
-              alt=""
-              className="w-full h-auto lg:w-32 lg:rounded object-cover object-center"
-            />
-            <div className="px-4 lg:px-0">
-              <div className="text-2xl font-bold">
-                {/* <span className=" px-2 rounded border  inline-block mr-2">{product.category?.name}</span> */}
-                {product.title}
+      <main>
+        <Image
+          priority
+          width={960}
+          height={960}
+          src={`${product?.image}?w=960&h=960`}
+          alt=""
+          className="w-full h-auto lg:hidden object-cover object-center mb-4"
+        />
+        <div className="lg:flex lg:gap-8 container">
+          <div className="w-full lg:mt-8 lg:p-4 lg:rounded lg:shadow">
+            <div className="flex flex-col lg:flex-row gap-4">
+              <Image
+                priority
+                width={960}
+                height={960}
+                src={`${product?.image}?w=960&h=960`}
+                alt=""
+                className="w-32 h-auto hidden lg:block lg:rounded object-cover object-center"
+              />
+              <div className="flex flex-col gap-4">
+                <div className="text-2xl font-bold lg:mt-0">
+                  {/* <span className=" px-2 rounded border  inline-block mr-2">{product.category?.name}</span> */}
+                  {product.title}
+                </div>
+                <AmountFormat value={product.price!} size="lg"></AmountFormat>
               </div>
-              <AmountFormat
-                value={product.price!}
-                size="lg"
-                className="mt-4"
-              ></AmountFormat>
             </div>
+            <div
+              className="mt-4 lg:mt-8 pt-4 lg:pt-8 wysiwyg border-t"
+              dangerouslySetInnerHTML={{ __html: product.content || "" }}
+            ></div>
+            <BuyCard product={product} />
           </div>
-          <div
-            className="container mt-4 lg:mt-8 pt-4 lg:pt-8 wysiwyg border-t"
-            dangerouslySetInnerHTML={{ __html: product.content || "" }}
-          ></div>
-          <BuyCard product={product} />
-        </div>
-        <div className="container">
           <div className="w-full lg:w-[375px] flex-shrink-0 border-t mt-4 lg:mt-0 lg:border-none">
             <BusinessCard
               merchant={merchant}
