@@ -15,6 +15,7 @@ export const getProducts = /* GraphQL */ `
           }
         }
         title
+        description
         image
         isActive
         createdAt
@@ -45,6 +46,7 @@ export const getProduct = /* GraphQL */ `
       }
       title
       content
+      description
       image
       isActive
       createdAt

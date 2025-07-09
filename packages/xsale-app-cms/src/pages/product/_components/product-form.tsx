@@ -438,6 +438,10 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
         <Input />
       </Form.Item>
 
+      <Form.Item label={t("product.fields.description")} name={["description"]}>
+        <Input maxLength={200} />
+      </Form.Item>
+
       <Form.Item
         label={t("product.fields.price")}
         name={["price"]}

@@ -37,6 +37,10 @@ export class Product extends Base {
   title: string;
 
   @Field({ nullable: true })
+  @Column({ length: 200, nullable: true })
+  description?: string;
+
+  @Field({ nullable: true })
   @Column({ type: 'text' })
   content: string;
 

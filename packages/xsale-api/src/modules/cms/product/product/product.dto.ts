@@ -35,6 +35,9 @@ export class CreateProductInput {
 
   @Field(() => PosterQrcodeConfig, { nullable: true })
   posterQrcodeConfig?: PosterQrcodeConfig;
+
+  @Field({ nullable: true })
+  description?: string;
 }
 
 @InputType()
@@ -44,6 +47,9 @@ export class UpdateProductInput {
 
   @Field()
   content: string;
+
+  @Field({ nullable: true })
+  description?: string;
 
   @Field({ nullable: true })
   price?: number;
