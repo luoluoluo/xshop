@@ -4,6 +4,7 @@ export const getProduct = /* GraphQL */ `
     product(id: $id) {
       id
       title
+      description
       content
       image
       price
@@ -29,6 +30,7 @@ export const getProducts = /* GraphQL */ `
       data {
         id
         title
+        description
         image
         price
         commission
