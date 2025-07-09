@@ -38,7 +38,7 @@ export async function generateMetadata({
   });
 
   const title = product?.title || "";
-  const description = product?.description || "";
+  const description = product?.description || merchant?.name || "";
   const keywords = merchant?.businessScope || "";
   const imageUrl = product?.image ? `${product.image}?w=960&h=960` : undefined;
 
@@ -145,7 +145,7 @@ export default async function Page({
       <Wechat
         shareConfig={{
           title: product?.title || "",
-          desc: product?.description || "",
+          desc: product?.description || merchant?.name || "",
           imgUrl: `${product.image}?w=960&h=960`,
         }}
       />
