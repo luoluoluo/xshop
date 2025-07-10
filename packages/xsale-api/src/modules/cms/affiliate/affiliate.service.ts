@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { hash } from 'bcrypt';
 import { Affiliate } from '@/entities/affiliate.entity';
+import { MerchantAffiliate } from '@/entities/merchant-affiliate.entity';
 import {
   CreateAffiliateInput,
   AffiliatePagination,
@@ -23,6 +24,8 @@ export class AffiliateService {
   constructor(
     @InjectRepository(Affiliate)
     private affiliateRepository: Repository<Affiliate>,
+    @InjectRepository(MerchantAffiliate)
+    private merchantAffiliateRepository: Repository<MerchantAffiliate>,
   ) {}
 
   // Affiliate management methods
@@ -35,10 +38,31 @@ export class AffiliateService {
     take?: number;
     where?: AffiliateWhereInput;
   }): Promise<AffiliatePagination> {
+    // 构建查询条件
+    const whereCondition: any = {
+      ...where,
+    };
+
+    // 如果指定了商家ID，添加关联条件
+    if (where.merchantId) {
+      whereCondition.merchantAffiliates = {
+        merchant: {
+          id: where.merchantId,
+        },
+      };
+      // 删除merchantId，避免重复查询
+      delete whereCondition.merchantId;
+    }
+
     const [items, total] = await this.affiliateRepository.findAndCount({
-      where,
+      where: whereCondition,
       skip,
       take,
+      relations: {
+        merchantAffiliates: {
+          merchant: true,
+        },
+      },
     });
 
     return {
@@ -50,6 +74,11 @@ export class AffiliateService {
   async findOne(id: string): Promise<Affiliate> {
     const affiliate = await this.affiliateRepository.findOne({
       where: { id },
+      relations: {
+        merchantAffiliates: {
+          merchant: true,
+        },
+      },
     });
 
     if (!affiliate) {
@@ -78,7 +107,24 @@ export class AffiliateService {
         password,
       });
 
-      return this.affiliateRepository.save(affiliate);
+      const savedAffiliate = await this.affiliateRepository.save(affiliate);
+
+      // 处理商家关联
+      if (
+        createAffiliateInput.merchantIds &&
+        createAffiliateInput.merchantIds.length > 0
+      ) {
+        const merchantAffiliates = createAffiliateInput.merchantIds.map(
+          (merchantId) =>
+            this.merchantAffiliateRepository.create({
+              affiliateId: savedAffiliate.id,
+              merchantId,
+            }),
+        );
+        await this.merchantAffiliateRepository.save(merchantAffiliates);
+      }
+
+      return this.findOne(savedAffiliate.id);
     } catch (err) {
       this.logger.error('創建推廣員失敗', {
         error: err,
@@ -118,7 +164,27 @@ export class AffiliateService {
       }
 
       Object.assign(affiliate, updateAffiliateDto);
-      return this.affiliateRepository.save(affiliate);
+      const savedAffiliate = await this.affiliateRepository.save(affiliate);
+
+      // 处理商家关联更新
+      if (updateAffiliateDto.merchantIds !== undefined) {
+        // 删除现有关联
+        await this.merchantAffiliateRepository.delete({ affiliateId: id });
+
+        // 创建新的关联
+        if (updateAffiliateDto.merchantIds.length > 0) {
+          const merchantAffiliates = updateAffiliateDto.merchantIds.map(
+            (merchantId) =>
+              this.merchantAffiliateRepository.create({
+                affiliateId: id,
+                merchantId,
+              }),
+          );
+          await this.merchantAffiliateRepository.save(merchantAffiliates);
+        }
+      }
+
+      return this.findOne(id);
     } catch (err) {
       if (err instanceof ConflictException) {
         throw err;
@@ -134,11 +200,18 @@ export class AffiliateService {
     if (!affiliate) {
       throw new NotFoundException('Affiliate not found');
     }
+
+    // 删除关联关系
+    await this.merchantAffiliateRepository.delete({ affiliateId: id });
+
     await this.affiliateRepository.remove(affiliate);
     return true;
   }
 
   async delete(id: string): Promise<boolean> {
+    // 删除关联关系
+    await this.merchantAffiliateRepository.delete({ affiliateId: id });
+
     await this.affiliateRepository.delete(id);
     return true;
   }

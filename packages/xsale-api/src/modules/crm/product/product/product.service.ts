@@ -19,24 +19,44 @@ export class ProductService {
     skip,
     take,
     where,
+    affiliateId,
   }: {
     skip?: number;
     take?: number;
     where?: ProductWhereInput;
+    affiliateId?: string;
   }): Promise<ProductPagination> {
-    const [items, total] = await this.productRepository.findAndCount({
-      where: {
-        ...where,
+    // 构建查询条件
+    const whereCondition: any = {
+      ...where,
+      isActive: true,
+      merchant: {
         isActive: true,
-        merchant: {
-          isActive: true,
-        },
       },
+    };
+
+    // 如果指定了推广者ID，添加关联条件
+    if (affiliateId) {
+      whereCondition.merchant = {
+        ...whereCondition.merchant,
+        merchantAffiliates: {
+          affiliate: {
+            id: affiliateId,
+          },
+        },
+      };
+    }
+
+    const [items, total] = await this.productRepository.findAndCount({
+      where: whereCondition,
       skip,
       take,
       relations: {
         merchant: {
           affiliate: true,
+          merchantAffiliates: {
+            affiliate: true,
+          },
         },
       },
       order: { id: 'DESC' },

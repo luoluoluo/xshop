@@ -18,14 +18,19 @@ export class MerchantResolver {
 
   @Query(() => MerchantPagination)
   async merchants(
+    @Context() ctx: CrmContext,
     @Args('where', { nullable: true }) where: MerchantWhereInput,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
     @Args('take', { type: () => Int, nullable: true }) take: number,
   ): Promise<MerchantPagination> {
+    // 从上下文获取当前推广者ID
+    const affiliateId = ctx.req.user?.id;
+
     return this.merchantService.findAll({
       where,
       skip,
       take,
+      affiliateId, // 传递推广者ID
     });
   }
 

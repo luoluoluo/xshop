@@ -5,6 +5,7 @@ import { Affiliate } from './affiliate.entity';
 import { Product } from './product.entity';
 import { Order } from './order.entity';
 import { Client } from '@/decorators/client.decorator';
+import { MerchantAffiliate } from './merchant-affiliate.entity';
 
 @ObjectType()
 @Entity('merchant')
@@ -78,4 +79,11 @@ export class Merchant extends Base {
 
   @Column({ nullable: true })
   password?: string;
+
+  @Field(() => [MerchantAffiliate], { nullable: true })
+  @OneToMany(
+    () => MerchantAffiliate,
+    (merchantAffiliate) => merchantAffiliate.merchant,
+  )
+  merchantAffiliates?: MerchantAffiliate[];
 }

@@ -8,6 +8,14 @@ export const getAffiliates = /* GraphQL */ `
         isActive
         balance
         createdAt
+        merchantAffiliates {
+          id
+          merchant {
+            id
+            name
+            phone
+          }
+        }
       }
       total
     }
@@ -23,6 +31,14 @@ export const getAffiliate = /* GraphQL */ `
       isActive
       balance
       createdAt
+      merchantAffiliates {
+        id
+        merchant {
+          id
+          name
+          phone
+        }
+      }
     }
   }
 `;

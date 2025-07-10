@@ -1,8 +1,9 @@
 import { List, useTable } from "@refinedev/antd";
 import { useTranslate } from "@refinedev/core";
-import { Form, Radio, Table, Tag, Tooltip } from "antd";
+import { Form, Radio, Table, Tag, Tooltip, Select } from "antd";
 import { parse } from "graphql";
 import { getOrders } from "../../requests/order";
+import { getMerchants } from "../../requests/merchant";
 import {
   Affiliate,
   Merchant,
@@ -12,10 +13,21 @@ import {
 } from "../../generated/graphql";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { useSelect } from "@refinedev/antd";
 
 export const OrderList = () => {
   const t = useTranslate();
   const [where, setWhere] = useState<OrderWhereInput>();
+
+  const { selectProps: merchantSelectProps } = useSelect({
+    resource: "merchants",
+    meta: {
+      gqlQuery: parse(getMerchants),
+    },
+    optionLabel: "name",
+    optionValue: "id",
+  });
+
   const { tableProps } = useTable({
     meta: {
       gqlQuery: parse(getOrders),
@@ -87,6 +99,20 @@ export const OrderList = () => {
               setWhere({
                 ...where,
                 status: e.target.value as OrderStatus,
+              });
+            }}
+          />
+        </Form.Item>
+        <Form.Item name="merchantId" label="商家">
+          <Select
+            placeholder="请选择商家"
+            allowClear
+            style={{ width: 200 }}
+            {...merchantSelectProps}
+            onChange={(value: any) => {
+              setWhere({
+                ...where,
+                merchantId: value,
               });
             }}
           />

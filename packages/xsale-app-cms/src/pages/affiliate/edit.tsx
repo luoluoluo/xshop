@@ -15,7 +15,17 @@ export const AffiliateEdit = () => {
 
   return (
     <Edit saveButtonProps={saveButtonProps} isLoading={formLoading}>
-      <AffiliateForm formProps={formProps} />
+      <AffiliateForm
+        formProps={{
+          ...formProps,
+          initialValues: {
+            ...formProps.initialValues,
+            merchantIds: formProps.initialValues?.merchantAffiliates?.map(
+              (item: any) => item.merchant.id,
+            ),
+          },
+        }}
+      />
     </Edit>
   );
 };

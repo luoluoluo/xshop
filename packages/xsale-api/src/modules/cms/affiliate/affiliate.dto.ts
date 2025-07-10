@@ -1,6 +1,6 @@
 import { ObjectType, Int, InputType, Field } from '@nestjs/graphql';
 import { Affiliate } from '@/entities/affiliate.entity';
-import { IsOptional, IsBoolean } from 'class-validator';
+import { IsOptional, IsBoolean, IsArray } from 'class-validator';
 
 @InputType()
 export class CreateAffiliateInput {
@@ -29,6 +29,11 @@ export class CreateAffiliateInput {
   @Field({ nullable: true })
   @IsOptional()
   accountName?: string;
+
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  merchantIds?: string[];
 }
 
 @InputType()
@@ -61,6 +66,11 @@ export class UpdateAffiliateInput {
   @Field({ nullable: true })
   @IsOptional()
   accountName?: string;
+
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  merchantIds?: string[];
 }
 
 @InputType()
@@ -73,6 +83,9 @@ export class AffiliateWhereInput {
 
   @Field({ nullable: true })
   affiliateId?: string;
+
+  @Field({ nullable: true })
+  merchantId?: string;
 
   @Field(() => Boolean, { nullable: true })
   @IsOptional()

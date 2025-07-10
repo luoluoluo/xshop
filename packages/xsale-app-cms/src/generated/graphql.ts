@@ -24,6 +24,7 @@ export type Affiliate = {
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   isActive?: Maybe<Scalars['Boolean']['output']>;
+  merchantAffiliates?: Maybe<Array<MerchantAffiliate>>;
   name?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
@@ -40,6 +41,7 @@ export type AffiliateWhereInput = {
   affiliateId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  merchantId?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -112,6 +114,7 @@ export type CreateAffiliateInput = {
   bankAccount?: InputMaybe<Scalars['String']['input']>;
   bankName?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  merchantIds?: InputMaybe<Array<Scalars['String']['input']>>;
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
@@ -202,12 +205,22 @@ export type Merchant = {
   id: Scalars['String']['output'];
   isActive?: Maybe<Scalars['Boolean']['output']>;
   logo?: Maybe<Scalars['String']['output']>;
+  merchantAffiliates?: Maybe<Array<MerchantAffiliate>>;
   name?: Maybe<Scalars['String']['output']>;
   orders?: Maybe<Array<Order>>;
   phone?: Maybe<Scalars['String']['output']>;
   products?: Maybe<Array<Product>>;
   updatedAt: Scalars['DateTime']['output'];
   wechatQrcode?: Maybe<Scalars['String']['output']>;
+};
+
+export type MerchantAffiliate = {
+  __typename?: 'MerchantAffiliate';
+  affiliate: Affiliate;
+  affiliateId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  merchant: Merchant;
+  merchantId: Scalars['String']['output'];
 };
 
 export type MerchantPagination = {
@@ -703,6 +716,7 @@ export type UpdateAffiliateInput = {
   bankAccount?: InputMaybe<Scalars['String']['input']>;
   bankName?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  merchantIds?: InputMaybe<Array<Scalars['String']['input']>>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;

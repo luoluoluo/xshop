@@ -3,10 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AffiliateService } from './affiliate.service';
 import { AffiliateResolver } from './affiliate.resolver';
 import { Affiliate } from '@/entities/affiliate.entity';
+import { MerchantAffiliate } from '@/entities/merchant-affiliate.entity';
 import { User } from '@/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Affiliate, User])],
+  imports: [TypeOrmModule.forFeature([Affiliate, MerchantAffiliate, User])],
   providers: [AffiliateService, AffiliateResolver],
   exports: [AffiliateService],
 })

@@ -16,18 +16,38 @@ export class MerchantService {
     skip,
     take,
     where = {},
+    affiliateId,
   }: {
     skip?: number;
     take?: number;
     where?: MerchantWhereInput;
+    affiliateId?: string;
   }): Promise<MerchantPagination> {
+    // 构建查询条件
+    const whereCondition: any = {
+      ...where,
+    };
+
+    // 如果指定了推广者ID，添加关联条件
+    if (affiliateId) {
+      whereCondition.merchantAffiliates = {
+        affiliate: {
+          id: affiliateId,
+        },
+      };
+    }
+
     const [items, total] = await this.merchantRepository.findAndCount({
-      where,
+      where: whereCondition,
       skip,
       take,
       relations: {
         affiliate: true,
+        merchantAffiliates: {
+          affiliate: true,
+        },
       },
+      order: { id: 'DESC' },
     });
 
     return {
@@ -37,8 +57,14 @@ export class MerchantService {
   }
 
   async findOne(id: string, affiliateId?: string): Promise<Merchant> {
+    const whereCondition: any = { id };
+
+    if (affiliateId) {
+      whereCondition.affiliateId = affiliateId;
+    }
+
     const merchant = await this.merchantRepository.findOne({
-      where: { id, affiliateId: affiliateId },
+      where: whereCondition,
       relations: {
         affiliate: true,
       },

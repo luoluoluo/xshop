@@ -1,22 +1,55 @@
 import { DeleteButton, EditButton, List, useTable } from "@refinedev/antd";
 import { useTranslate, type BaseRecord } from "@refinedev/core";
-import { Button, message, Space, Table } from "antd";
+import { Button, message, Space, Table, Form, Select } from "antd";
 import { parse } from "graphql";
 import { deleteProduct, getProducts } from "../../requests/product";
-import { Merchant, Product } from "../../generated/graphql";
+import { getMerchants } from "../../requests/merchant";
+import { Merchant, Product, ProductWhereInput } from "../../generated/graphql";
 import { Clipboard } from "../../components/clipboard";
+import { useState } from "react";
+import { useSelect } from "@refinedev/antd";
 
 export const ProductList = () => {
   const t = useTranslate();
+  const [where, setWhere] = useState<ProductWhereInput>();
+
+  const { selectProps: merchantSelectProps } = useSelect({
+    resource: "merchants",
+    meta: {
+      gqlQuery: parse(getMerchants),
+    },
+    optionLabel: "name",
+    optionValue: "id",
+  });
+
   const { tableProps } = useTable({
     meta: {
       gqlQuery: parse(getProducts),
+      variables: {
+        where,
+      },
     },
   });
 
   return (
     <List>
-      <Table {...tableProps} rowKey="id">
+      <Form layout="inline">
+        <Form.Item name="merchantId" label="商家">
+          <Select
+            placeholder="请选择商家"
+            allowClear
+            style={{ width: 200 }}
+            {...merchantSelectProps}
+            onChange={(value: any) => {
+              setWhere({
+                ...where,
+                merchantId: value,
+              });
+            }}
+          />
+        </Form.Item>
+      </Form>
+      <Table {...tableProps} rowKey="id" className="mt-4">
         <Table.Column dataIndex="id" title={"ID"} />
         <Table.Column
           dataIndex="merchant"
