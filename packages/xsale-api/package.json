@@ -19,12 +19,12 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "typeorm-ts-node-commonjs -r tsconfig-paths/register",
-    "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./src/typeorm.config.ts",
-    "typeorm:generate-migration": "npm run typeorm -- -d ./src/typeorm.config.ts migration:generate ./src/migrations/migration",
-    "typeorm:create-migration": "npm run typeorm -- migration:create ./src/migrations/migration",
-    "typeorm:revert-migration": "npm run typeorm -- -d ./src/typeorm.config.ts migration:revert",
-    "seed": "node dist/database/seeds/index.js"
+    "seed": "node dist/database/seeds/index.js",
+    "migration:generate": "ts-node --require tsconfig-paths/register ./node_modules/.bin/typeorm migration:generate -d src/typeorm.config.ts",
+    "migration:run": "ts-node --require tsconfig-paths/register ./node_modules/.bin/typeorm migration:run -d src/typeorm.config.ts",
+    "migration:revert": "ts-node --require tsconfig-paths/register ./node_modules/.bin/typeorm migration:revert -d src/typeorm.config.ts",
+    "migration:show": "ts-node --require tsconfig-paths/register ./node_modules/.bin/typeorm migration:show -d src/typeorm.config.ts",
+    "migration:create": "ts-node --require tsconfig-paths/register ./node_modules/.bin/typeorm migration:create"
   },
   "dependencies": {
     "@alicloud/dysmsapi20170525": "^4.1.1",
