@@ -22,6 +22,10 @@ export const getProducts = /* GraphQL */ `
         platformCommission
         merchantAffiliateCommission
         affiliateCommission
+        commissionRate
+        platformCommissionRate
+        merchantAffiliateCommissionRate
+        affiliateCommissionRate
         stock
         poster
         posterQrcodeConfig {

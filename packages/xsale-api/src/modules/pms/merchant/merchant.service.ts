@@ -91,6 +91,7 @@ export class MerchantService {
     wechatQrcode?: string;
     affiliateId: string;
     password?: string;
+    images?: string[];
   }): Promise<Merchant> {
     // 检查手机号是否已存在
     const existingMerchant = await this.findByPhone(merchantData.phone);

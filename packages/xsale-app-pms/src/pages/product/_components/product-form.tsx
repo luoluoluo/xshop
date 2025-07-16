@@ -104,7 +104,7 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
   }, [poster, posterQrcodeConfig, debouncedGeneratePreview]);
 
   const onFinish = (values: CreateProductInput | UpdateProductInput) => {
-    values.commission = Number(values?.commission || 0);
+    values.commissionRate = Number(values?.commissionRate || 0);
     values.price = Number(values?.price || 0);
     values.stock = Number(values?.stock || 0);
 
@@ -420,26 +420,23 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
       </Form.Item>
 
       <Form.Item
-        label={t("product.fields.commission")}
-        name={["commission"]}
+        label={t("product.fields.commissionRate")}
+        name={["commissionRate"]}
         rules={[
           { required: true },
           {
             validator: (_, value) => {
               value = Number(value);
-              if (value && value > price) {
-                return Promise.reject(new Error("佣金不能大于价格"));
+              if (value && value > 100) {
+                return Promise.reject(new Error("佣金比例不能大于100%"));
               }
-              if (value && value < price * 0.05) {
-                return Promise.reject(new Error("佣金不能小于价格的5%"));
+              if (value && value < 5) {
+                return Promise.reject(new Error("佣金比例不能小于5%"));
               }
               return Promise.resolve();
             },
           },
         ]}
-        extra={`佣金比例：${
-          commission && price ? ((commission / price) * 100).toFixed(2) : 0
-        }%（包含平台服务费1%，商家客户经理1%）`}
       >
         <Input />
       </Form.Item>

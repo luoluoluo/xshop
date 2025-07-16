@@ -3,10 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from '@/entities/product.entity';
 import { ProductPagination, ProductWhereInput } from './product.dto';
-import {
-  MERCHANT_AFFILIATE_COMMISSION_PERCENTAGE,
-  PLATFORM_FEE_PERCENTAGE,
-} from '@/core/constants';
 
 @Injectable()
 export class ProductService {
@@ -60,23 +56,6 @@ export class ProductService {
         },
       },
       order: { id: 'DESC' },
-    });
-
-    // 计算佣金
-    items.forEach((item) => {
-      // 平台佣金
-      item.platformCommission =
-        Math.floor(item.price * PLATFORM_FEE_PERCENTAGE * 100) / 100;
-      // 招商经理佣金
-      item.merchantAffiliateCommission =
-        Math.floor(
-          item.price * MERCHANT_AFFILIATE_COMMISSION_PERCENTAGE * 100,
-        ) / 100;
-      // 推广者佣金
-      item.affiliateCommission =
-        item.commission -
-        item.platformCommission -
-        item.merchantAffiliateCommission;
     });
 
     return {

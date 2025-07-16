@@ -127,6 +127,10 @@ export const Settings = () => {
           <CustomUpload />
         </Form.Item>
 
+        <Form.Item name="images" label="商户相册">
+          <CustomUpload max={20} />
+        </Form.Item>
+
         <Form.Item
           name="wechatQrcode"
           label="微信二维码"

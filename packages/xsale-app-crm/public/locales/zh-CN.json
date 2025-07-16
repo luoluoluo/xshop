@@ -480,7 +480,11 @@
       "platformCommission": "平台佣金",
       "merchantAffiliateCommission": "招商经理佣金",
       "affiliateCommission": "推广者佣金",
-      "merchantAffiliate": "招商经理"
+      "merchantAffiliate": "招商经理",
+      "commissionRate": "佣金比例（%）",
+      "platformCommissionRate": "平台佣金比例（%）",
+      "merchantAffiliateCommissionRate": "招商经理佣金比例（%）",
+      "affiliateCommissionRate": "推广者佣金比例（%）"
     },
     "filter": {
       "title": "筛选",

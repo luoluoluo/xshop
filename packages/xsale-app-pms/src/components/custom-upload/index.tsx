@@ -3,7 +3,8 @@ import * as Icons from "@ant-design/icons";
 import { UploadListType } from "antd/es/upload/interface";
 import { genId } from "../../utils/gen";
 import { upload } from "../../utils/request";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { UploadFile } from "antd/lib";
 
 const uploadButton = (
   <button style={{ border: 0, background: "none" }} type="button">
@@ -28,16 +29,21 @@ export const CustomUpload = (props: {
       : (props.value as string[])
     : [];
 
-  const fileList = useMemo(() => {
-    return values.length
-      ? values.map((f) => ({
-          uid: genId(),
-          name: f,
-          url: f,
-          status: "done" as const,
-        }))
-      : undefined;
-  }, [values]);
+  const [fileList, setFileList] = useState<UploadFile[]>();
+
+  useEffect(() => {
+    if (!values.length) {
+      return;
+    }
+    setFileList(
+      values.map((f) => ({
+        uid: genId(),
+        name: f,
+        url: f,
+        status: "done" as const,
+      })),
+    );
+  }, []);
 
   return (
     <Upload
@@ -64,7 +70,9 @@ export const CustomUpload = (props: {
         });
       }}
       onChange={(e) => {
+        console.log(e);
         setStatus(e.file.status || "");
+        setFileList(e.fileList);
         switch (e.file.status) {
           case "done":
             if (props.onChange) {

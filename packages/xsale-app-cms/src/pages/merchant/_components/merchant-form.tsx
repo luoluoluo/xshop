@@ -50,6 +50,10 @@ export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
         <CustomUpload />
       </Form.Item>
 
+      <Form.Item label={t("merchant.fields.images")} name={["images"]}>
+        <CustomUpload max={20} />
+      </Form.Item>
+
       <Form.Item
         label={t("merchant.fields.name")}
         name={["name"]}

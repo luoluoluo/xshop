@@ -6,6 +6,7 @@ export const getMerchant = /* GraphQL */ `
       name
       description
       logo
+      images
       address
       phone
       affiliateId

@@ -23,6 +23,7 @@ export type Affiliate = {
   bankName?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
+  merchantAffiliates?: Maybe<Array<MerchantAffiliate>>;
   name?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
@@ -120,13 +121,24 @@ export type Merchant = {
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  images?: Maybe<Array<Scalars['String']['output']>>;
   logo?: Maybe<Scalars['String']['output']>;
+  merchantAffiliates?: Maybe<Array<MerchantAffiliate>>;
   name?: Maybe<Scalars['String']['output']>;
   orders?: Maybe<Array<Order>>;
   phone?: Maybe<Scalars['String']['output']>;
   products?: Maybe<Array<Product>>;
   updatedAt: Scalars['DateTime']['output'];
   wechatQrcode?: Maybe<Scalars['String']['output']>;
+};
+
+export type MerchantAffiliate = {
+  __typename?: 'MerchantAffiliate';
+  affiliate: Affiliate;
+  affiliateId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  merchant: Merchant;
+  merchantId: Scalars['String']['output'];
 };
 
 export type MerchantPagination = {
@@ -278,7 +290,9 @@ export type PosterQrcodeConfigInput = {
 export type Product = {
   __typename?: 'Product';
   affiliateCommission?: Maybe<Scalars['Float']['output']>;
+  affiliateCommissionRate?: Maybe<Scalars['Int']['output']>;
   commission?: Maybe<Scalars['Float']['output']>;
+  commissionRate?: Maybe<Scalars['Int']['output']>;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -287,8 +301,10 @@ export type Product = {
   isActive?: Maybe<Scalars['Boolean']['output']>;
   merchant?: Maybe<Merchant>;
   merchantAffiliateCommission?: Maybe<Scalars['Float']['output']>;
+  merchantAffiliateCommissionRate?: Maybe<Scalars['Int']['output']>;
   merchantId?: Maybe<Scalars['String']['output']>;
   platformCommission?: Maybe<Scalars['Float']['output']>;
+  platformCommissionRate?: Maybe<Scalars['Int']['output']>;
   poster?: Maybe<Scalars['String']['output']>;
   posterQrcodeConfig?: Maybe<PosterQrcodeConfig>;
   price?: Maybe<Scalars['Float']['output']>;

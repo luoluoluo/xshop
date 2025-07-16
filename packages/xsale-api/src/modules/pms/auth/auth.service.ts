@@ -264,6 +264,7 @@ export class AuthService {
       wechatQrcode: registerInput.wechatQrcode,
       affiliateId: registerInput.affiliateId,
       password: registerInput.password, // 添加密码
+      images: registerInput.images,
     });
 
     return this.getAuthToken(merchant);

@@ -473,6 +473,7 @@
       },
       "image": "图片",
       "commission": "佣金",
+      "commissionRate": "佣金比例（%）",
       "price": "价格",
       "category": "分类",
       "images": "相册",

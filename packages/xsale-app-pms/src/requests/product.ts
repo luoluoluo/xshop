@@ -21,6 +21,7 @@ export const getProducts = /* GraphQL */ `
         createdAt
         price
         commission
+        commissionRate
         stock
         poster
         posterQrcodeConfig {
@@ -52,6 +53,7 @@ export const getProduct = /* GraphQL */ `
       createdAt
       price
       commission
+      commissionRate
       stock
       poster
       posterQrcodeConfig {

@@ -9,6 +9,7 @@ import {
   Row,
   Col,
   Spin,
+  message,
 } from "antd";
 import { CustomUpload } from "../../../components/custom-upload";
 import { CustomEditor } from "../../../components/custom-editor";
@@ -24,6 +25,10 @@ import { useTranslate } from "@refinedev/core";
 import { getMerchants } from "../../../requests/merchant";
 import QRCode from "qrcode";
 import { debounce } from "lodash";
+import {
+  MERCHANT_AFFILIATE_COMMISSION_PERCENTAGE,
+  PLATFORM_FEE_PERCENTAGE,
+} from "../../../config/constant";
 
 export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
   const t = useTranslate();
@@ -44,8 +49,6 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
     });
   }, []);
 
-  const price = Form.useWatch<number>("price", formProps.form);
-  const commission = Form.useWatch<number>("commission", formProps.form);
   const poster = Form.useWatch<string>("poster", formProps.form);
   const posterQrcodeConfig = Form.useWatch(
     "posterQrcodeConfig",
@@ -119,7 +122,20 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
 
   const onFinish = (values: CreateProductInput | UpdateProductInput) => {
     values.sort = Number(values?.sort || 0);
-    values.commission = Number(values?.commission || 0);
+    values.commissionRate = Number(values?.commissionRate || 0);
+    values.platformCommissionRate = Number(values?.platformCommissionRate || 0);
+    values.merchantAffiliateCommissionRate = Number(
+      values?.merchantAffiliateCommissionRate || 0,
+    );
+
+    if (
+      values.commissionRate <
+      values.platformCommissionRate + values.merchantAffiliateCommissionRate
+    ) {
+      message.error("佣金比例不能小于平台佣金比例和招商经理佣金比例之和");
+      return;
+    }
+
     values.price = Number(values?.price || 0);
     values.stock = Number(values?.stock || 0);
 
@@ -451,30 +467,40 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
       </Form.Item>
 
       <Form.Item
-        label={t("product.fields.commission")}
-        name={["commission"]}
+        label={t("product.fields.commissionRate")}
+        name={["commissionRate"]}
         rules={[
           { required: true },
           {
             validator: (_, value) => {
-              value = Number(value);
-              if (value && value > price) {
-                return Promise.reject(new Error("佣金不能大于价格"));
+              if (value && value > 100) {
+                return Promise.reject(new Error("佣金比例不能大于100%"));
               }
-              if (value && value < price * 0.05) {
-                return Promise.reject(new Error("佣金不能小于价格的5%"));
+              if (value && value < 5) {
+                return Promise.reject(new Error("佣金比例不能小于5%"));
               }
               return Promise.resolve();
             },
           },
         ]}
-        extra={`${
-          commission && price
-            ? `佣金比例：${((commission / price) * 100).toFixed(2)}%`
-            : ""
-        }（包含平台服务费1%，商家客户经理1%）`}
       >
         <Input />
+      </Form.Item>
+
+      <Form.Item
+        label={t("product.fields.platformCommissionRate")}
+        name={["platformCommissionRate"]}
+        rules={[{ required: true }]}
+      >
+        <Input defaultValue={PLATFORM_FEE_PERCENTAGE} />
+      </Form.Item>
+
+      <Form.Item
+        label={t("product.fields.merchantAffiliateCommissionRate")}
+        name={["merchantAffiliateCommissionRate"]}
+        rules={[{ required: true }]}
+      >
+        <Input defaultValue={MERCHANT_AFFILIATE_COMMISSION_PERCENTAGE} />
       </Form.Item>
 
       <Form.Item

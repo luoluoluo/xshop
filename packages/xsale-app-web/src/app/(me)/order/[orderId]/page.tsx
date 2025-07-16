@@ -1,4 +1,4 @@
-import { BusinessCard } from "@/components/business-card/business-card";
+import { MerchantBusinessCard } from "@/components/merchant/merchant-business-card";
 import { Contact } from "@/components/contact/contact";
 import { SiteFooter } from "@/components/layouts/site-footer";
 import { SiteHeader } from "@/components/layouts/site-header";
@@ -62,11 +62,7 @@ export default async function Page({
       <main className="container lg:flex lg:gap-8">
         <OrderItem order={order} className="mt-4 lg:mt-8 w-full"></OrderItem>
         <div className="w-full lg:w-[375px] flex-shrink-0 border-t mt-4 lg:mt-0 lg:border-none">
-          <BusinessCard
-            merchant={merchant}
-            className="mt-4 lg:mt-8"
-            showAction
-          />
+          <MerchantBusinessCard merchant={merchant} className="mt-4 lg:mt-8" />
         </div>
       </main>
       <Contact

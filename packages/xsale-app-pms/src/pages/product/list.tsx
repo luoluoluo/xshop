@@ -49,10 +49,14 @@ export const ProductList = () => {
           }}
         />
         <Table.Column
-          dataIndex="commission"
-          title={t("product.fields.commission")}
-          render={(commission: number) => {
-            return <span>{commission?.toFixed(2)}</span>;
+          dataIndex="commissionRate"
+          title={t("product.fields.commissionRate")}
+          render={(commissionRate: number, record: Product) => {
+            return (
+              <span>
+                {`${commissionRate}%（${record.commission?.toFixed(2)}）`}
+              </span>
+            );
           }}
         />
         <Table.Column

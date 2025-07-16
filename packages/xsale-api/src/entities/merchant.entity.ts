@@ -86,4 +86,8 @@ export class Merchant extends Base {
     (merchantAffiliate) => merchantAffiliate.merchant,
   )
   merchantAffiliates?: MerchantAffiliate[];
+
+  @Field(() => [String], { nullable: true })
+  @Column({ type: 'json', nullable: true })
+  images?: string[]; // 商家相册
 }

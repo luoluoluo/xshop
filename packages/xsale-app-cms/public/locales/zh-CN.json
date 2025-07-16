@@ -481,6 +481,9 @@
       "merchantAffiliateCommission": "招商经理佣金",
       "affiliateCommission": "推广者佣金",
       "merchantAffiliate": "招商经理",
+      "commissionRate": "佣金比例（%）",
+      "platformCommissionRate": "平台佣金比例（%）",
+      "merchantAffiliateCommissionRate": "招商经理佣金比例（%）",
       "link": "链接"
     },
     "filter": {
@@ -764,6 +767,7 @@
     "fields": {
       "id": "编号",
       "logo": "Logo",
+      "images": "相册",
       "name": "名称",
       "email": "邮箱地址",
       "address": "地址",

@@ -13,6 +13,7 @@ import {
   ProductWhereInput,
   UpdateProductInput,
 } from './product.dto';
+import { CommonProductService } from '@/modules/_common/product/product.service';
 
 @Injectable()
 export class ProductService {
@@ -21,6 +22,7 @@ export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    private readonly commonProductService: CommonProductService,
   ) {}
 
   async findAll({
@@ -67,7 +69,8 @@ export class ProductService {
   async create(createProductDto: CreateProductInput): Promise<Product> {
     try {
       // 创建产品
-      const product = this.productRepository.create(createProductDto);
+      let product = this.productRepository.create(createProductDto);
+      product = this.commonProductService.withCommission(product);
       return this.productRepository.save(product);
     } catch (err) {
       this.logger.error('創建產品失敗', {
@@ -82,13 +85,8 @@ export class ProductService {
     id: string,
     updateProductDto: UpdateProductInput,
   ): Promise<Product> {
-    const product = await this.productRepository.findOne({
+    let product = await this.productRepository.findOne({
       where: { id },
-      relations: {
-        merchant: {
-          affiliate: true,
-        },
-      },
     });
     if (!product) {
       throw new NotFoundException(`產品ID ${id} 未找到`);
@@ -97,6 +95,8 @@ export class ProductService {
     try {
       // 更新产品基本信息
       Object.assign(product, updateProductDto);
+
+      product = this.commonProductService.withCommission(product);
 
       return this.productRepository.save(product);
     } catch (err) {

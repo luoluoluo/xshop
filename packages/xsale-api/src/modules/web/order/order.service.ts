@@ -13,10 +13,7 @@ import {
 } from './order.dto';
 import { Product } from '@/entities/product.entity';
 import { Merchant } from '@/entities/merchant.entity';
-import {
-  MERCHANT_AFFILIATE_COMMISSION_PERCENTAGE,
-  PLATFORM_FEE_PERCENTAGE,
-} from '@/core/constants';
+
 import { Affiliate } from '@/entities/affiliate.entity';
 import { Logger } from '@nestjs/common';
 import { CommonOrderService } from '@/modules/_common/order/order.service';
@@ -123,32 +120,33 @@ export class OrderService {
         data.affiliateId = merchant.affiliateId;
       }
 
-      // Generate unique order number
-      const code = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
       // 订单金额 = 订单数量 * 产品价格
       const amount = Math.floor(data.quantity * product.price * 100) / 100;
+
       // 总佣金
-      const commission =
+      const commissionAmount =
         Math.floor(data.quantity * product.commission * 100) / 100;
+
       // 平台佣金 = 订单金额 * 平台费用比例
       const platformAmount =
-        Math.floor(amount * PLATFORM_FEE_PERCENTAGE * 100) / 100;
+        Math.floor(data.quantity * (product.platformCommission || 0) * 100) /
+        100;
+
       // 招商经理佣金 = 订单金额 * 招商经理佣金比例
       const merchantAffiliateAmount =
-        Math.floor(amount * MERCHANT_AFFILIATE_COMMISSION_PERCENTAGE * 100) /
-        100;
+        Math.floor(
+          data.quantity * (product.merchantAffiliateCommission || 0) * 100,
+        ) / 100;
 
       // 推广者佣金 = 总佣金 - 平台佣金 - 招商经理佣金
       const affiliateAmount =
-        commission - platformAmount - merchantAffiliateAmount;
+        Math.floor(data.quantity * (product.affiliateCommission || 0) * 100) /
+        100;
 
-      // 店铺收入 = 订单金额 - 平台佣金 - 推广者佣金 - 招商经理佣金
-      const merchantAmount =
-        amount - platformAmount - affiliateAmount - merchantAffiliateAmount;
+      // 商家收入 = 订单金额 - 佣金金额
+      const merchantAmount = amount - commissionAmount;
 
       const order = queryRunner.manager.create(Order, {
-        code,
         customerId: customerId,
         affiliateId: data.affiliateId,
         amount,

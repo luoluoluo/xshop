@@ -69,14 +69,56 @@ export class Product extends Base {
   })
   commission: number;
 
+  @Field(() => Int, { nullable: true })
+  @Column({ name: 'commission_rate', type: 'int', nullable: true })
+  commissionRate: number;
+
   @Field(() => Float, { nullable: true })
+  @Column({
+    name: 'platform_commission',
+    type: 'float',
+    precision: 10,
+    scale: 2,
+  })
   platformCommission?: number;
 
-  @Field(() => Float, { nullable: true })
-  merchantAffiliateCommission?: number;
+  @Field(() => Int, { nullable: true })
+  @Column({ name: 'platform_commission_rate', type: 'int', nullable: true })
+  platformCommissionRate?: number;
 
   @Field(() => Float, { nullable: true })
+  @Column({
+    name: 'merchant_affiliate_commission',
+    type: 'float',
+    precision: 10,
+    scale: 2,
+  })
+  merchantAffiliateCommission?: number;
+
+  @Field(() => Int, { nullable: true })
+  @Column({
+    name: 'merchant_affiliate_commission_rate',
+    type: 'int',
+    nullable: true,
+  })
+  merchantAffiliateCommissionRate?: number;
+
+  @Field(() => Float, { nullable: true })
+  @Column({
+    name: 'affiliate_commission',
+    type: 'float',
+    precision: 10,
+    scale: 2,
+  })
   affiliateCommission?: number;
+
+  @Field(() => Int, { nullable: true })
+  @Column({
+    name: 'affiliate_commission_rate',
+    type: 'int',
+    nullable: true,
+  })
+  affiliateCommissionRate?: number;
 
   @Field(() => Int, { nullable: true })
   @Column({ type: 'int', default: 0, nullable: true })

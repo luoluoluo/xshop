@@ -1,5 +1,5 @@
-export const PLATFORM_FEE_PERCENTAGE = 0.01;
-export const MERCHANT_AFFILIATE_COMMISSION_PERCENTAGE = 0.01;
+export const PLATFORM_FEE_PERCENTAGE = 1; // 1%
+export const MERCHANT_AFFILIATE_COMMISSION_PERCENTAGE = 1; // 1%
 
 export const CMS_JWT_STRATEGY = 'cms-jwt';
 export const WEB_JWT_STRATEGY = 'web-jwt';

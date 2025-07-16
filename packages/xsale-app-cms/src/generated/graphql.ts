@@ -137,6 +137,7 @@ export type CreateMerchantInput = {
   bankName?: InputMaybe<Scalars['String']['input']>;
   businessScope?: InputMaybe<Scalars['String']['input']>;
   description: Scalars['String']['input'];
+  images?: InputMaybe<Array<Scalars['String']['input']>>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   logo: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -146,12 +147,14 @@ export type CreateMerchantInput = {
 };
 
 export type CreateProductInput = {
-  commission: Scalars['Float']['input'];
+  commissionRate: Scalars['Int']['input'];
   content: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   image: Scalars['String']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  merchantAffiliateCommissionRate: Scalars['Int']['input'];
   merchantId: Scalars['String']['input'];
+  platformCommissionRate: Scalars['Int']['input'];
   poster?: InputMaybe<Scalars['String']['input']>;
   posterQrcodeConfig?: InputMaybe<PosterQrcodeConfigInput>;
   price: Scalars['Float']['input'];
@@ -203,6 +206,7 @@ export type Merchant = {
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  images?: Maybe<Array<Scalars['String']['output']>>;
   isActive?: Maybe<Scalars['Boolean']['output']>;
   logo?: Maybe<Scalars['String']['output']>;
   merchantAffiliates?: Maybe<Array<MerchantAffiliate>>;
@@ -517,7 +521,9 @@ export type PosterQrcodeConfigInput = {
 export type Product = {
   __typename?: 'Product';
   affiliateCommission?: Maybe<Scalars['Float']['output']>;
+  affiliateCommissionRate?: Maybe<Scalars['Int']['output']>;
   commission?: Maybe<Scalars['Float']['output']>;
+  commissionRate?: Maybe<Scalars['Int']['output']>;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -526,8 +532,10 @@ export type Product = {
   isActive?: Maybe<Scalars['Boolean']['output']>;
   merchant?: Maybe<Merchant>;
   merchantAffiliateCommission?: Maybe<Scalars['Float']['output']>;
+  merchantAffiliateCommissionRate?: Maybe<Scalars['Int']['output']>;
   merchantId?: Maybe<Scalars['String']['output']>;
   platformCommission?: Maybe<Scalars['Float']['output']>;
+  platformCommissionRate?: Maybe<Scalars['Int']['output']>;
   poster?: Maybe<Scalars['String']['output']>;
   posterQrcodeConfig?: Maybe<PosterQrcodeConfig>;
   price?: Maybe<Scalars['Float']['output']>;
@@ -739,6 +747,7 @@ export type UpdateMerchantInput = {
   bankName?: InputMaybe<Scalars['String']['input']>;
   businessScope?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  images?: InputMaybe<Array<Scalars['String']['input']>>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   logo?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -748,12 +757,14 @@ export type UpdateMerchantInput = {
 };
 
 export type UpdateProductInput = {
-  commission?: InputMaybe<Scalars['Float']['input']>;
+  commissionRate: Scalars['Int']['input'];
   content: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   image: Scalars['String']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  merchantAffiliateCommissionRate: Scalars['Int']['input'];
   merchantId?: InputMaybe<Scalars['String']['input']>;
+  platformCommissionRate: Scalars['Int']['input'];
   poster?: InputMaybe<Scalars['String']['input']>;
   posterQrcodeConfig?: InputMaybe<PosterQrcodeConfigInput>;
   price?: InputMaybe<Scalars['Float']['input']>;

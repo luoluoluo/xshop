@@ -59,6 +59,9 @@ export class RegisterInput {
 
   @Field()
   wechatQrcode: string;
+
+  @Field(() => [String], { nullable: true })
+  images?: string[];
 }
 
 @InputType()

@@ -21,6 +21,13 @@ export const getProducts = /* GraphQL */ `
         createdAt
         price
         commission
+        commissionRate
+        platformCommission
+        platformCommissionRate
+        merchantAffiliateCommission
+        merchantAffiliateCommissionRate
+        affiliateCommission
+        affiliateCommissionRate
         stock
         poster
         posterQrcodeConfig {
@@ -52,6 +59,13 @@ export const getProduct = /* GraphQL */ `
       createdAt
       price
       commission
+      commissionRate
+      platformCommission
+      platformCommissionRate
+      merchantAffiliateCommission
+      merchantAffiliateCommissionRate
+      affiliateCommission
+      affiliateCommissionRate
       stock
       poster
       posterQrcodeConfig {

@@ -377,17 +377,32 @@ export const ProductList = () => {
             }}
           />
           <Table.Column
-            dataIndex="merchantAffiliateCommission"
-            title={t("product.fields.merchantAffiliateCommission")}
-            render={(commission: number) => {
-              return <span>{commission?.toFixed(2)}</span>;
+            dataIndex="merchantAffiliateCommissionRate"
+            title={t("product.fields.merchantAffiliateCommissionRate")}
+            render={(
+              merchantAffiliateCommissionRate: number,
+              record: Product,
+            ) => {
+              return (
+                <span>
+                  {`${merchantAffiliateCommissionRate}%（${record.merchantAffiliateCommission?.toFixed(
+                    2,
+                  )}）`}
+                </span>
+              );
             }}
           />
           <Table.Column
-            dataIndex="affiliateCommission"
-            title={t("product.fields.affiliateCommission")}
-            render={(commission: number) => {
-              return <span>{commission?.toFixed(2)}</span>;
+            dataIndex="affiliateCommissionRate"
+            title={t("product.fields.affiliateCommissionRate")}
+            render={(affiliateCommissionRate: number, record: Product) => {
+              return (
+                <span>
+                  {`${affiliateCommissionRate}%（${record.affiliateCommission?.toFixed(
+                    2,
+                  )}）`}
+                </span>
+              );
             }}
           />
           <Table.Column
