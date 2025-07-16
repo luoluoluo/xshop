@@ -425,6 +425,10 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
         rules={[
           { required: true },
           {
+            pattern: /^[1-9]\d*$/,
+            message: "佣金比例必须为正整数",
+          },
+          {
             validator: (_, value) => {
               value = Number(value);
               if (value && value > 100) {

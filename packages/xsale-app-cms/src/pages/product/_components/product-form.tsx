@@ -472,6 +472,10 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
         rules={[
           { required: true },
           {
+            pattern: /^[1-9]\d*$/,
+            message: "佣金比例必须为正整数",
+          },
+          {
             validator: (_, value) => {
               if (value && value > 100) {
                 return Promise.reject(new Error("佣金比例不能大于100%"));
@@ -490,7 +494,13 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
       <Form.Item
         label={t("product.fields.platformCommissionRate")}
         name={["platformCommissionRate"]}
-        rules={[{ required: true }]}
+        rules={[
+          { required: true },
+          {
+            pattern: /^[1-9]\d*$/,
+            message: "佣金比例必须为正整数",
+          },
+        ]}
       >
         <Input defaultValue={PLATFORM_FEE_PERCENTAGE} />
       </Form.Item>
@@ -498,7 +508,13 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
       <Form.Item
         label={t("product.fields.merchantAffiliateCommissionRate")}
         name={["merchantAffiliateCommissionRate"]}
-        rules={[{ required: true }]}
+        rules={[
+          { required: true },
+          {
+            pattern: /^[1-9]\d*$/,
+            message: "佣金比例必须为正整数",
+          },
+        ]}
       >
         <Input defaultValue={MERCHANT_AFFILIATE_COMMISSION_PERCENTAGE} />
       </Form.Item>
