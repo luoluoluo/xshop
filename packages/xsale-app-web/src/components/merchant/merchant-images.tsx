@@ -116,7 +116,7 @@ export const MerchantImages = ({
                     priority
                     width={960}
                     height={960}
-                    className="w-full h-auto object-cover object-center aspect-[2/1] cursor-pointer"
+                    className="w-full h-auto object-cover object-center aspect-square cursor-pointer"
                     src={img}
                     // loading="auto"
                     alt=""
