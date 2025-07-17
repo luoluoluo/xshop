@@ -36,11 +36,7 @@ export const MerchantBusinessCard = function ({
 }) {
   return (
     <div className={cn(className)}>
-      <MerchantImages
-        data={merchant?.images || []}
-        className="mt-4 rounded overflow-hidden"
-      />
-      <div className="w-full h-auto shadow rounded p-4 mt-4">
+      <div className="w-full h-auto shadow rounded p-4">
         <div className="flex items-center justify-between gap-4">
           <div>
             <div className="flex items-center">
@@ -67,6 +63,10 @@ export const MerchantBusinessCard = function ({
           {merchant?.businessScope}
         </div>
       </div>
+      <MerchantImages
+        data={merchant?.images || []}
+        className="mt-4 rounded overflow-hidden"
+      />
 
       {merchant?.description ? (
         <div className="shadow mt-4 p-4 rounded">
