@@ -117,7 +117,7 @@ export const MerchantImages = ({
                     width={960}
                     height={960}
                     className="w-full h-auto object-cover object-center aspect-square cursor-pointer"
-                    src={img}
+                    src={`${img}?w=960&h=960`}
                     // loading="auto"
                     alt=""
                     onClick={() => openPreview(img, index)}
