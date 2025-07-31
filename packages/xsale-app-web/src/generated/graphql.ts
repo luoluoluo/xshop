@@ -313,6 +313,11 @@ export type Product = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+export type ProductOrderByInput = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type ProductPagination = {
   __typename?: 'ProductPagination';
   data: Array<Product>;
@@ -405,6 +410,7 @@ export type QueryProductArgs = {
 
 
 export type QueryProductsArgs = {
+  orderBy?: ProductOrderByInput;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: ProductWhereInput;

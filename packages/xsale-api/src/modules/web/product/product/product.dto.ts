@@ -1,5 +1,6 @@
 import { ObjectType, Int, InputType, Field } from '@nestjs/graphql';
 import { Product } from '@/entities/product.entity';
+import { OrderBy } from '@/entities/base.entity';
 
 @InputType()
 export class ProductWhereInput {
@@ -11,6 +12,15 @@ export class ProductWhereInput {
 
   @Field({ nullable: true })
   merchantId?: string;
+}
+
+@InputType()
+export class ProductOrderByInput {
+  @Field({ nullable: true })
+  id?: OrderBy;
+
+  @Field({ nullable: true })
+  price?: OrderBy;
 }
 
 @ObjectType()

@@ -8,7 +8,7 @@ import { getProducts } from "@/requests/product";
 import { getAffiliateId } from "@/utils/index.server";
 import { getLogger } from "@/utils/logger";
 import { request } from "@/utils/request.server";
-import { ProductItem } from "@/components/product/product-item";
+import { ProductList } from "@/components/product/product-list";
 
 export async function generateMetadata({
   params,
@@ -68,6 +68,7 @@ export default async function Page({
     return res.data?.products.data;
   });
   if (!products) return null;
+
   const merchant = await request<{ merchant: Merchant }>({
     query: getMerchant,
     variables: { id: params.merchantId, affiliateId: getAffiliateId() },
@@ -91,10 +92,8 @@ export default async function Page({
       />
       <main>
         <div className="lg:flex lg:gap-8 container">
-          <div className="w-full grid grid-cols-2 gap-4 mt-4 lg:mt-8 h-fit">
-            {products.map((product) => (
-              <ProductItem key={product.id} product={product} />
-            ))}
+          <div className="w-full mt-4 lg:mt-8">
+            <ProductList products={products} />
           </div>
           <div className="w-full lg:w-[375px] flex-shrink-0 border-t mt-4 lg:mt-0 lg:border-none">
             <MerchantBusinessCard

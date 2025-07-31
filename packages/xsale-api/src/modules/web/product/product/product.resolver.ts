@@ -1,7 +1,11 @@
 import { Resolver, Query, Args, Int } from '@nestjs/graphql';
 import { Product } from '@/entities/product.entity';
 import { ProductService } from './product.service';
-import { ProductPagination, ProductWhereInput } from './product.dto';
+import {
+  ProductOrderByInput,
+  ProductPagination,
+  ProductWhereInput,
+} from './product.dto';
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -13,11 +17,14 @@ export class ProductResolver {
     @Args('take', { type: () => Int, nullable: true }) take: number,
     @Args('where', { type: () => ProductWhereInput, defaultValue: {} })
     where?: ProductWhereInput,
+    @Args('orderBy', { type: () => ProductOrderByInput, defaultValue: {} })
+    orderBy?: ProductOrderByInput,
   ): Promise<ProductPagination> {
     return await this.productService.findAll({
       skip,
       take,
       where,
+      orderBy,
     });
   }
 
