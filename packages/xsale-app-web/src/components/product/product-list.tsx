@@ -5,14 +5,14 @@ import { Product } from "@/generated/graphql";
 import { ProductItem } from "./product-item";
 import { ProductSortSelector } from "./product-sort-selector";
 
-type SortOrder = "asc" | "desc";
+type SortOrder = "latest" | "asc" | "desc";
 
 interface ProductListProps {
   products: Product[];
 }
 
 export const ProductList = ({ products }: ProductListProps) => {
-  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("latest");
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearchTerm, setActiveSearchTerm] = useState("");
 
@@ -37,11 +37,30 @@ export const ProductList = ({ products }: ProductListProps) => {
       product.title?.toLowerCase().includes(activeSearchTerm.toLowerCase()),
     );
 
-    // 再按价格排序
+    // 再按排序规则排序
     return filtered.sort((a, b) => {
-      const priceA = a.price || 0;
-      const priceB = b.price || 0;
-      return sortOrder === "asc" ? priceA - priceB : priceB - priceA;
+      switch (sortOrder) {
+        case "latest": {
+          // 按创建时间倒序（最新的在前）
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        }
+        case "asc": {
+          // 价格从低到高
+          const priceA = a.price || 0;
+          const priceB = b.price || 0;
+          return priceA - priceB;
+        }
+        case "desc": {
+          // 价格从高到低
+          const priceC = a.price || 0;
+          const priceD = b.price || 0;
+          return priceD - priceC;
+        }
+        default:
+          return 0;
+      }
     });
   }, [products, sortOrder, activeSearchTerm]);
 

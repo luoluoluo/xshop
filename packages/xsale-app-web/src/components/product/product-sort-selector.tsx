@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-type SortOrder = "asc" | "desc";
+type SortOrder = "latest" | "asc" | "desc";
 
 interface ProductSortSelectorProps {
   onSortChange: (order: SortOrder) => void;
@@ -11,7 +11,7 @@ interface ProductSortSelectorProps {
 
 export const ProductSortSelector = ({
   onSortChange,
-  defaultOrder = "asc",
+  defaultOrder = "latest",
 }: ProductSortSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentOrder, setCurrentOrder] = useState<SortOrder>(defaultOrder);
@@ -23,6 +23,7 @@ export const ProductSortSelector = ({
   };
 
   const sortOptions = [
+    { value: "latest", label: "最新产品" },
     { value: "asc", label: "价格从低到高" },
     { value: "desc", label: "价格从高到低" },
   ];
