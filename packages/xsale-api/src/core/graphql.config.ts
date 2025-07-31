@@ -111,7 +111,7 @@ export function createGraphQLConfig(options: {
         extensions: {
           ...error.extensions,
           statusCode: originalError?.statusCode || 500,
-          message: message,
+          message,
           code,
         },
       };

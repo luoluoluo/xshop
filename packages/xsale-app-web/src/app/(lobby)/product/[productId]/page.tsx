@@ -97,7 +97,7 @@ export default async function Page({
       <SiteHeader
         theme="product"
         logoAttributes={{
-          link: "#",
+          link: `/merchant/${product.merchantId}`,
           name: merchant?.name || undefined,
           logo: merchant?.logo || undefined,
         }}
