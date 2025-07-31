@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Product } from '@/entities/product.entity';
 import { ProductPagination, ProductWhereInput } from './product.dto';
 
@@ -21,9 +21,15 @@ export class ProductService {
     where?: ProductWhereInput;
   }): Promise<ProductPagination> {
     const [items, total] = await this.productRepository.findAndCount({
-      where,
+      where: {
+        merchantId: where?.merchantId,
+        isActive: true,
+        title: where?.title ? ILike(`%${where?.title}%`) : undefined,
+        id: where?.id,
+      },
       skip,
       take,
+      order: { id: 'DESC' },
     });
 
     return {
