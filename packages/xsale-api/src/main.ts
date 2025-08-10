@@ -11,22 +11,22 @@ const getServers = () => {
   return [
     {
       module: CmsModule,
-      port: process.env.CMS_PORT || 3000,
+      port: process.env.CMS_PORT || 4000,
       name: 'cms',
     },
     {
       module: WebModule,
-      port: process.env.WEB_PORT || 3001,
+      port: process.env.WEB_PORT || 4001,
       name: 'web',
     },
     {
       module: PmsModule,
-      port: process.env.PMS_PORT || 3002,
+      port: process.env.PMS_PORT || 4002,
       name: 'pms',
     },
     {
       module: CrmModule,
-      port: process.env.CRM_PORT || 3003,
+      port: process.env.CRM_PORT || 4003,
       name: 'crm',
     },
   ];
