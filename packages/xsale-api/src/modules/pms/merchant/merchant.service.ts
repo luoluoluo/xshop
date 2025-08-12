@@ -8,7 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Merchant } from '@/entities/merchant.entity';
-import { UpdateMeInput } from '../auth/auth.dto';
+import { RegisterInput, UpdateMeInput } from '../auth/auth.dto';
 import { Affiliate } from '@/entities/affiliate.entity';
 import { hash } from 'bcrypt';
 
@@ -81,18 +81,7 @@ export class MerchantService {
     return true;
   }
 
-  async create(merchantData: {
-    phone: string;
-    name: string;
-    description?: string;
-    logo?: string;
-    address?: string;
-    businessScope?: string;
-    wechatQrcode?: string;
-    affiliateId: string;
-    password?: string;
-    images?: string[];
-  }): Promise<Merchant> {
+  async create(merchantData: RegisterInput): Promise<Merchant> {
     // 检查手机号是否已存在
     const existingMerchant = await this.findByPhone(merchantData.phone);
     if (existingMerchant) {

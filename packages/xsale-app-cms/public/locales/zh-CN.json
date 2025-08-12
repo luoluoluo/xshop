@@ -779,6 +779,7 @@
       "businessScope": "业务范围",
       "wechatQrcode": "微信二维码",
       "bankName": "银行名称",
+      "wechatMerchantId": "微信商户号",
       "bankAccount": "银行账户",
       "accountName": "账户名称"
     }

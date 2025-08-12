@@ -5,6 +5,7 @@ import {
   ShopOutlined,
   FileTextOutlined,
   LockOutlined,
+  WechatOutlined,
 } from "@ant-design/icons";
 import { request } from "../../utils/request";
 import { updateMe } from "../../requests/auth";
@@ -137,6 +138,14 @@ export const Settings = () => {
           rules={[{ required: true, message: "请上传微信二维码" }]}
         >
           <CustomUpload />
+        </Form.Item>
+
+        <Form.Item
+          name="wechatMerchantId"
+          label="微信商户号"
+          extra="服务商模式下必填"
+        >
+          <Input prefix={<WechatOutlined />} placeholder="请输入微信商户号" />
         </Form.Item>
 
         <Form.Item

@@ -44,6 +44,7 @@ export const getMerchant = /* GraphQL */ `
       }
       businessScope
       wechatQrcode
+      wechatMerchantId
     }
   }
 `;

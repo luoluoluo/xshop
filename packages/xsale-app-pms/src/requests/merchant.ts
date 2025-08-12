@@ -40,6 +40,7 @@ export const getMerchant = /* GraphQL */ `
         id
         name
       }
+      wechatMerchantId
     }
   }
 `;

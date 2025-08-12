@@ -115,5 +115,8 @@ export class UpdateMeInput {
   wechatQrcode?: string;
 
   @Field({ nullable: true })
+  wechatMerchantId?: string;
+
+  @Field({ nullable: true })
   password?: string;
 }

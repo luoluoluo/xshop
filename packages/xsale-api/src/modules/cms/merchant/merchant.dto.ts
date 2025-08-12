@@ -48,6 +48,9 @@ export class CreateMerchantInput {
   @Field(() => [String], { nullable: true })
   @IsOptional()
   images?: string[];
+
+  @Field({ nullable: true })
+  wechatMerchantId?: string;
 }
 
 @InputType()
@@ -102,6 +105,9 @@ export class UpdateMerchantInput {
   @Field(() => [String], { nullable: true })
   @IsOptional()
   images?: string[];
+
+  @Field({ nullable: true })
+  wechatMerchantId?: string;
 }
 
 @InputType()

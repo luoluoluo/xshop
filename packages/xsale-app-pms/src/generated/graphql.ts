@@ -132,6 +132,7 @@ export type Merchant = {
   phone?: Maybe<Scalars['String']['output']>;
   products?: Maybe<Array<Product>>;
   updatedAt: Scalars['DateTime']['output'];
+  wechatMerchantId?: Maybe<Scalars['String']['output']>;
   wechatQrcode?: Maybe<Scalars['String']['output']>;
 };
 
@@ -258,7 +259,6 @@ export type Order = {
   createdAt: Scalars['DateTime']['output'];
   customer?: Maybe<Customer>;
   id: Scalars['String']['output'];
-  isWechatProfitSharing?: Maybe<Scalars['Boolean']['output']>;
   merchant?: Maybe<Merchant>;
   merchantAffiliate?: Maybe<Affiliate>;
   merchantAffiliateAmount?: Maybe<Scalars['Float']['output']>;
@@ -280,6 +280,7 @@ export type Order = {
   refundedAt?: Maybe<Scalars['DateTime']['output']>;
   status?: Maybe<OrderStatus>;
   updatedAt: Scalars['DateTime']['output'];
+  wechatMerchantId?: Maybe<Scalars['String']['output']>;
   wechatTransactionId?: Maybe<Scalars['String']['output']>;
 };
 
@@ -445,6 +446,7 @@ export type UpdateMeInput = {
   logo?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
+  wechatMerchantId?: InputMaybe<Scalars['String']['input']>;
   wechatQrcode?: InputMaybe<Scalars['String']['input']>;
 };
 

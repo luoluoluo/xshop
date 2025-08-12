@@ -254,18 +254,7 @@ export class AuthService {
     }
 
     // 创建商户
-    const merchant = await this.merchantService.create({
-      phone: registerInput.phone,
-      name: registerInput.name,
-      description: registerInput.description,
-      logo: registerInput.logo,
-      address: registerInput.address,
-      businessScope: registerInput.businessScope,
-      wechatQrcode: registerInput.wechatQrcode,
-      affiliateId: registerInput.affiliateId,
-      password: registerInput.password, // 添加密码
-      images: registerInput.images,
-    });
+    const merchant = await this.merchantService.create(registerInput);
 
     return this.getAuthToken(merchant);
   }
