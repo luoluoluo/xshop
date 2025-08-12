@@ -34,6 +34,7 @@
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
     "dropdown-menu": "^0.1.1",
+    "graphql": "^16.11.0",
     "install": "^0.13.0",
     "js-cookie": "^3.0.5",
     "js-md5": "^0.8.3",

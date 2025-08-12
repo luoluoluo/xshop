@@ -65,6 +65,9 @@ dependencies:
   dropdown-menu:
     specifier: ^0.1.1
     version: 0.1.1
+  graphql:
+    specifier: ^16.11.0
+    version: 16.11.0
   install:
     specifier: ^0.13.0
     version: 0.13.0
