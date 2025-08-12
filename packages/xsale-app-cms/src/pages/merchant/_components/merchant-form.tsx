@@ -128,16 +128,16 @@ export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
         <Input />
       </Form.Item>
 
-      <Form.Item label={t("fields.isActive.label")} name={["isActive"]}>
-        <Switch />
-      </Form.Item>
-
       <Form.Item
         label={t("merchant.fields.wechatMerchantId")}
         name={["wechatMerchantId"]}
         extra="服务商模式下必填"
       >
         <Input />
+      </Form.Item>
+
+      <Form.Item label={t("fields.isActive.label")} name={["isActive"]}>
+        <Switch />
       </Form.Item>
     </Form>
   );
