@@ -47,6 +47,7 @@ export class CommonOrderService {
     private readonly wechatPayService: WechatPayService,
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
+    @InjectRepository(Merchant)
     private readonly merchantRepository: Repository<Merchant>,
     private readonly wechatPayPartnerService: WechatPayPartnerService,
     private readonly configService: ConfigService,
