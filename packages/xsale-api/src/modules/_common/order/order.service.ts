@@ -16,6 +16,13 @@ import {
 import { Affiliate } from '@/entities/affiliate.entity';
 import { Merchant } from '@/entities/merchant.entity';
 import { Payment } from '../wechat-pay/wechat-pay.dto';
+import {
+  PartnerProfitsharingCreateOrdersRequest,
+  PartnerRefundRequest,
+  PartnerTransactionRequest,
+  WechatPayPartnerService,
+} from '../wechat-pay/wechat-pay-partner.service';
+import { ConfigService } from '@nestjs/config';
 
 export interface CancelOptions {
   /** 自定义验证函数 */
@@ -40,6 +47,9 @@ export class CommonOrderService {
     private readonly wechatPayService: WechatPayService,
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
+    private readonly merchantRepository: Repository<Merchant>,
+    private readonly wechatPayPartnerService: WechatPayPartnerService,
+    private readonly configService: ConfigService,
   ) {}
 
   /**
@@ -157,18 +167,33 @@ export class CommonOrderService {
       // 调用微信退款接口（在更新订单状态之前）
       if (!skipWechatRefund) {
         try {
-          const refundParams = {
-            out_refund_no: `REFUND-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            amount: {
-              total: Math.floor(order.amount * 100), // 微信支付金额以分为单位
-              currency: 'CNY',
-              refund: Math.floor(order.amount * 100),
-            },
-            out_trade_no: order.id,
-          };
+          if (order.wechatMerchantId) {
+            const partnerRefundParams: PartnerRefundRequest = {
+              sub_mchid: order.wechatMerchantId,
+              out_refund_no: `REFUND-${order.id}-${Date.now()}`,
+              amount: {
+                total: Math.floor(order.amount * 100),
+                currency: 'CNY',
+                refund: Math.floor(order.amount * 100),
+              },
+              out_trade_no: order.id,
+            };
+            await this.wechatPayPartnerService.refund(partnerRefundParams);
+            this.logger.log(`Wechat refund successful for order ${orderId}`);
+          } else {
+            const refundParams = {
+              out_refund_no: `REFUND-${order.id}-${Date.now()}`,
+              amount: {
+                total: Math.floor(order.amount * 100), // 微信支付金额以分为单位
+                currency: 'CNY',
+                refund: Math.floor(order.amount * 100),
+              },
+              out_trade_no: order.id,
+            };
 
-          await this.wechatPayService.refund(refundParams);
-          this.logger.log(`Wechat refund successful for order ${orderId}`);
+            await this.wechatPayService.refund(refundParams);
+            this.logger.log(`Wechat refund successful for order ${orderId}`);
+          }
         } catch (error) {
           this.logger.error(`Wechat refund failed for order ${orderId}`, error);
           throw new Error(`微信退款失败: ${error.message}`);
@@ -286,49 +311,71 @@ export class CommonOrderService {
       order.completedAt = new Date();
       const savedOrder = await queryRunner.manager.save(order);
 
-      // 如果开启了微信分账且有openId，通过微信分账
-      if (order.isWechatProfitSharing) {
-        if (!order.wechatTransactionId) {
-          throw new Error('微信支付订单号不存在，无法进行分账');
-        }
-        let receivers: ProfitsharingCreateOrdersRequest['receivers'] = [];
-        if (
-          !affiliate?.wechatOAuth?.openId ||
-          !merchantAffiliate?.wechatOAuth?.openId
-        ) {
-          throw new Error('推广者或招商经理的微信openId不存在，无法进行分账');
-        }
-        if (
-          affiliate.wechatOAuth.openId === merchantAffiliate.wechatOAuth.openId
-        ) {
-          receivers = [
-            {
-              type: 'PERSONAL_OPENID',
-              account: affiliate.wechatOAuth.openId,
-              amount:
-                Math.floor((order.affiliateAmount || 0) * 100) +
-                Math.floor((order.merchantAffiliateAmount || 0) * 100),
-              description: `订单${order.id}佣金`,
-            },
-          ];
-        } else {
-          receivers = [
-            // 推广者分账
-            {
-              type: 'PERSONAL_OPENID',
-              account: affiliate.wechatOAuth.openId,
-              amount: Math.floor((order.affiliateAmount || 0) * 100),
-              description: `订单${order.id}佣金`,
-            },
-            // 商户客户经理分账
-            {
-              type: 'PERSONAL_OPENID',
-              account: merchantAffiliate.wechatOAuth.openId,
-              amount: Math.floor((order.merchantAffiliateAmount || 0) * 100),
-              description: `订单${order.id}佣金`,
-            },
-          ];
-        }
+      /** 通过微信分账 start */
+      if (!order.wechatTransactionId) {
+        throw new Error('微信支付订单号不存在，无法进行分账');
+      }
+      let receivers:
+        | ProfitsharingCreateOrdersRequest['receivers']
+        | PartnerProfitsharingCreateOrdersRequest['receivers'] = [];
+      if (
+        !affiliate?.wechatOAuth?.openId ||
+        !merchantAffiliate?.wechatOAuth?.openId
+      ) {
+        throw new Error('推广者或招商经理的微信openId不存在，无法进行分账');
+      }
+      if (
+        affiliate.wechatOAuth.openId === merchantAffiliate.wechatOAuth.openId
+      ) {
+        receivers = [
+          {
+            type: 'PERSONAL_OPENID',
+            account: affiliate.wechatOAuth.openId,
+            amount:
+              Math.floor((order.affiliateAmount || 0) * 100) +
+              Math.floor((order.merchantAffiliateAmount || 0) * 100),
+            description: `订单${order.id}佣金`,
+          },
+        ];
+      } else {
+        receivers = [
+          // 推广者分账
+          {
+            type: 'PERSONAL_OPENID',
+            account: affiliate.wechatOAuth.openId,
+            amount: Math.floor((order.affiliateAmount || 0) * 100),
+            description: `订单${order.id}佣金`,
+          },
+          // 商户客户经理分账
+          {
+            type: 'PERSONAL_OPENID',
+            account: merchantAffiliate.wechatOAuth.openId,
+            amount: Math.floor((order.merchantAffiliateAmount || 0) * 100),
+            description: `订单${order.id}佣金`,
+          },
+        ];
+      }
+      // 服务商模式
+      if (order.wechatMerchantId) {
+        // 平台分账
+        receivers.push({
+          type: 'MERCHANT_ID',
+          account: this.configService.get<string>('WECHAT_PAY_MCHID')!,
+          amount: Math.floor((order.platformAmount || 0) * 100),
+          description: `订单${order.id}佣金`,
+        });
+        const partnerProfitSharingParams: PartnerProfitsharingCreateOrdersRequest =
+          {
+            sub_mchid: order.wechatMerchantId,
+            transaction_id: order.wechatTransactionId,
+            out_order_no: order.id,
+            receivers,
+            unfreeze_unsplit: true,
+          };
+        await this.wechatPayPartnerService.profitsharingCreateOrders(
+          partnerProfitSharingParams,
+        );
+      } else {
         const affiliateProfitSharingParams: ProfitsharingCreateOrdersRequest = {
           transaction_id: order.wechatTransactionId,
           out_order_no: order.id,
@@ -338,29 +385,8 @@ export class CommonOrderService {
         await this.wechatPayService.profitsharingCreateOrders(
           affiliateProfitSharingParams,
         );
-      } else {
-        // 检查推广者和招商经理是否是同一个人
-        if (affiliate.id === merchantAffiliate.id) {
-          // 同一个人，累加两个金额一次性更新
-          affiliate.balance =
-            Number(affiliate.balance) +
-            Number(order.affiliateAmount || 0) +
-            Number(order.merchantAffiliateAmount || 0);
-          await queryRunner.manager.save(affiliate);
-        } else {
-          // 不同的人，分别更新余额
-          // 更新推广者余额
-          affiliate.balance =
-            Number(affiliate.balance) + Number(order.affiliateAmount || 0);
-          await queryRunner.manager.save(affiliate);
-
-          // 更新商户客户经理余额
-          merchantAffiliate.balance =
-            Number(merchantAffiliate.balance) +
-            Number(order.merchantAffiliateAmount || 0);
-          await queryRunner.manager.save(merchantAffiliate);
-        }
       }
+      /** 通过微信分账 end */
 
       if (order.merchantId) {
         // 更新商户余额
@@ -415,50 +441,84 @@ export class CommonOrderService {
       throw new Error('Only created orders can be paid');
     }
 
-    // 检查是否需要开启分账
-    const totalCommissionPercentage =
-      (((order.affiliateAmount || 0) + (order.merchantAffiliateAmount || 0)) /
-        order.amount) *
-      100;
+    const merchant = await this.merchantRepository.findOne({
+      where: { id: order.merchantId },
+      relations: {
+        affiliate: {
+          wechatOAuth: true,
+        },
+      },
+    });
 
-    if (
-      totalCommissionPercentage <= 30 &&
-      order.affiliate?.wechatOAuth?.openId &&
-      order.merchant?.affiliate?.wechatOAuth?.openId
-    ) {
-      order.isWechatProfitSharing = true;
-      await this.orderRepository.save(order);
+    if (!merchant) {
+      throw new NotFoundException(`Merchant ${order.merchantId} not found`);
     }
 
-    // 构建支付参数
-    const paymentParams: TransactionRequest = {
-      description: `订单${order.id}支付`,
-      out_trade_no: order.id,
-      amount: {
-        total: Math.floor(order.amount * 100),
-        currency: 'CNY',
-      },
-      payer: {
-        openid: options.openId,
-      },
-      notify_url: options.notifyUrl,
-      settle_info: {
-        profit_sharing: order.isWechatProfitSharing,
-      },
-    };
+    // 服务商模式
+    if (merchant.wechatMerchantId) {
+      // 构建支付参数
+      const partnerPaymentParams: PartnerTransactionRequest = {
+        sub_mchid: merchant.wechatMerchantId,
+        description: `订单${order.id}支付`,
+        out_trade_no: order.id,
+        amount: {
+          total: Math.floor(order.amount * 100),
+          currency: 'CNY',
+        },
+        payer: {
+          openid: options.openId,
+        },
+        notify_url: options.notifyUrl,
+        settle_info: {
+          profit_sharing: true,
+        },
+      };
 
-    // 调用微信支付接口
-    const paymentResult =
-      await this.wechatPayService.createTransactionsJsapi(paymentParams);
+      // 调用微信支付接口
+      const paymentResult =
+        await this.wechatPayPartnerService.createTransactionsJsapi(
+          partnerPaymentParams,
+        );
 
-    return {
-      appId: paymentResult.appId,
-      timeStamp: paymentResult.timeStamp,
-      nonceStr: paymentResult.nonceStr,
-      package: paymentResult.package,
-      signType: paymentResult.signType,
-      paySign: paymentResult.paySign,
-    };
+      return {
+        appId: paymentResult.appId || '',
+        timeStamp: paymentResult.timeStamp,
+        nonceStr: paymentResult.nonceStr,
+        package: paymentResult.package,
+        signType: paymentResult.signType,
+        paySign: paymentResult.paySign,
+      };
+    } else {
+      // 构建支付参数
+      const paymentParams: TransactionRequest = {
+        description: `订单${order.id}支付`,
+        out_trade_no: order.id,
+        amount: {
+          total: Math.floor(order.amount * 100),
+          currency: 'CNY',
+        },
+        payer: {
+          openid: options.openId,
+        },
+        notify_url: options.notifyUrl,
+        settle_info: {
+          profit_sharing: true,
+        },
+      };
+
+      // 调用微信支付接口
+      const paymentResult =
+        await this.wechatPayService.createTransactionsJsapi(paymentParams);
+
+      return {
+        appId: paymentResult.appId || '',
+        timeStamp: paymentResult.timeStamp,
+        nonceStr: paymentResult.nonceStr,
+        package: paymentResult.package,
+        signType: paymentResult.signType,
+        paySign: paymentResult.paySign,
+      };
+    }
   }
 
   /**

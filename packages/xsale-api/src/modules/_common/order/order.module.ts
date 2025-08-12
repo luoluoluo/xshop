@@ -7,6 +7,7 @@ import { WechatPayModule } from '../wechat-pay/wechat-pay.module';
 import { Affiliate } from '@/entities/affiliate.entity';
 import { Merchant } from '@/entities/merchant.entity';
 import { WechatOAuth } from '@/entities/wechat-oauth.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { WechatOAuth } from '@/entities/wechat-oauth.entity';
       WechatOAuth,
     ]),
     WechatPayModule,
+    ConfigModule,
   ],
   providers: [CommonOrderService],
   exports: [CommonOrderService],

@@ -90,4 +90,8 @@ export class Merchant extends Base {
   @Field(() => [String], { nullable: true })
   @Column({ type: 'json', nullable: true })
   images?: string[]; // 商家相册
+
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'wechat_merchant_id', nullable: true })
+  wechatMerchantId?: string;
 }

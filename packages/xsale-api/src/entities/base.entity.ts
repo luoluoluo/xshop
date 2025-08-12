@@ -1,15 +1,6 @@
 import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { snowflakeGenerator } from '@/core/snowflake';
-
-export enum OrderBy {
-  ASC = 'asc',
-  DESC = 'desc',
-}
-
-registerEnumType(OrderBy, {
-  name: 'OrderBy',
-});
 
 @ObjectType()
 export class Base {

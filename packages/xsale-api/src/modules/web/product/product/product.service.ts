@@ -1,12 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { FindOptionsOrder, ILike, Repository } from 'typeorm';
 import { Product } from '@/entities/product.entity';
-import {
-  ProductOrderByInput,
-  ProductPagination,
-  ProductWhereInput,
-} from './product.dto';
+import { ProductPagination, ProductWhereInput } from './product.dto';
+import { SorterInput } from '@/core/sorter.dto';
 
 @Injectable()
 export class ProductService {
@@ -19,13 +16,21 @@ export class ProductService {
     skip,
     take,
     where,
-    orderBy,
+    sorters,
   }: {
     skip?: number;
     take?: number;
     where?: ProductWhereInput;
-    orderBy?: ProductOrderByInput;
+    sorters?: SorterInput[];
   }): Promise<ProductPagination> {
+    const order: FindOptionsOrder<Product> = {};
+    if (sorters?.length) {
+      sorters.forEach((sorter) => {
+        order[sorter.field] = sorter.direction;
+      });
+    } else {
+      order.price = 'asc';
+    }
     const [items, total] = await this.productRepository.findAndCount({
       where: {
         merchantId: where?.merchantId,
@@ -35,9 +40,7 @@ export class ProductService {
       },
       skip,
       take,
-      order: orderBy || {
-        price: 'ASC',
-      },
+      order,
     });
 
     return {
