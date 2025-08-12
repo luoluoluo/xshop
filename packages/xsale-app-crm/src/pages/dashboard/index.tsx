@@ -90,7 +90,7 @@ const Dashboard = () => {
                   </div>
 
                   <div className="text-sm text-gray-500">
-                    绑定微信后，佣金将自动提现到微信钱包，无需手动提现
+                    绑定微信后，佣金将自动提现到微信钱包
                   </div>
                 </div>
               </div>
@@ -102,7 +102,7 @@ const Dashboard = () => {
                   </Button>
                 )}
                 <div className="text-sm text-gray-500">
-                  绑定微信后，佣金将自动提现到微信钱包，无需手动提现
+                  绑定微信后，佣金将自动提现到微信钱包
                 </div>
               </div>
             )}
@@ -126,21 +126,6 @@ const Dashboard = () => {
             <Icons.ProductOutlined className="text-[32px] " />
             <div className="text-sm mt-1">产品列表</div>
           </Link>
-        </div>
-      </Card>
-
-      <Card title="仪表盘">
-        <div className="flex flex-wrap gap-8 mt-8">
-          <div className="flex flex-col text-gray-700">
-            <Statistic title="余额" value={me?.balance || 0} />
-            <Link
-              to="/affiliate-withdrawal/new"
-              className="mt-4"
-              type="primary"
-            >
-              申请提现
-            </Link>
-          </div>
         </div>
       </Card>
     </div>

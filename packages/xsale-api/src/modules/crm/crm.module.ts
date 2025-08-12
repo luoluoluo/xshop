@@ -12,7 +12,6 @@ import { I18nModule } from 'nestjs-i18n';
 import { createI18nConfig } from '@/core/i18n.config';
 import { AffiliateModule } from './affiliate/affiliate.module';
 import { WechatModule } from '../_common/wechat/wechat.module';
-import { AffiliateWithdrawalModule } from './affiliate-withdrawal/affiliate-withdrawal.module';
 import { MerchantModule } from './merchant/merchant.module';
 import { FileModule } from '../_common/file/file.module';
 
@@ -23,7 +22,6 @@ const CrmModules = [
   MerchantModule,
   AffiliateModule,
   WechatModule,
-  AffiliateWithdrawalModule,
   FileModule,
 ];
 

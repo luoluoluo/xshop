@@ -39,15 +39,6 @@ export const getResources = (): ResourceProps[] => {
       },
     },
     {
-      name: "affiliateWithdrawal",
-      list: "/affiliate-withdrawal",
-      create: "/affiliate-withdrawal/new",
-      meta: {
-        parent: "finance",
-        icon: <></>,
-      },
-    },
-    {
       name: "settings",
       list: "/settings",
       meta: {

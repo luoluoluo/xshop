@@ -17,7 +17,6 @@ import { createI18nConfig } from '@/core/i18n.config';
 import { OrderModule } from './order/order.module';
 import { MerchantModule } from './merchant/merchant.module';
 import { MerchantWithdrawalModule } from './merchant-withdrawal/merchant-withdrawal.module';
-import { AffiliateWithdrawalModule } from './affiliate-withdrawal/affiliate-withdrawal.module';
 import { AffiliateModule } from './affiliate/affiliate.module';
 
 const cmsModules = [
@@ -30,7 +29,6 @@ const cmsModules = [
   ArticleModule,
   MerchantModule,
   MerchantWithdrawalModule,
-  AffiliateWithdrawalModule,
   AffiliateModule,
   OrderModule,
 ];

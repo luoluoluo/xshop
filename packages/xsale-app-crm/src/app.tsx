@@ -37,10 +37,6 @@ import { ProductList } from "./pages/product";
 import { getResources } from "./config/app";
 
 import { OrderList, OrderShow } from "./pages/order";
-import {
-  AffiliateWithdrawalCreate,
-  AffiliateWithdrawalList,
-} from "./pages/affiliate-withdrawal";
 import Dashboard from "./pages/dashboard";
 
 function App() {
@@ -104,14 +100,6 @@ function App() {
                     <Route path="/order">
                       <Route index element={<OrderList />} />
                       <Route path=":id" element={<OrderShow />} />
-                    </Route>
-
-                    <Route path="/affiliate-withdrawal">
-                      <Route index element={<AffiliateWithdrawalList />} />
-                      <Route
-                        path="new"
-                        element={<AffiliateWithdrawalCreate />}
-                      />
                     </Route>
 
                     <Route path="/settings" element={<Settings />} />

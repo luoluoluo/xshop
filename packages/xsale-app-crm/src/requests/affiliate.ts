@@ -6,7 +6,6 @@ export const getAffiliates = /* GraphQL */ `
         name
         phone
         isActive
-        balance
         createdAt
       }
       total
@@ -21,7 +20,6 @@ export const getAffiliate = /* GraphQL */ `
       name
       phone
       isActive
-      balance
       createdAt
     }
   }

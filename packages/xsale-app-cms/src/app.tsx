@@ -49,7 +49,6 @@ import { getResources } from "./config/app";
 import { ArticleCreate, ArticleEdit, ArticleList } from "./pages/article";
 import { MerchantCreate, MerchantEdit, MerchantList } from "./pages/merchant";
 import { OrderList, OrderShow } from "./pages/order";
-import { AffiliateWithdrawalList } from "./pages/affiliate-withdrawal";
 import { MerchantWithdrawalList } from "./pages/merchant-withdrawal";
 import {
   AffiliateCreate,
@@ -157,9 +156,6 @@ function App() {
                       <Route path=":id/edit" element={<AffiliateEdit />} />
                     </Route>
 
-                    <Route path="/affiliate-withdrawal">
-                      <Route index element={<AffiliateWithdrawalList />} />
-                    </Route>
                     <Route path="/merchant-withdrawal">
                       <Route index element={<MerchantWithdrawalList />} />
                     </Route>

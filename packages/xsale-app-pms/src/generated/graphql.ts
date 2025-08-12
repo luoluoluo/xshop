@@ -17,10 +17,6 @@ export type Scalars = {
 
 export type Affiliate = {
   __typename?: 'Affiliate';
-  accountName?: Maybe<Scalars['String']['output']>;
-  balance?: Maybe<Scalars['Float']['output']>;
-  bankAccount?: Maybe<Scalars['String']['output']>;
-  bankName?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   merchantAffiliates?: Maybe<Array<MerchantAffiliate>>;
@@ -29,32 +25,6 @@ export type Affiliate = {
   updatedAt: Scalars['DateTime']['output'];
   wechatOAuth?: Maybe<WechatOAuth>;
 };
-
-export type AffiliateWithdrawal = {
-  __typename?: 'AffiliateWithdrawal';
-  accountName?: Maybe<Scalars['String']['output']>;
-  affiliate?: Maybe<Affiliate>;
-  affiliateId?: Maybe<Scalars['String']['output']>;
-  amount?: Maybe<Scalars['Float']['output']>;
-  approvedAt?: Maybe<Scalars['DateTime']['output']>;
-  bankAccount?: Maybe<Scalars['String']['output']>;
-  bankName?: Maybe<Scalars['String']['output']>;
-  completedAt?: Maybe<Scalars['DateTime']['output']>;
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  note?: Maybe<Scalars['String']['output']>;
-  rejectReason?: Maybe<Scalars['String']['output']>;
-  rejectedAt?: Maybe<Scalars['DateTime']['output']>;
-  status?: Maybe<AffiliateWithdrawalStatus>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-export enum AffiliateWithdrawalStatus {
-  Approved = 'APPROVED',
-  Completed = 'COMPLETED',
-  Created = 'CREATED',
-  Rejected = 'REJECTED'
-}
 
 export type Article = {
   __typename?: 'Article';

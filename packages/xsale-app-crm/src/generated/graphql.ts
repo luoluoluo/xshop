@@ -17,10 +17,6 @@ export type Scalars = {
 
 export type Affiliate = {
   __typename?: 'Affiliate';
-  accountName?: Maybe<Scalars['String']['output']>;
-  balance?: Maybe<Scalars['Float']['output']>;
-  bankAccount?: Maybe<Scalars['String']['output']>;
-  bankName?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   merchantAffiliates?: Maybe<Array<MerchantAffiliate>>;
@@ -28,43 +24,6 @@ export type Affiliate = {
   phone?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
   wechatOAuth?: Maybe<WechatOAuth>;
-};
-
-export type AffiliateWithdrawal = {
-  __typename?: 'AffiliateWithdrawal';
-  accountName?: Maybe<Scalars['String']['output']>;
-  affiliate?: Maybe<Affiliate>;
-  affiliateId?: Maybe<Scalars['String']['output']>;
-  amount?: Maybe<Scalars['Float']['output']>;
-  approvedAt?: Maybe<Scalars['DateTime']['output']>;
-  bankAccount?: Maybe<Scalars['String']['output']>;
-  bankName?: Maybe<Scalars['String']['output']>;
-  completedAt?: Maybe<Scalars['DateTime']['output']>;
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  note?: Maybe<Scalars['String']['output']>;
-  rejectReason?: Maybe<Scalars['String']['output']>;
-  rejectedAt?: Maybe<Scalars['DateTime']['output']>;
-  status?: Maybe<AffiliateWithdrawalStatus>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-export type AffiliateWithdrawalPagination = {
-  __typename?: 'AffiliateWithdrawalPagination';
-  data: Array<AffiliateWithdrawal>;
-  total: Scalars['Int']['output'];
-};
-
-export enum AffiliateWithdrawalStatus {
-  Approved = 'APPROVED',
-  Completed = 'COMPLETED',
-  Created = 'CREATED',
-  Rejected = 'REJECTED'
-}
-
-export type AffiliateWithdrawalWhereInput = {
-  id?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<AffiliateWithdrawalStatus>;
 };
 
 export type Article = {
@@ -84,14 +43,6 @@ export type AuthToken = {
   affiliate: Affiliate;
   expiresIn: Scalars['Float']['output'];
   token: Scalars['String']['output'];
-};
-
-export type CreateAffiliateWithdrawalInput = {
-  accountName: Scalars['String']['input'];
-  amount: Scalars['Float']['input'];
-  bankAccount: Scalars['String']['input'];
-  bankName: Scalars['String']['input'];
-  note?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Customer = {
@@ -129,6 +80,7 @@ export type Merchant = {
   phone?: Maybe<Scalars['String']['output']>;
   products?: Maybe<Array<Product>>;
   updatedAt: Scalars['DateTime']['output'];
+  wechatMerchantId?: Maybe<Scalars['String']['output']>;
   wechatQrcode?: Maybe<Scalars['String']['output']>;
 };
 
@@ -180,17 +132,11 @@ export enum MerchantWithdrawalStatus {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createAffiliateWithdrawal: AffiliateWithdrawal;
   login: AuthToken;
   register: AuthToken;
   sendSmsCode: Scalars['Boolean']['output'];
   updateMe: Affiliate;
   updateMeWechatOAuth: WechatOAuth;
-};
-
-
-export type MutationCreateAffiliateWithdrawalArgs = {
-  data: CreateAffiliateWithdrawalInput;
 };
 
 
@@ -229,7 +175,6 @@ export type Order = {
   createdAt: Scalars['DateTime']['output'];
   customer?: Maybe<Customer>;
   id: Scalars['String']['output'];
-  isWechatProfitSharing?: Maybe<Scalars['Boolean']['output']>;
   merchant?: Maybe<Merchant>;
   merchantAffiliate?: Maybe<Affiliate>;
   merchantAffiliateAmount?: Maybe<Scalars['Float']['output']>;
@@ -251,6 +196,7 @@ export type Order = {
   refundedAt?: Maybe<Scalars['DateTime']['output']>;
   status?: Maybe<OrderStatus>;
   updatedAt: Scalars['DateTime']['output'];
+  wechatMerchantId?: Maybe<Scalars['String']['output']>;
   wechatTransactionId?: Maybe<Scalars['String']['output']>;
 };
 
@@ -330,8 +276,6 @@ export type ProductWhereInput = {
 
 export type Query = {
   __typename?: 'Query';
-  affiliateWithdrawal: AffiliateWithdrawal;
-  affiliateWithdrawals: AffiliateWithdrawalPagination;
   me: Affiliate;
   merchant: Merchant;
   merchants: MerchantPagination;
@@ -343,18 +287,6 @@ export type Query = {
   wechatJsConfig?: Maybe<WechatJsConfig>;
   wechatOauthUrl: Scalars['String']['output'];
   wechatVerifySignature: Scalars['Boolean']['output'];
-};
-
-
-export type QueryAffiliateWithdrawalArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryAffiliateWithdrawalsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  take?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<AffiliateWithdrawalWhereInput>;
 };
 
 

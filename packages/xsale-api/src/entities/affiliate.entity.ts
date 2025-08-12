@@ -21,22 +21,6 @@ export class Affiliate extends Base {
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 
-  @Field(() => Float, { nullable: true, defaultValue: 0 })
-  @Column({ type: 'float', precision: 10, scale: 2, default: 0 })
-  balance: number;
-
-  @Field({ nullable: true })
-  @Column({ length: 100, nullable: true })
-  bankName?: string;
-
-  @Field({ nullable: true })
-  @Column({ length: 50, nullable: true })
-  bankAccount?: string;
-
-  @Field({ nullable: true })
-  @Column({ length: 50, nullable: true })
-  accountName?: string;
-
   @Column({ nullable: true })
   password?: string;
 

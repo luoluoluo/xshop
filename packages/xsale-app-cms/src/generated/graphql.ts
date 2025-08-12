@@ -17,10 +17,6 @@ export type Scalars = {
 
 export type Affiliate = {
   __typename?: 'Affiliate';
-  accountName?: Maybe<Scalars['String']['output']>;
-  balance?: Maybe<Scalars['Float']['output']>;
-  bankAccount?: Maybe<Scalars['String']['output']>;
-  bankName?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   isActive?: Maybe<Scalars['Boolean']['output']>;
@@ -43,44 +39,6 @@ export type AffiliateWhereInput = {
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   merchantId?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type AffiliateWithdrawal = {
-  __typename?: 'AffiliateWithdrawal';
-  accountName?: Maybe<Scalars['String']['output']>;
-  affiliate?: Maybe<Affiliate>;
-  affiliateId?: Maybe<Scalars['String']['output']>;
-  amount?: Maybe<Scalars['Float']['output']>;
-  approvedAt?: Maybe<Scalars['DateTime']['output']>;
-  bankAccount?: Maybe<Scalars['String']['output']>;
-  bankName?: Maybe<Scalars['String']['output']>;
-  completedAt?: Maybe<Scalars['DateTime']['output']>;
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  note?: Maybe<Scalars['String']['output']>;
-  rejectReason?: Maybe<Scalars['String']['output']>;
-  rejectedAt?: Maybe<Scalars['DateTime']['output']>;
-  status?: Maybe<AffiliateWithdrawalStatus>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-export type AffiliateWithdrawalPagination = {
-  __typename?: 'AffiliateWithdrawalPagination';
-  data: Array<AffiliateWithdrawal>;
-  total: Scalars['Int']['output'];
-};
-
-export enum AffiliateWithdrawalStatus {
-  Approved = 'APPROVED',
-  Completed = 'COMPLETED',
-  Created = 'CREATED',
-  Rejected = 'REJECTED'
-}
-
-export type AffiliateWithdrawalWhereInput = {
-  affiliateId?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<AffiliateWithdrawalStatus>;
 };
 
 export type Article = {
@@ -282,9 +240,7 @@ export type MerchantWithdrawalWhereInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  approveAffiliateWithdrawal: AffiliateWithdrawal;
   approveMerchantWithdrawal: MerchantWithdrawal;
-  completeAffiliateWithdrawal: AffiliateWithdrawal;
   completeMerchantWithdrawal: MerchantWithdrawal;
   createAffiliate: Affiliate;
   createArticle: Article;
@@ -299,7 +255,6 @@ export type Mutation = {
   deleteRole: Scalars['Boolean']['output'];
   deleteUser: Scalars['Boolean']['output'];
   login: AuthToken;
-  rejectAffiliateWithdrawal: AffiliateWithdrawal;
   rejectMerchantWithdrawal: MerchantWithdrawal;
   updateAffiliate: Affiliate;
   updateArticle: Article;
@@ -310,17 +265,7 @@ export type Mutation = {
 };
 
 
-export type MutationApproveAffiliateWithdrawalArgs = {
-  id: Scalars['String']['input'];
-};
-
-
 export type MutationApproveMerchantWithdrawalArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type MutationCompleteAffiliateWithdrawalArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -392,12 +337,6 @@ export type MutationDeleteUserArgs = {
 
 export type MutationLoginArgs = {
   data: LoginInput;
-};
-
-
-export type MutationRejectAffiliateWithdrawalArgs = {
-  id: Scalars['String']['input'];
-  rejectReason: Scalars['String']['input'];
 };
 
 
@@ -561,8 +500,6 @@ export type ProductWhereInput = {
 export type Query = {
   __typename?: 'Query';
   affiliate: Affiliate;
-  affiliateWithdrawal: AffiliateWithdrawal;
-  affiliateWithdrawals: AffiliateWithdrawalPagination;
   affiliates: AffiliatePagination;
   article: Article;
   articles: ArticlePagination;
@@ -586,18 +523,6 @@ export type Query = {
 
 export type QueryAffiliateArgs = {
   id: Scalars['String']['input'];
-};
-
-
-export type QueryAffiliateWithdrawalArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryAffiliateWithdrawalsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  take?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<AffiliateWithdrawalWhereInput>;
 };
 
 
