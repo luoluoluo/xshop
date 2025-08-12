@@ -6,7 +6,6 @@ export const getAffiliates = /* GraphQL */ `
         name
         phone
         isActive
-        balance
         createdAt
         merchantAffiliates {
           id
@@ -29,7 +28,6 @@ export const getAffiliate = /* GraphQL */ `
       name
       phone
       isActive
-      balance
       createdAt
       merchantAffiliates {
         id
