@@ -53,13 +53,6 @@ export const AffiliateList = () => {
         <Table.Column dataIndex="name" title={t("affiliate.fields.name")} />
         <Table.Column dataIndex="phone" title={t("affiliate.fields.phone")} />
         <Table.Column
-          dataIndex="balance"
-          title={t("affiliate.fields.balance")}
-          render={(balance: number) => {
-            return balance ? `¥${balance.toFixed(2)}` : "¥0.00";
-          }}
-        />
-        <Table.Column
           dataIndex="merchantAffiliates"
           title="关联商家"
           render={(merchantAffiliates: any[]) => {
