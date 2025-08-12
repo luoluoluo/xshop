@@ -33,12 +33,6 @@ export const getResources = (): ResourceProps[] => {
       },
     },
     {
-      name: "finance",
-      meta: {
-        icon: <DollarOutlined />,
-      },
-    },
-    {
       name: "settings",
       list: "/settings",
       meta: {
