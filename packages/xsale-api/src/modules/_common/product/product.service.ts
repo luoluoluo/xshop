@@ -11,6 +11,9 @@ export class CommonProductService {
     if (!product.commissionRate) {
       return product;
     }
+    if (product.commissionRate < 5 || product.commissionRate > 30) {
+      throw new Error('佣金比例必须在5-30之间');
+    }
     // 总佣金
     product.commission =
       Math.floor(product.price * product.commissionRate) / 100;

@@ -431,8 +431,8 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
           {
             validator: (_, value) => {
               value = Number(value);
-              if (value && value > 100) {
-                return Promise.reject(new Error("佣金比例不能大于100%"));
+              if (value && value > 30) {
+                return Promise.reject(new Error("佣金比例不能大于30%"));
               }
               if (value && value < 5) {
                 return Promise.reject(new Error("佣金比例不能小于5%"));
