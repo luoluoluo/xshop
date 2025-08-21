@@ -10,7 +10,6 @@ export const getMerchants = /* GraphQL */ `
         address
         description
         isActive
-        balance
         createdAt
         affiliate {
           id

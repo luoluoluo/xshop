@@ -6,7 +6,6 @@ export const me = /* GraphQL */ `
       id
       name
       phone
-      balance
       createdAt
       wechatOAuth {
         openId
@@ -33,7 +32,6 @@ export const login = gql`
         id
         name
         phone
-        balance
         wechatOAuth {
           openId
           nickName
@@ -54,7 +52,6 @@ export const register = gql`
         id
         name
         phone
-        balance
         wechatOAuth {
           openId
           nickName
@@ -72,7 +69,6 @@ export const updateMe = /* GraphQL */ `
       id
       name
       phone
-      balance
       createdAt
       updatedAt
     }
