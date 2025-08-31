@@ -34,7 +34,7 @@ export interface PayAmount {
 
 // 服务商支付特有的支付者信息
 interface PayPayer {
-  openid?: string;
+  sp_openid?: string;
   sub_openid?: string;
 }
 

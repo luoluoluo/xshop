@@ -8,11 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { Order } from '@/entities/order.entity';
 import { Product } from '@/entities/product.entity';
-import {
-  TransactionRequest,
-  WechatPayService,
-  ProfitsharingCreateOrdersRequest,
-} from '../wechat-pay/wechat-pay.service';
+import { WechatPayService } from '../wechat-pay/wechat-pay.service';
 import { Affiliate } from '@/entities/affiliate.entity';
 import { Merchant } from '@/entities/merchant.entity';
 import { Payment } from '../wechat-pay/wechat-pay.dto';
@@ -395,7 +391,7 @@ export class CommonOrderService {
         currency: 'CNY',
       },
       payer: {
-        openid: options.openId,
+        sp_openid: options.openId,
       },
       notify_url: options.notifyUrl,
       settle_info: {
