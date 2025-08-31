@@ -112,37 +112,12 @@ export class OrderService {
         throw new NotFoundException(`Merchant ${product.merchantId} not found`);
       }
 
-      const affiliate = await queryRunner.manager.findOne(Affiliate, {
-        where: { id: data.affiliateId },
-      });
-
-      // 如果推广者为空，默认为招商经理
-      if (!data.affiliateId || !affiliate) {
-        data.affiliateId = merchant.affiliateId;
-      }
-
       // 订单金额 = 订单数量 * 产品价格
       const amount = Math.floor(data.quantity * product.price * 100) / 100;
 
       // 总佣金
       const commissionAmount =
         Math.floor(data.quantity * product.commission * 100) / 100;
-
-      // 平台佣金 = 订单金额 * 平台费用比例
-      const platformAmount =
-        Math.floor(data.quantity * (product.platformCommission || 0) * 100) /
-        100;
-
-      // 招商经理佣金 = 订单金额 * 招商经理佣金比例
-      const merchantAffiliateAmount =
-        Math.floor(
-          data.quantity * (product.merchantAffiliateCommission || 0) * 100,
-        ) / 100;
-
-      // 推广者佣金 = 总佣金 - 平台佣金 - 招商经理佣金
-      const affiliateAmount =
-        Math.floor(data.quantity * (product.affiliateCommission || 0) * 100) /
-        100;
 
       // 商家收入 = 订单金额 - 佣金金额
       const merchantAmount = amount - commissionAmount;
@@ -151,17 +126,14 @@ export class OrderService {
         customerId: customerId,
         affiliateId: data.affiliateId,
         amount,
-        platformAmount,
-        affiliateAmount,
+        affiliateAmount: commissionAmount,
         merchantAmount,
-        merchantAffiliateAmount,
         status: OrderStatus.CREATED,
         note: data.note,
         productId: data.productId,
         merchantId: product.merchantId,
         receiverName: data.receiverName,
         receiverPhone: data.receiverPhone,
-        merchantAffiliateId: merchant.affiliateId,
         quantity: data.quantity,
         productTitle: product.title,
         productImage: product.image,

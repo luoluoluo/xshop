@@ -44,20 +44,6 @@ export class Merchant extends Base {
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 
-  @Client(['cms', 'pms'])
-  @Field(() => Float, { nullable: true, defaultValue: 0 })
-  @Column({ type: 'float', precision: 10, scale: 2, default: 0 })
-  balance: number;
-
-  @Field(() => String, { nullable: true })
-  @Column({ name: 'affiliate_id', nullable: true })
-  affiliateId: string;
-
-  @Field(() => Affiliate, { nullable: true })
-  @ManyToOne(() => Affiliate, { onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'affiliate_id' })
-  affiliate: Affiliate;
-
   @Field(() => String, { nullable: true })
   @Column({ name: 'business_scope', nullable: true })
   businessScope: string;

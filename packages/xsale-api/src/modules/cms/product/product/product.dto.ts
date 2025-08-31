@@ -15,14 +15,8 @@ export class CreateProductInput {
   @Field(() => Float)
   price: number;
 
-  @Field(() => Int)
-  commissionRate?: number;
-
-  @Field(() => Int)
-  platformCommissionRate?: number;
-
-  @Field(() => Int)
-  merchantAffiliateCommissionRate?: number;
+  @Field(() => Float)
+  commission: number;
 
   @Field(() => Int)
   stock: number;
@@ -60,14 +54,8 @@ export class UpdateProductInput {
   @Field({ nullable: true })
   price?: number;
 
-  @Field(() => Int)
-  commissionRate?: number;
-
-  @Field(() => Int)
-  platformCommissionRate?: number;
-
-  @Field(() => Int)
-  merchantAffiliateCommissionRate?: number;
+  @Field(() => Float)
+  commission?: number;
 
   @Field(() => Int, { nullable: true })
   stock?: number;

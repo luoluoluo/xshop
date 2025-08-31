@@ -5,7 +5,6 @@ export const me = /* GraphQL */ `
     me {
       id
       name
-      balance
       phone
       description
       logo
@@ -31,7 +30,6 @@ export const login = gql`
       merchant {
         id
         name
-        balance
         phone
         description
         logo

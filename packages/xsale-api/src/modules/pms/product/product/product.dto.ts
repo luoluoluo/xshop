@@ -12,8 +12,8 @@ export class CreateProductInput {
   @Field(() => Float)
   price: number;
 
-  @Field(() => Int, { nullable: true })
-  commissionRate?: number;
+  @Field(() => Float)
+  commission: number;
 
   @Field(() => Int)
   stock: number;
@@ -45,8 +45,8 @@ export class UpdateProductInput {
   @Field({ nullable: true })
   price?: number;
 
-  @Field(() => Int, { nullable: true })
-  commissionRate?: number;
+  @Field(() => Float, { nullable: true })
+  commission?: number;
 
   @Field(() => Int, { nullable: true })
   stock?: number;

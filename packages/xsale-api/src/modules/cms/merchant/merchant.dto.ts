@@ -48,9 +48,6 @@ export class CreateMerchantInput {
   @Field(() => [String], { nullable: true })
   @IsOptional()
   images?: string[];
-
-  @Field({ nullable: true })
-  wechatMerchantId?: string;
 }
 
 @InputType()
@@ -105,9 +102,6 @@ export class UpdateMerchantInput {
   @Field(() => [String], { nullable: true })
   @IsOptional()
   images?: string[];
-
-  @Field({ nullable: true })
-  wechatMerchantId?: string;
 }
 
 @InputType()
@@ -125,6 +119,33 @@ export class MerchantWhereInput {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+}
+
+@InputType()
+export class ApproveWechatMerchantInput {
+  @Field()
+  id: string;
+
+  @Field()
+  wechatMerchantSignUrl: string;
+}
+
+@InputType()
+export class RejectWechatMerchantInput {
+  @Field()
+  id: string;
+
+  @Field()
+  wechatMerchantNote: string;
+}
+
+@InputType()
+export class CompleteWechatMerchantInput {
+  @Field()
+  id: string;
+
+  @Field()
+  wechatMerchantId: string;
 }
 
 @ObjectType()

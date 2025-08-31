@@ -13,7 +13,6 @@ import {
   ProductWhereInput,
   UpdateProductInput,
 } from './product.dto';
-import { CommonProductService } from '@/modules/_common/product/product.service';
 
 @Injectable()
 export class ProductService {
@@ -22,7 +21,6 @@ export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-    private readonly commonProductService: CommonProductService,
   ) {}
 
   async findAll({
@@ -44,9 +42,7 @@ export class ProductService {
       skip,
       take,
       relations: {
-        merchant: {
-          affiliate: true,
-        },
+        merchant: true,
       },
       order: { id: 'DESC' },
     });
@@ -61,9 +57,7 @@ export class ProductService {
     const product = await this.productRepository.findOne({
       where: { id, merchantId },
       relations: {
-        merchant: {
-          affiliate: true,
-        },
+        merchant: true,
       },
     });
     if (!product) {
@@ -78,11 +72,10 @@ export class ProductService {
   ): Promise<Product> {
     try {
       // 创建产品
-      let product = this.productRepository.create({
+      const product = this.productRepository.create({
         ...createProductDto,
         merchantId,
       });
-      product = this.commonProductService.withCommission(product);
       return this.productRepository.save(product);
     } catch (err) {
       this.logger.error(`創建產品失敗`, {
@@ -98,12 +91,10 @@ export class ProductService {
     updateProductDto: UpdateProductInput,
     merchantId?: string,
   ): Promise<Product> {
-    let product = await this.productRepository.findOne({
+    const product = await this.productRepository.findOne({
       where: { id, merchantId },
       relations: {
-        merchant: {
-          affiliate: true,
-        },
+        merchant: true,
       },
     });
     if (!product) {
@@ -113,7 +104,6 @@ export class ProductService {
     try {
       // 更新产品基本信息
       Object.assign(product, updateProductDto);
-      product = this.commonProductService.withCommission(product);
       return this.productRepository.save(product);
     } catch (err) {
       this.logger.error(`更新產品失敗`, {

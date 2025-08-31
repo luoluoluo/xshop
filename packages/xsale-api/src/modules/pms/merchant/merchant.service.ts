@@ -8,9 +8,14 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Merchant } from '@/entities/merchant.entity';
-import { RegisterInput, UpdateMeInput } from '../auth/auth.dto';
+import {
+  RegisterInput,
+  UpdateMeInput,
+  ApplyWechatMerchantInput,
+} from '../auth/auth.dto';
 import { Affiliate } from '@/entities/affiliate.entity';
 import { hash } from 'bcrypt';
+import { WechatMerchantStatus } from '@/types/merchant-wechat-status';
 
 @Injectable()
 export class MerchantService {
@@ -114,6 +119,35 @@ export class MerchantService {
         createDto: merchantData,
       });
       throw new InternalServerErrorException('创建商户失败');
+    }
+  }
+
+  async applyWechatMerchant(
+    id: string,
+    input: ApplyWechatMerchantInput,
+  ): Promise<Merchant> {
+    const merchant = await this.merchantRepository.findOne({
+      where: { id },
+    });
+
+    if (!merchant) {
+      throw new NotFoundException('商户未找到');
+    }
+
+    try {
+      merchant.idCardPhoto = input.idCardPhoto;
+      merchant.businessLicensePhoto = input.businessLicensePhoto;
+      merchant.bankCardPhoto = input.bankCardPhoto;
+      merchant.wechatMerchantStatus = WechatMerchantStatus.CREATED;
+
+      return await this.merchantRepository.save(merchant);
+    } catch (err) {
+      this.logger.error(`申请微信支付失败`, {
+        error: err,
+        merchantId: id,
+        input,
+      });
+      throw new InternalServerErrorException('申请微信支付失败');
     }
   }
 }

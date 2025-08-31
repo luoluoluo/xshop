@@ -31,7 +31,6 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
   const [generatingPreview, setGeneratingPreview] = useState(false);
 
   const price = Form.useWatch<number>("price", formProps.form);
-  const commission = Form.useWatch<number>("commission", formProps.form);
   const poster = Form.useWatch<string>("poster", formProps.form);
   const posterQrcodeConfig = Form.useWatch(
     "posterQrcodeConfig",
@@ -104,7 +103,7 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
   }, [poster, posterQrcodeConfig, debouncedGeneratePreview]);
 
   const onFinish = (values: CreateProductInput | UpdateProductInput) => {
-    values.commissionRate = Number(values?.commissionRate || 0);
+    values.commission = Number(values?.commission || 0);
     values.price = Number(values?.price || 0);
     values.stock = Number(values?.stock || 0);
 
@@ -420,8 +419,8 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
       </Form.Item>
 
       <Form.Item
-        label={t("product.fields.commissionRate")}
-        name={["commissionRate"]}
+        label={t("product.fields.commission")}
+        name={["commission"]}
         rules={[
           { required: true },
           {
@@ -430,11 +429,11 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
           },
           {
             validator: (_, value) => {
-              value = Number(value);
-              if (value && value > 30) {
+              const rate = (value / price) * 100;
+              if (rate && rate > 30) {
                 return Promise.reject(new Error("佣金比例不能大于30%"));
               }
-              if (value && value < 5) {
+              if (rate && rate < 5) {
                 return Promise.reject(new Error("佣金比例不能小于5%"));
               }
               return Promise.resolve();

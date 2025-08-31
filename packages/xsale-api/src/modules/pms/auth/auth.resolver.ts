@@ -6,6 +6,7 @@ import {
   RegisterInput,
   SendSmsCodeInput,
   UpdateMeInput,
+  ApplyWechatMerchantInput,
 } from './auth.dto';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
@@ -48,5 +49,14 @@ export class AuthResolver {
     @Context() ctx: PmsContext,
   ): Promise<Merchant> {
     return this.merchantService.update(ctx.req.user!.id, data);
+  }
+
+  @Mutation(() => Merchant)
+  @UseGuards(GqlAuthGuard)
+  async applyWechatMerchant(
+    @Args('data') data: ApplyWechatMerchantInput,
+    @Context() ctx: PmsContext,
+  ): Promise<Merchant> {
+    return this.merchantService.applyWechatMerchant(ctx.req.user!.id, data);
   }
 }

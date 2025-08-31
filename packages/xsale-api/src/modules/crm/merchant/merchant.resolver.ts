@@ -39,14 +39,7 @@ export class MerchantResolver {
   async merchant(
     @Context() ctx: CrmContext,
     @Args('id', { type: () => String }) id: string,
-    @Args('affiliateId', { type: () => String, nullable: true })
-    affiliateId?: string,
   ): Promise<Merchant> {
-    const merchant = await this.merchantService.findOne(id);
-    if (affiliateId) {
-      const affiliate = await this.affiliateService.findOne(affiliateId);
-      merchant.affiliate = affiliate;
-    }
-    return merchant;
+    return await this.merchantService.findOne(id);
   }
 }

@@ -49,7 +49,6 @@ export class ProductService {
       take,
       relations: {
         merchant: {
-          affiliate: true,
           merchantAffiliates: {
             affiliate: true,
           },

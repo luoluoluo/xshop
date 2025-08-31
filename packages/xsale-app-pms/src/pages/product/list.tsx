@@ -20,20 +20,6 @@ export const ProductList = () => {
       <Table {...tableProps} rowKey="id">
         <Table.Column dataIndex="id" title={"ID"} />
         <Table.Column
-          dataIndex="merchantAffiliate"
-          title={t("product.fields.merchantAffiliate")}
-          render={(_, record: Product) => {
-            return (
-              <div>
-                <div>{record?.merchant?.affiliate?.name || "-"}</div>
-                <div className="text-sm text-gray-500">
-                  {record?.merchant?.affiliate?.phone || "-"}
-                </div>
-              </div>
-            );
-          }}
-        />
-        <Table.Column
           dataIndex="image"
           title={t("product.fields.image")}
           render={(image: string) => {
@@ -49,12 +35,15 @@ export const ProductList = () => {
           }}
         />
         <Table.Column
-          dataIndex="commissionRate"
-          title={t("product.fields.commissionRate")}
-          render={(commissionRate: number, record: Product) => {
+          dataIndex="commission"
+          title={t("product.fields.commission")}
+          render={(commission: number, record: Product) => {
             return (
               <span>
-                {`${commissionRate}%（${record.commission?.toFixed(2)}）`}
+                {`${commission?.toFixed(2)}(${(
+                  ((commission ?? 0) / (record.price ?? 0)) *
+                  100
+                ).toFixed(2)}%)`}
               </span>
             );
           }}

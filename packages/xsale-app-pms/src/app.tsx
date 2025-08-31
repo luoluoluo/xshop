@@ -41,10 +41,6 @@ import {
 
 import { getResources } from "./config/app";
 import { OrderList, OrderShow } from "./pages/order";
-import {
-  MerchantWithdrawalCreate,
-  MerchantWithdrawalList,
-} from "./pages/merchant-withdrawal";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -114,14 +110,6 @@ function App() {
                     <Route path="/order">
                       <Route index element={<OrderList />} />
                       <Route path=":id" element={<OrderShow />} />
-                    </Route>
-
-                    <Route path="/merchant-withdrawal">
-                      <Route index element={<MerchantWithdrawalList />} />
-                      <Route
-                        path="new"
-                        element={<MerchantWithdrawalCreate />}
-                      />
                     </Route>
 
                     <Route path="/settings" element={<Settings />} />

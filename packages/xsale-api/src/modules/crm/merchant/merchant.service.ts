@@ -42,7 +42,6 @@ export class MerchantService {
       skip,
       take,
       relations: {
-        affiliate: true,
         merchantAffiliates: {
           affiliate: true,
         },
@@ -65,9 +64,6 @@ export class MerchantService {
 
     const merchant = await this.merchantRepository.findOne({
       where: whereCondition,
-      relations: {
-        affiliate: true,
-      },
     });
 
     if (!merchant) {

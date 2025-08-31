@@ -101,8 +101,17 @@ export class UpdateMeInput {
   wechatQrcode?: string;
 
   @Field({ nullable: true })
-  wechatMerchantId?: string;
-
-  @Field({ nullable: true })
   password?: string;
+}
+
+@InputType()
+export class ApplyWechatMerchantInput {
+  @Field()
+  idCardPhoto: string;
+
+  @Field()
+  businessLicensePhoto: string;
+
+  @Field()
+  bankCardPhoto: string;
 }

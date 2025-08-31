@@ -8,11 +8,6 @@ export const getProducts = /* GraphQL */ `
           id
           name
           phone
-          affiliate {
-            id
-            name
-            phone
-          }
         }
         title
         description
@@ -21,7 +16,6 @@ export const getProducts = /* GraphQL */ `
         createdAt
         price
         commission
-        commissionRate
         stock
         poster
         posterQrcodeConfig {
@@ -53,7 +47,6 @@ export const getProduct = /* GraphQL */ `
       createdAt
       price
       commission
-      commissionRate
       stock
       poster
       posterQrcodeConfig {

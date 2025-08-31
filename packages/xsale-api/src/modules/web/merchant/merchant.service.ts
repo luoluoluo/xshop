@@ -25,9 +25,6 @@ export class MerchantService {
       where,
       skip,
       take,
-      relations: {
-        affiliate: true,
-      },
     });
 
     return {
@@ -36,12 +33,9 @@ export class MerchantService {
     };
   }
 
-  async findOne(id: string, affiliateId?: string): Promise<Merchant> {
+  async findOne(id: string): Promise<Merchant> {
     const merchant = await this.merchantRepository.findOne({
-      where: { id, affiliateId: affiliateId },
-      relations: {
-        affiliate: true,
-      },
+      where: { id },
     });
 
     if (!merchant) {

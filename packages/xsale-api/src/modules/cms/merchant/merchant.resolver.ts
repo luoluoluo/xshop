@@ -6,6 +6,9 @@ import {
   MerchantWhereInput,
   MerchantPagination,
   CreateMerchantInput,
+  ApproveWechatMerchantInput,
+  RejectWechatMerchantInput,
+  CompleteWechatMerchantInput,
 } from './merchant.dto';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
@@ -64,5 +67,32 @@ export class MerchantResolver {
     @Args('id', { type: () => String }) id: string,
   ): Promise<boolean> {
     return this.merchantService.delete(id);
+  }
+
+  @Mutation(() => Merchant)
+  @UseGuards(GqlAuthGuard)
+  @RequirePermission('merchant.approve')
+  async approveWechatMerchant(
+    @Args('data') data: ApproveWechatMerchantInput,
+  ): Promise<Merchant> {
+    return this.merchantService.approveWechatMerchant(data);
+  }
+
+  @Mutation(() => Merchant)
+  @UseGuards(GqlAuthGuard)
+  @RequirePermission('merchant.reject')
+  async rejectWechatMerchant(
+    @Args('data') data: RejectWechatMerchantInput,
+  ): Promise<Merchant> {
+    return this.merchantService.rejectWechatMerchant(data);
+  }
+
+  @Mutation(() => Merchant)
+  @UseGuards(GqlAuthGuard)
+  @RequirePermission('merchant.complete')
+  async completeWechatMerchant(
+    @Args('data') data: CompleteWechatMerchantInput,
+  ): Promise<Merchant> {
+    return this.merchantService.completeWechatMerchant(data);
   }
 }

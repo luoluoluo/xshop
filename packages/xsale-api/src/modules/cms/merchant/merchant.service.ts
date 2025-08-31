@@ -13,7 +13,11 @@ import {
   MerchantPagination,
   MerchantWhereInput,
   UpdateMerchantInput,
+  ApproveWechatMerchantInput,
+  RejectWechatMerchantInput,
+  CompleteWechatMerchantInput,
 } from './merchant.dto';
+import { WechatMerchantStatus } from '@/types/merchant-wechat-status';
 import { hash } from 'bcrypt';
 
 @Injectable()
@@ -39,9 +43,6 @@ export class MerchantService {
       where,
       skip,
       take,
-      relations: {
-        affiliate: true,
-      },
     });
 
     return {
@@ -53,9 +54,6 @@ export class MerchantService {
   async findOne(id: string): Promise<Merchant> {
     const merchant = await this.merchantRepository.findOne({
       where: { id },
-      relations: {
-        affiliate: true,
-      },
     });
 
     if (!merchant) {
@@ -100,9 +98,6 @@ export class MerchantService {
   ): Promise<Merchant> {
     const merchant = await this.merchantRepository.findOne({
       where: { id },
-      relations: {
-        affiliate: true,
-      },
     });
     if (!merchant) {
       throw new NotFoundException('Merchant not found');
@@ -136,9 +131,6 @@ export class MerchantService {
   async remove(id: string): Promise<boolean> {
     const merchant = await this.merchantRepository.findOne({
       where: { id },
-      relations: {
-        affiliate: true,
-      },
     });
     if (!merchant) {
       throw new NotFoundException('Merchant not found');
@@ -150,5 +142,83 @@ export class MerchantService {
   async delete(id: string): Promise<boolean> {
     await this.merchantRepository.delete(id);
     return true;
+  }
+
+  async approveWechatMerchant(
+    input: ApproveWechatMerchantInput,
+  ): Promise<Merchant> {
+    const merchant = await this.merchantRepository.findOne({
+      where: { id: input.id },
+    });
+
+    if (!merchant) {
+      throw new NotFoundException('商户未找到');
+    }
+
+    try {
+      merchant.wechatMerchantSignUrl = input.wechatMerchantSignUrl;
+      merchant.wechatMerchantStatus = WechatMerchantStatus.APPLIED;
+
+      return await this.merchantRepository.save(merchant);
+    } catch (err) {
+      this.logger.error('通过微信商户申请失败', {
+        error: err,
+        merchantId: input.id,
+        input,
+      });
+      throw new InternalServerErrorException('通过微信商户申请失败');
+    }
+  }
+
+  async rejectWechatMerchant(
+    input: RejectWechatMerchantInput,
+  ): Promise<Merchant> {
+    const merchant = await this.merchantRepository.findOne({
+      where: { id: input.id },
+    });
+
+    if (!merchant) {
+      throw new NotFoundException('商户未找到');
+    }
+
+    try {
+      merchant.wechatMerchantNote = input.wechatMerchantNote;
+      merchant.wechatMerchantStatus = WechatMerchantStatus.REJECTED;
+
+      return await this.merchantRepository.save(merchant);
+    } catch (err) {
+      this.logger.error('拒绝微信商户申请失败', {
+        error: err,
+        merchantId: input.id,
+        input,
+      });
+      throw new InternalServerErrorException('拒绝微信商户申请失败');
+    }
+  }
+
+  async completeWechatMerchant(
+    input: CompleteWechatMerchantInput,
+  ): Promise<Merchant> {
+    const merchant = await this.merchantRepository.findOne({
+      where: { id: input.id },
+    });
+
+    if (!merchant) {
+      throw new NotFoundException('商户未找到');
+    }
+
+    try {
+      merchant.wechatMerchantId = input.wechatMerchantId;
+      merchant.wechatMerchantStatus = WechatMerchantStatus.COMPLETED;
+
+      return await this.merchantRepository.save(merchant);
+    } catch (err) {
+      this.logger.error('完成微信商户申请失败', {
+        error: err,
+        merchantId: input.id,
+        input,
+      });
+      throw new InternalServerErrorException('完成微信商户申请失败');
+    }
   }
 }

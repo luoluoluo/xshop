@@ -73,27 +73,6 @@ export class Order extends Base {
   })
   affiliateAmount?: number;
 
-  // 招商经理佣金
-  @Field(() => Float, { nullable: true })
-  @Column({
-    type: 'float',
-    precision: 10,
-    scale: 2,
-    nullable: true,
-    name: 'merchant_affiliate_amount',
-  })
-  merchantAffiliateAmount?: number;
-
-  @Field(() => Float, { nullable: true })
-  @Column({
-    type: 'float',
-    precision: 10,
-    scale: 2,
-    nullable: true,
-    name: 'platform_amount',
-  })
-  platformAmount?: number;
-
   @Field(() => Float, { nullable: true })
   @Column({
     type: 'float',

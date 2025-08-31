@@ -298,11 +298,6 @@ export class CommonOrderService {
 
       const merchant = await queryRunner.manager.findOne(Merchant, {
         where: { id: order.merchantId },
-        relations: {
-          affiliate: {
-            wechatOAuth: true,
-          },
-        },
       });
       if (!merchant) {
         throw new BadRequestException('商户不存在');
@@ -317,85 +312,33 @@ export class CommonOrderService {
       if (!order.wechatTransactionId) {
         throw new Error('微信支付订单号不存在，无法进行分账');
       }
-      let receivers:
-        | ProfitsharingCreateOrdersRequest['receivers']
-        | PartnerProfitsharingCreateOrdersRequest['receivers'] = [];
-      if (
-        !affiliate?.wechatOAuth?.openId ||
-        !merchantAffiliate?.wechatOAuth?.openId
-      ) {
-        throw new Error('推广者或招商经理的微信openId不存在，无法进行分账');
+      if (!order.wechatMerchantId) {
+        throw new Error('商户微信支付未绑定，无法进行分账');
       }
-      if (
-        affiliate.wechatOAuth.openId === merchantAffiliate.wechatOAuth.openId
-      ) {
-        receivers = [
-          {
-            type: 'PERSONAL_OPENID',
-            account: affiliate.wechatOAuth.openId,
-            amount:
-              Math.floor((order.affiliateAmount || 0) * 100) +
-              Math.floor((order.merchantAffiliateAmount || 0) * 100),
-            description: `订单${order.id}佣金`,
-          },
-        ];
-      } else {
-        receivers = [
-          // 推广者分账
-          {
-            type: 'PERSONAL_OPENID',
-            account: affiliate.wechatOAuth.openId,
-            amount: Math.floor((order.affiliateAmount || 0) * 100),
-            description: `订单${order.id}佣金`,
-          },
-          // 商户客户经理分账
-          {
-            type: 'PERSONAL_OPENID',
-            account: merchantAffiliate.wechatOAuth.openId,
-            amount: Math.floor((order.merchantAffiliateAmount || 0) * 100),
-            description: `订单${order.id}佣金`,
-          },
-        ];
+
+      if (!affiliate?.wechatOAuth?.openId) {
+        throw new Error('推广者的微信未绑定，无法进行分账');
       }
-      // 服务商模式
-      if (order.wechatMerchantId) {
-        // 平台分账
-        receivers.push({
-          type: 'MERCHANT_ID',
-          account: this.configService.get<string>('WECHAT_PAY_MCHID')!,
-          amount: Math.floor((order.platformAmount || 0) * 100),
-          description: `订单${order.id}佣金`,
-        });
-        const partnerProfitSharingParams: PartnerProfitsharingCreateOrdersRequest =
-          {
-            sub_mchid: order.wechatMerchantId,
-            transaction_id: order.wechatTransactionId,
-            out_order_no: order.id,
-            receivers,
-            unfreeze_unsplit: true,
-          };
-        await this.wechatPayPartnerService.profitsharingCreateOrders(
-          partnerProfitSharingParams,
-        );
-      } else {
-        const affiliateProfitSharingParams: ProfitsharingCreateOrdersRequest = {
+      const partnerProfitSharingParams: PartnerProfitsharingCreateOrdersRequest =
+        {
+          sub_mchid: order.wechatMerchantId,
           transaction_id: order.wechatTransactionId,
           out_order_no: order.id,
-          receivers,
+          receivers: [
+            {
+              type: 'PERSONAL_OPENID',
+              account: affiliate.wechatOAuth.openId,
+              amount: Math.floor((order.affiliateAmount || 0) * 100),
+              description: `订单${order.id}佣金`,
+            },
+          ],
           unfreeze_unsplit: true,
         };
-        await this.wechatPayService.profitsharingCreateOrders(
-          affiliateProfitSharingParams,
-        );
-      }
-      /** 通过微信分账 end */
+      await this.wechatPayPartnerService.profitsharingCreateOrders(
+        partnerProfitSharingParams,
+      );
 
-      if (order.merchantId) {
-        // 更新商户余额
-        merchant.balance =
-          Number(merchant.balance) + Number(order.merchantAmount || 0);
-        await queryRunner.manager.save(merchant);
-      }
+      /** 通过微信分账 end */
 
       // 提交事务
       await queryRunner.commitTransaction();
@@ -427,11 +370,7 @@ export class CommonOrderService {
         affiliate: {
           wechatOAuth: true,
         },
-        merchant: {
-          affiliate: {
-            wechatOAuth: true,
-          },
-        },
+        merchant: true,
       },
     });
 
@@ -445,11 +384,6 @@ export class CommonOrderService {
 
     const merchant = await this.merchantRepository.findOne({
       where: { id: order.merchantId },
-      relations: {
-        affiliate: {
-          wechatOAuth: true,
-        },
-      },
     });
 
     if (!merchant) {

@@ -13,8 +13,6 @@ import {
   ProductWhereInput,
   UpdateProductInput,
 } from './product.dto';
-import { CommonProductService } from '@/modules/_common/product/product.service';
-
 @Injectable()
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
@@ -22,7 +20,6 @@ export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-    private readonly commonProductService: CommonProductService,
   ) {}
 
   async findAll({
@@ -39,9 +36,7 @@ export class ProductService {
       skip,
       take,
       relations: {
-        merchant: {
-          affiliate: true,
-        },
+        merchant: true,
       },
     });
 
@@ -55,9 +50,7 @@ export class ProductService {
     const product = await this.productRepository.findOne({
       where: { id },
       relations: {
-        merchant: {
-          affiliate: true,
-        },
+        merchant: true,
       },
     });
     if (!product) {
@@ -69,8 +62,7 @@ export class ProductService {
   async create(createProductDto: CreateProductInput): Promise<Product> {
     try {
       // 创建产品
-      let product = this.productRepository.create(createProductDto);
-      product = this.commonProductService.withCommission(product);
+      const product = this.productRepository.create(createProductDto);
       return this.productRepository.save(product);
     } catch (err) {
       this.logger.error('創建產品失敗', {
@@ -85,7 +77,7 @@ export class ProductService {
     id: string,
     updateProductDto: UpdateProductInput,
   ): Promise<Product> {
-    let product = await this.productRepository.findOne({
+    const product = await this.productRepository.findOne({
       where: { id },
     });
     if (!product) {
@@ -95,8 +87,6 @@ export class ProductService {
     try {
       // 更新产品基本信息
       Object.assign(product, updateProductDto);
-
-      product = this.commonProductService.withCommission(product);
 
       return this.productRepository.save(product);
     } catch (err) {

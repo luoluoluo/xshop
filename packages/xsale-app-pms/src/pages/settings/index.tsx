@@ -141,14 +141,6 @@ export const Settings = () => {
         </Form.Item>
 
         <Form.Item
-          name="wechatMerchantId"
-          label="微信商户号"
-          extra="服务商模式下必填"
-        >
-          <Input prefix={<WechatOutlined />} placeholder="请输入微信商户号" />
-        </Form.Item>
-
-        <Form.Item
           label="密码"
           name="password"
           extra={"非必填，填写后会修改密码"}
