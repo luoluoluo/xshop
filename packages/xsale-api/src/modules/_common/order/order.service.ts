@@ -381,71 +381,42 @@ export class CommonOrderService {
       throw new NotFoundException(`Merchant ${order.merchantId} not found`);
     }
 
-    // 服务商模式
-    if (merchant.wechatMerchantId) {
-      // 构建支付参数
-      const partnerPaymentParams: PartnerTransactionRequest = {
-        sub_mchid: merchant.wechatMerchantId,
-        description: `订单${order.id}支付`,
-        out_trade_no: order.id,
-        amount: {
-          total: Math.floor(order.amount * 100),
-          currency: 'CNY',
-        },
-        payer: {
-          openid: options.openId,
-        },
-        notify_url: options.notifyUrl,
-        settle_info: {
-          profit_sharing: true,
-        },
-      };
-
-      // 调用微信支付接口
-      const paymentResult =
-        await this.wechatPayPartnerService.createTransactionsJsapi(
-          partnerPaymentParams,
-        );
-
-      return {
-        appId: paymentResult.appId || '',
-        timeStamp: paymentResult.timeStamp,
-        nonceStr: paymentResult.nonceStr,
-        package: paymentResult.package,
-        signType: paymentResult.signType,
-        paySign: paymentResult.paySign,
-      };
-    } else {
-      // 构建支付参数
-      const paymentParams: TransactionRequest = {
-        description: `订单${order.id}支付`,
-        out_trade_no: order.id,
-        amount: {
-          total: Math.floor(order.amount * 100),
-          currency: 'CNY',
-        },
-        payer: {
-          openid: options.openId,
-        },
-        notify_url: options.notifyUrl,
-        settle_info: {
-          profit_sharing: true,
-        },
-      };
-
-      // 调用微信支付接口
-      const paymentResult =
-        await this.wechatPayService.createTransactionsJsapi(paymentParams);
-
-      return {
-        appId: paymentResult.appId || '',
-        timeStamp: paymentResult.timeStamp,
-        nonceStr: paymentResult.nonceStr,
-        package: paymentResult.package,
-        signType: paymentResult.signType,
-        paySign: paymentResult.paySign,
-      };
+    if (!merchant.wechatMerchantId) {
+      throw new Error('商户微信支付未绑定，无法进行支付');
     }
+
+    // 构建支付参数
+    const partnerPaymentParams: PartnerTransactionRequest = {
+      sub_mchid: merchant.wechatMerchantId,
+      description: `订单${order.id}支付`,
+      out_trade_no: order.id,
+      amount: {
+        total: Math.floor(order.amount * 100),
+        currency: 'CNY',
+      },
+      payer: {
+        openid: options.openId,
+      },
+      notify_url: options.notifyUrl,
+      settle_info: {
+        profit_sharing: true,
+      },
+    };
+
+    // 调用微信支付接口
+    const paymentResult =
+      await this.wechatPayPartnerService.createTransactionsJsapi(
+        partnerPaymentParams,
+      );
+
+    return {
+      appId: paymentResult.appId || '',
+      timeStamp: paymentResult.timeStamp,
+      nonceStr: paymentResult.nonceStr,
+      package: paymentResult.package,
+      signType: paymentResult.signType,
+      paySign: paymentResult.paySign,
+    };
   }
 
   /**
