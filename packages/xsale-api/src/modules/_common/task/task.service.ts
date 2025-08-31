@@ -53,4 +53,45 @@ export class TaskService {
       this.logger.error('Failed to cancel expired orders', error);
     }
   }
+
+  /**
+   * Auto-complete paid orders after 7 days
+   * Runs every hour
+   */
+  @Cron(CronExpression.EVERY_HOUR)
+  async autoCompleteOrders(): Promise<void> {
+    try {
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+      const paidOrders = await this.orderRepository.find({
+        where: {
+          status: OrderStatus.PAID,
+          paidAt: LessThan(sevenDaysAgo),
+        },
+      });
+
+      if (paidOrders.length === 0) {
+        this.logger.debug('No orders to auto-complete found');
+        return;
+      }
+
+      this.logger.log(`Found ${paidOrders.length} orders to auto-complete`);
+
+      await Promise.all(
+        paidOrders.map(async (order) => {
+          try {
+            await this.commonOrderService.complete(order.id, {});
+            this.logger.log(`Successfully auto-completed order ${order.id}`);
+          } catch (error) {
+            this.logger.error(
+              `Failed to auto-complete order ${order.id}`,
+              error,
+            );
+          }
+        }),
+      );
+    } catch (error) {
+      this.logger.error('Failed to auto-complete orders', error);
+    }
+  }
 }

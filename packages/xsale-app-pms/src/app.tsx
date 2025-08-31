@@ -42,6 +42,7 @@ import {
 import { getResources } from "./config/app";
 import { OrderList, OrderShow } from "./pages/order";
 import { AffiliateCreate, AffiliateList } from "./pages/affiliate";
+import Dashboard from "./pages/dashboard";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -86,7 +87,7 @@ function App() {
                           )}
                         >
                           <CanAccess
-                            fallback={<NavigateToResource resource="product" />}
+                            fallback={<NavigateToResource resource="/" />}
                           >
                             <div className="pt-8 lg:mt-0">
                               <Outlet />
@@ -96,10 +97,7 @@ function App() {
                       </Authenticated>
                     }
                   >
-                    <Route
-                      index
-                      element={<NavigateToResource resource="product" />}
-                    />
+                    <Route index element={<Dashboard />} />
 
                     <Route path="/product">
                       <Route index element={<ProductList />} />
