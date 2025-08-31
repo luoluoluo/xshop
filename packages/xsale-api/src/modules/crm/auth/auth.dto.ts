@@ -1,23 +1,9 @@
-import {
-  Field,
-  ObjectType,
-  InputType,
-  registerEnumType,
-} from '@nestjs/graphql';
+import { Field, ObjectType, InputType } from '@nestjs/graphql';
 import { IsString, IsOptional, Matches } from 'class-validator';
 import { Affiliate } from '@/entities/affiliate.entity';
+import { SmsCodeType } from '@/types/sms-code-type';
 
 const phoneReg = /^1\d{10}$/;
-
-export enum SmsCodeType {
-  LOGIN = 'LOGIN',
-  REGISTER = 'REGISTER',
-}
-
-registerEnumType(SmsCodeType, {
-  name: 'SmsCodeType',
-  description: '短信验证码类型',
-});
 
 export interface AuthPayload {
   sub: string;

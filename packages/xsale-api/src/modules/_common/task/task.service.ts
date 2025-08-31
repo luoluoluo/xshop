@@ -2,7 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThan } from 'typeorm';
-import { Order, OrderStatus } from '@/entities/order.entity';
+import { Order } from '@/entities/order.entity';
+import { OrderStatus } from '@/types/order-status';
 import { Product } from '@/entities/product.entity';
 import { CommonOrderService } from '../order/order.service';
 

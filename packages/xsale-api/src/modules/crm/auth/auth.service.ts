@@ -13,13 +13,13 @@ import {
   LoginInput,
   RegisterInput,
   SendSmsCodeInput,
-  SmsCodeType,
 } from './auth.dto';
 import { Affiliate } from '@/entities/affiliate.entity';
 import { getJwtExpiresIn } from '../../../core/auth.config';
 import { Logger } from '@nestjs/common';
 import { compare } from 'bcrypt';
 import { CommonAuthService } from '../../_common/auth/auth.service';
+import { SmsCodeType } from '@/types/sms-code-type';
 
 @Injectable()
 export class AuthService {

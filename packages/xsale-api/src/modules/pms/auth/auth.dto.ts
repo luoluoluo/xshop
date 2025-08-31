@@ -1,20 +1,6 @@
-import {
-  Field,
-  ObjectType,
-  InputType,
-  registerEnumType,
-} from '@nestjs/graphql';
+import { Field, ObjectType, InputType } from '@nestjs/graphql';
 import { Merchant } from '@/entities/merchant.entity';
-
-export enum SmsCodeType {
-  LOGIN = 'LOGIN',
-  REGISTER = 'REGISTER',
-}
-
-registerEnumType(SmsCodeType, {
-  name: 'SmsCodeType',
-  description: '短信验证码类型',
-});
+import { SmsCodeType } from '@/types/sms-code-type';
 
 @InputType()
 export class LoginInput {

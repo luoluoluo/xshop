@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Context, Int } from '@nestjs/graphql';
 import { OrderService } from './order.service';
-import { Order, OrderStatus } from '@/entities/order.entity';
+import { Order } from '@/entities/order.entity';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '@/modules/web/auth/guards/gql-auth.guard';
 import {
@@ -9,15 +9,13 @@ import {
   OrderWhereInput,
 } from './order.dto';
 import { WebContext } from '@/types/graphql-context';
-import {
-  TransactionRequest,
-  WechatPayService,
-} from '@/modules/_common/wechat-pay/wechat-pay.service';
+import { WechatPayService } from '@/modules/_common/wechat-pay/wechat-pay.service';
 import {
   CreatePaymentInput,
   Payment,
 } from '@/modules/_common/wechat-pay/wechat-pay.dto';
 import { CommonOrderService } from '@/modules/_common/order/order.service';
+import { OrderStatus } from '@/types/order-status';
 
 @Resolver(() => Order)
 export class OrderResolver {

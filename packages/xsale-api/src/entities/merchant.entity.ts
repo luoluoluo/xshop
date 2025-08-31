@@ -6,6 +6,7 @@ import { Product } from './product.entity';
 import { Order } from './order.entity';
 import { Client } from '@/decorators/client.decorator';
 import { MerchantAffiliate } from './merchant-affiliate.entity';
+import { WechatMerchantStatus } from '@/types/merchant-wechat-status';
 
 @ObjectType()
 @Entity('merchant')
@@ -91,7 +92,43 @@ export class Merchant extends Base {
   @Column({ type: 'json', nullable: true })
   images?: string[]; // 商家相册
 
+  @Client(['cms', 'pms'])
   @Field(() => String, { nullable: true })
   @Column({ name: 'wechat_merchant_id', nullable: true })
   wechatMerchantId?: string;
+
+  @Client(['cms', 'pms'])
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'bank_card_photo', nullable: true })
+  bankCardPhoto?: string;
+
+  @Client(['cms', 'pms'])
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'business_license_photo', nullable: true })
+  businessLicensePhoto?: string;
+
+  @Client(['cms', 'pms'])
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'id_card_photo', nullable: true })
+  idCardPhoto?: string;
+
+  @Client(['cms', 'pms'])
+  @Field(() => WechatMerchantStatus, { nullable: true })
+  @Column({
+    name: 'wechat_merchant_status',
+    nullable: true,
+    type: 'enum',
+    enum: WechatMerchantStatus,
+  })
+  wechatMerchantStatus?: WechatMerchantStatus;
+
+  @Client(['cms', 'pms'])
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'wechat_merchant_sign_url', nullable: true })
+  wechatMerchantSignUrl?: string;
+
+  @Client(['cms', 'pms'])
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'wechat_merchant_note', nullable: true })
+  wechatMerchantNote?: string;
 }

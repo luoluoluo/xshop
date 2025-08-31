@@ -2,7 +2,7 @@ import { Resolver, Query, Args, Int } from '@nestjs/graphql';
 import { Product } from '@/entities/product.entity';
 import { ProductService } from './product.service';
 import { ProductPagination, ProductWhereInput } from './product.dto';
-import { SorterInput } from '@/core/sorter.dto';
+import { SorterInput } from '@/types/sorter';
 
 @Resolver(() => Product)
 export class ProductResolver {

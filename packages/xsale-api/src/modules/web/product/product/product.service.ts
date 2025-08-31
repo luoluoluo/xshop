@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, ILike, Repository } from 'typeorm';
 import { Product } from '@/entities/product.entity';
 import { ProductPagination, ProductWhereInput } from './product.dto';
-import { SorterInput } from '@/core/sorter.dto';
+import { SorterInput } from '@/types/sorter';
 
 @Injectable()
 export class ProductService {

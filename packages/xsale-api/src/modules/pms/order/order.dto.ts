@@ -1,5 +1,6 @@
 import { ObjectType, InputType, Field, Int } from '@nestjs/graphql';
-import { Order, OrderStatus } from '@/entities/order.entity';
+import { Order } from '@/entities/order.entity';
+import { OrderStatus } from '@/types/order-status';
 
 @ObjectType()
 export class OrderPagination {

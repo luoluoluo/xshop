@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import { Order, OrderStatus } from '@/entities/order.entity';
+import { Order } from '@/entities/order.entity';
 import {
   CreateOrderInput,
   OrderPagination,
@@ -17,6 +17,7 @@ import { Merchant } from '@/entities/merchant.entity';
 import { Affiliate } from '@/entities/affiliate.entity';
 import { Logger } from '@nestjs/common';
 import { CommonOrderService } from '@/modules/_common/order/order.service';
+import { OrderStatus } from '@/types/order-status';
 
 @Injectable()
 export class OrderService {

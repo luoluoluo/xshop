@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Repository } from 'typeorm';
-import { Order, OrderStatus } from '@/entities/order.entity';
+import { Order } from '@/entities/order.entity';
 import { Product } from '@/entities/product.entity';
 import {
   TransactionRequest,
@@ -23,6 +23,7 @@ import {
   WechatPayPartnerService,
 } from '../wechat-pay/wechat-pay-partner.service';
 import { ConfigService } from '@nestjs/config';
+import { OrderStatus } from '@/types/order-status';
 
 export interface CancelOptions {
   /** 自定义验证函数 */

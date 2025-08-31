@@ -1,4 +1,5 @@
-import { Order, OrderStatus } from '@/entities/order.entity';
+import { Order } from '@/entities/order.entity';
+import { OrderStatus } from '@/types/order-status';
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import {
   IsNotEmpty,

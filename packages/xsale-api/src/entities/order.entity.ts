@@ -1,28 +1,11 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import {
-  Field,
-  ObjectType,
-  Float,
-  registerEnumType,
-  Int,
-} from '@nestjs/graphql';
+import { Field, ObjectType, Float, Int } from '@nestjs/graphql';
 import { Base } from './base.entity';
 import { Product } from './product.entity';
 import { Merchant } from './merchant.entity';
 import { Affiliate } from './affiliate.entity';
 import { Customer } from './customer.entity';
-
-export enum OrderStatus {
-  CREATED = 'created',
-  PAID = 'paid',
-  COMPLETED = 'completed',
-  REFUNDED = 'refunded',
-  CANCELLED = 'cancelled',
-}
-
-registerEnumType(OrderStatus, {
-  name: 'OrderStatus',
-});
+import { OrderStatus } from '@/types/order-status';
 
 @ObjectType()
 @Entity('order')
