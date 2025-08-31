@@ -156,7 +156,14 @@ export class WechatService {
     };
     const url = `${getOauthAccessTokenUrl}?${new URLSearchParams(data).toString()}`;
     const res = await fetch(url);
-    return res.json() as Promise<GetOauthAccessTokenResponse>;
+    const resData = (await res.json()) as GetOauthAccessTokenResponse;
+
+    if (resData.errcode) {
+      this.logger.error(resData, 'getOauthAccessToken error');
+      throw new Error(resData.errmsg);
+    }
+
+    return resData;
   };
 
   // 获取用户信息
