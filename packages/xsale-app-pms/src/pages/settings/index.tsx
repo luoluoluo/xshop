@@ -429,11 +429,6 @@ export const Settings = () => {
 
   return (
     <Card>
-      <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <Typography.Title level={3}>个人设置</Typography.Title>
-        <Text type="secondary">修改您的商户信息</Text>
-      </div>
-
       <Tabs defaultActiveKey="basic" items={items} size="large" />
     </Card>
   );
