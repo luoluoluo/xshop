@@ -61,7 +61,7 @@ export class AuthService {
     const iat = Math.floor(Date.now() / 1000);
     const expiresIn = getJwtExpiresIn();
     const payload: AuthPayload = {
-      sub: affiliate.id!,
+      sub: affiliate?.id,
       iat,
     };
     return {
