@@ -15,9 +15,7 @@ import { getStatusColor, getStatusText } from "../../utils/order";
 import { useState } from "react";
 
 export const OrderList = () => {
-  const [where, setWhere] = useState<OrderWhereInput>({
-    isMerchantAffiliate: false,
-  });
+  const [where, setWhere] = useState<OrderWhereInput>({});
   const t = useTranslate();
   const { tableProps } = useTable({
     meta: {
@@ -32,30 +30,6 @@ export const OrderList = () => {
     <>
       <List>
         <Form layout="inline" className="mb-4">
-          <Form.Item
-            name="isMerchantAffiliate"
-            label={t("order.filter.affiliateType.label")}
-            initialValue={where.isMerchantAffiliate ? "true" : "false"}
-          >
-            <Radio.Group
-              options={[
-                {
-                  label: t("order.filter.affiliateType.affiliate"),
-                  value: "false",
-                },
-                {
-                  label: t("order.filter.affiliateType.merchantAffiliate"),
-                  value: "true",
-                },
-              ]}
-              onChange={(e) => {
-                setWhere({
-                  ...where,
-                  isMerchantAffiliate: e.target.value === "true",
-                });
-              }}
-            />
-          </Form.Item>
           <Form.Item name="status" label={t("order.filter.status.label")}>
             <Radio.Group
               optionType="button"
@@ -172,30 +146,6 @@ export const OrderList = () => {
             title={t("order.fields.affiliateAmount")}
             render={(affiliateAmount: number) =>
               `¥${affiliateAmount?.toFixed(2) || "0.00"}`
-            }
-          />
-
-          <Table.Column
-            dataIndex="merchantAffiliate"
-            title={t("order.fields.merchantAffiliate")}
-            render={(merchantAffiliate: Affiliate) => {
-              return (
-                <div>
-                  <div className="font-medium">
-                    {merchantAffiliate?.name || "-"}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {merchantAffiliate?.phone || "-"}
-                  </div>
-                </div>
-              );
-            }}
-          />
-          <Table.Column
-            dataIndex="merchantAffiliateAmount"
-            title={t("order.fields.merchantAffiliateAmount")}
-            render={(merchantAffiliateAmount: number) =>
-              `¥${merchantAffiliateAmount?.toFixed(2) || "0.00"}`
             }
           />
 

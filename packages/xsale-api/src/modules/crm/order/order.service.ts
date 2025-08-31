@@ -16,22 +16,19 @@ export class OrderService {
     skip,
     take,
     where,
-    affiliateId,
-    merchantAffiliateId,
   }: {
     skip?: number;
     take?: number;
-    where?: OrderWhereInput;
-    affiliateId?: string;
-    merchantAffiliateId?: string;
+    where?: OrderWhereInput & {
+      affiliateId?: string;
+    };
   }): Promise<OrderPagination> {
     const [items, total] = await this.orderRepository.findAndCount({
       where: {
         id: where?.id,
         merchantId: where?.merchantId,
-        merchantAffiliateId,
-        affiliateId,
         status: where?.status,
+        affiliateId: where?.affiliateId,
       },
       skip,
       take,
@@ -40,7 +37,6 @@ export class OrderService {
         merchant: true,
         customer: true,
         affiliate: true,
-        merchantAffiliate: true,
       },
     });
 
@@ -54,14 +50,12 @@ export class OrderService {
     id: string,
     where?: {
       affiliateId?: string;
-      merchantAffiliateId?: string;
     },
   ): Promise<Order> {
     const order = await this.orderRepository.findOne({
       where: {
         id,
         affiliateId: where?.affiliateId,
-        merchantAffiliateId: where?.merchantAffiliateId,
       },
     });
 

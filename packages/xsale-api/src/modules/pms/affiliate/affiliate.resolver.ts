@@ -18,12 +18,18 @@ export class AffiliateResolver {
   @Query(() => AffiliatePagination)
   @UseGuards(GqlAuthGuard)
   async affiliates(
+    @Context() ctx: PmsContext,
     @Args('where', { nullable: true }) where: AffiliateWhereInput,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
     @Args('take', { type: () => Int, nullable: true }) take: number,
   ): Promise<AffiliatePagination> {
     return this.affiliateService.findAll({
-      where,
+      where: {
+        ...where,
+      },
+      merchant: {
+        id: ctx.req.user?.id,
+      },
       skip,
       take,
     });
@@ -32,8 +38,9 @@ export class AffiliateResolver {
   @Query(() => Affiliate)
   async affiliate(
     @Args('id', { type: () => String }) id: string,
+    @Context() ctx: PmsContext,
   ): Promise<Affiliate> {
-    return this.affiliateService.findOne(id);
+    return this.affiliateService.findOne(id, ctx.req.user?.id);
   }
 
   @Mutation(() => Affiliate)
@@ -45,19 +52,26 @@ export class AffiliateResolver {
     if (!ctx.req.user?.id) {
       throw new ForbiddenException('User not found');
     }
-    return this.affiliateService.create({
-      ...data,
-      merchantAffiliate: {
-        merchantId: ctx.req.user?.id,
+    return this.affiliateService.create(
+      {
+        ...data,
       },
-    });
+      {
+        id: ctx.req.user?.id,
+        name: ctx.req.user?.name,
+      },
+    );
   }
 
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
   async deleteAffiliate(
     @Args('id', { type: () => String }) id: string,
+    @Context() ctx: PmsContext,
   ): Promise<boolean> {
-    return this.affiliateService.delete(id);
+    if (!ctx.req.user?.id) {
+      throw new ForbiddenException('User not found');
+    }
+    return this.affiliateService.delete(id, ctx.req.user?.id);
   }
 }

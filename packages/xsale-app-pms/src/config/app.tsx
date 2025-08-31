@@ -6,6 +6,7 @@ import {
   DollarOutlined,
   GiftOutlined,
   SettingOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 
 export const getResources = (): ResourceProps[] => {
@@ -15,6 +16,14 @@ export const getResources = (): ResourceProps[] => {
       list: "/",
       meta: {
         icon: <DashboardOutlined />,
+      },
+    },
+    {
+      name: "affiliate",
+      list: "/affiliate",
+      create: "/affiliate/new",
+      meta: {
+        icon: <UserOutlined />,
       },
     },
     {

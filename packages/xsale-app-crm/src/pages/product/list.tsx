@@ -97,10 +97,10 @@ export const ProductList = () => {
     return `${window.location.origin}/product/${id}?affiliateId=${me?.id}`;
   };
 
-  // 简单的回退方案：在产品图片右下角添加二维码
+  // 简单的回退方案：在商品图片右下角添加二维码
   const getSimpleFallbackPoster = async (product: Product): Promise<string> => {
     if (!product.image) {
-      throw new Error("产品图片缺失");
+      throw new Error("商品图片缺失");
     }
 
     const qrCodeDataUrl = await QRCode.toDataURL(getAffiliateLink(product.id), {
@@ -127,7 +127,7 @@ export const ProductList = () => {
             canvas.width = posterImage.naturalWidth;
             canvas.height = posterImage.naturalHeight;
 
-            // 绘制产品图片
+            // 绘制商品图片
             ctx.drawImage(posterImage, 0, 0);
 
             // 在右下角添加二维码
@@ -154,7 +154,7 @@ export const ProductList = () => {
       };
 
       posterImage.onload = checkBothLoaded;
-      posterImage.onerror = () => reject(new Error("产品图片加载失败"));
+      posterImage.onerror = () => reject(new Error("商品图片加载失败"));
 
       qrCodeImage.onload = checkBothLoaded;
       qrCodeImage.onerror = () => reject(new Error("二维码生成失败"));
@@ -170,7 +170,7 @@ export const ProductList = () => {
   // 使用product.poster和posterQrcodeConfig生成精确定位的海报
   const getPrecisionPoster = async (product: Product): Promise<string> => {
     if (!product.poster || !product.posterQrcodeConfig) {
-      throw new Error("产品海报或二维码配置缺失");
+      throw new Error("商品海报或二维码配置缺失");
     }
 
     if (
@@ -277,7 +277,7 @@ export const ProductList = () => {
 
     // 回退到简单方案：使用product.image
     if (!product.image) {
-      throw new Error("产品图片是生成海报的必要条件");
+      throw new Error("商品图片是生成海报的必要条件");
     }
 
     return await getSimpleFallbackPoster(product);
@@ -286,7 +286,7 @@ export const ProductList = () => {
   const showPosterPreview = async (product: Product) => {
     // 检查是否有海报或图片
     if (!product.poster && !product.image) {
-      message.error("该产品没有海报和图片，无法生成推广海报");
+      message.error("该商品没有海报和图片，无法生成推广海报");
       return;
     }
 
@@ -343,25 +343,6 @@ export const ProductList = () => {
             }}
           />
           <Table.Column
-            dataIndex="merchantAffiliate"
-            title={
-              <Tooltip title="该商家的签约推广者，所有订单都返佣">
-                {t("product.fields.merchantAffiliate")}
-                <InfoCircleOutlined className="ml-1" />
-              </Tooltip>
-            }
-            render={(_, record: Product) => {
-              return (
-                <div>
-                  <div>{record?.merchant?.affiliate?.name || "-"}</div>
-                  <div className="text-sm text-gray-500">
-                    {record?.merchant?.affiliate?.phone || "-"}
-                  </div>
-                </div>
-              );
-            }}
-          />
-          <Table.Column
             dataIndex="image"
             title={t("product.fields.image")}
             render={(image: string) => {
@@ -377,30 +358,15 @@ export const ProductList = () => {
             }}
           />
           <Table.Column
-            dataIndex="merchantAffiliateCommissionRate"
-            title={t("product.fields.merchantAffiliateCommissionRate")}
-            render={(
-              merchantAffiliateCommissionRate: number,
-              record: Product,
-            ) => {
+            dataIndex="commission"
+            title={t("product.fields.commission")}
+            render={(commission: number, record: Product) => {
               return (
                 <span>
-                  {`${merchantAffiliateCommissionRate}%（${record.merchantAffiliateCommission?.toFixed(
-                    2,
-                  )}）`}
-                </span>
-              );
-            }}
-          />
-          <Table.Column
-            dataIndex="affiliateCommissionRate"
-            title={t("product.fields.affiliateCommissionRate")}
-            render={(affiliateCommissionRate: number, record: Product) => {
-              return (
-                <span>
-                  {`${affiliateCommissionRate}%（${record.affiliateCommission?.toFixed(
-                    2,
-                  )}）`}
+                  {`${commission}%（${(
+                    (commission / (record.price ?? 0)) *
+                    100
+                  ).toFixed(2)}%）`}
                 </span>
               );
             }}
@@ -459,7 +425,7 @@ export const ProductList = () => {
 
       {/* 海报预览弹窗 */}
       <Modal
-        title={`${previewProduct?.title || "产品"} - 推广海报预览`}
+        title={`${previewProduct?.title || "商品"} - 推广海报预览`}
         open={previewVisible}
         onCancel={handleClosePreview}
         width={800}

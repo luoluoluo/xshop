@@ -5,8 +5,6 @@ export const getAffiliates = /* GraphQL */ `
         id
         name
         phone
-        isActive
-        balance
         createdAt
       }
       total
@@ -20,17 +18,7 @@ export const getAffiliate = /* GraphQL */ `
       id
       name
       phone
-      isActive
-      balance
       createdAt
-    }
-  }
-`;
-
-export const updateAffiliate = /* GraphQL */ `
-  mutation updateAffiliate($id: String!, $data: UpdateAffiliateInput!) {
-    updateAffiliate(id: $id, data: $data) {
-      id
     }
   }
 `;

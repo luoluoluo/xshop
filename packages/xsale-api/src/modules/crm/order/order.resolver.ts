@@ -22,11 +22,10 @@ export class OrderResolver {
     return this.orderService.findAll({
       take,
       skip,
-      where,
-      affiliateId: where?.isMerchantAffiliate ? undefined : ctx.req.user?.id,
-      merchantAffiliateId: where?.isMerchantAffiliate
-        ? ctx.req.user?.id
-        : undefined,
+      where: {
+        ...where,
+        affiliateId: ctx.req.user?.id,
+      },
     });
   }
 
@@ -35,12 +34,9 @@ export class OrderResolver {
   async order(
     @Context() ctx: CrmContext,
     @Args('id') id: string,
-    @Args('isMerchantAffiliate', { type: () => Boolean, defaultValue: false })
-    isMerchantAffiliate: boolean,
   ): Promise<Order> {
     return this.orderService.findOne(id, {
-      affiliateId: isMerchantAffiliate ? undefined : ctx.req.user?.id,
-      merchantAffiliateId: isMerchantAffiliate ? ctx.req.user?.id : undefined,
+      affiliateId: ctx.req.user?.id,
     });
   }
 }

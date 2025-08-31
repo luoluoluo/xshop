@@ -18,7 +18,11 @@ import routerBindings, {
 import { ConfigProvider as AntdConfigProvider, App as AntdApp } from "antd";
 import zhCN from "antd/es/locale/zh_CN"; // 中文
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import { authProvider } from "./providers/auth";
+import {
+  authProvider,
+  TOKEN_KEY,
+  TOKEN_EXPIRATION_KEY,
+} from "./providers/auth";
 import { AppIcon } from "./components/app-icon";
 import { Header } from "./components/header";
 import { ColorModeContextProvider } from "./contexts/color-mode";
@@ -38,6 +42,27 @@ import { getResources } from "./config/app";
 
 import { OrderList, OrderShow } from "./pages/order";
 import Dashboard from "./pages/dashboard";
+import Cookies from "js-cookie";
+import dayjs from "dayjs";
+import { useEffect } from "react";
+
+// 处理 URL 中的 token 组件
+function TokenHandler() {
+  useEffect(() => {
+    // 检查 URL 查询参数中是否有 token
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get("token");
+
+    if (urlToken) {
+      // 设置 token 到 cookie 中，过期时间设为 7 天
+      const expires = dayjs().add(7, "days").toDate();
+      Cookies.set(TOKEN_KEY, urlToken, { expires });
+      Cookies.set(TOKEN_EXPIRATION_KEY, expires.toString(), { expires });
+    }
+  }, []);
+
+  return null;
+}
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -49,6 +74,7 @@ function App() {
   };
   return (
     <BrowserRouter basename="/app-crm">
+      <TokenHandler />
       <RefineKbarProvider>
         <ColorModeContextProvider>
           <AntdConfigProvider locale={zhCN}>

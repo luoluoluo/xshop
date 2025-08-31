@@ -37,16 +37,6 @@ export class Order extends Base {
   @JoinColumn({ name: 'affiliate_id' })
   affiliate: Affiliate;
 
-  @Field(() => String, { nullable: true })
-  @Column({ name: 'merchant_affiliate_id', nullable: true })
-  merchantAffiliateId: string;
-
-  // 招商经理
-  @Field(() => Affiliate, { nullable: true })
-  @ManyToOne(() => Affiliate, { onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'merchant_affiliate_id' })
-  merchantAffiliate: Affiliate;
-
   @Field(() => Customer, { nullable: true })
   @ManyToOne(() => Customer, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'customer_id' })

@@ -6,8 +6,6 @@ export const getOrders = /* GraphQL */ `
         amount
         affiliateAmount
         merchantAmount
-        merchantAffiliateAmount
-        platformAmount
         quantity
         status
         note
@@ -22,11 +20,6 @@ export const getOrders = /* GraphQL */ `
           phone
         }
         merchant {
-          id
-          name
-          phone
-        }
-        merchantAffiliate {
           id
           name
           phone
@@ -54,8 +47,6 @@ export const getOrder = /* GraphQL */ `
       amount
       affiliateAmount
       merchantAmount
-      merchantAffiliateAmount
-      platformAmount
       quantity
       status
       note
@@ -74,11 +65,7 @@ export const getOrder = /* GraphQL */ `
         name
         phone
       }
-      merchantAffiliate {
-        id
-        name
-        phone
-      }
+
       affiliate {
         id
         name

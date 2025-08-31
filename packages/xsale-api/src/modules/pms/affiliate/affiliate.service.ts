@@ -8,6 +8,9 @@ import {
   AffiliatePagination,
   AffiliateWhereInput,
 } from './affiliate.dto';
+import { SmsService } from '@/modules/_common/sms/sms.service';
+import { ShortLinkService } from '@/modules/_common/short-link/short-link.service';
+import { CommonJwtService } from '@/modules/_common/jwt/jtw.servive';
 
 @Injectable()
 export class AffiliateService {
@@ -18,6 +21,9 @@ export class AffiliateService {
     private affiliateRepository: Repository<Affiliate>,
     @InjectRepository(MerchantAffiliate)
     private merchantAffiliateRepository: Repository<MerchantAffiliate>,
+    private readonly smsService: SmsService,
+    private readonly shortLinkService: ShortLinkService,
+    private readonly commonJwtService: CommonJwtService,
   ) {}
 
   // Affiliate management methods
@@ -25,22 +31,21 @@ export class AffiliateService {
     skip,
     take,
     where = {},
+    merchant,
   }: {
     skip?: number;
     take?: number;
-    where?: AffiliateWhereInput & {
-      merchantAffiliates?: { merchant: { id: string } };
-    };
+    where?: AffiliateWhereInput;
+    merchant?: { id?: string };
   }): Promise<AffiliatePagination> {
     // 构建查询条件
     const whereCondition: FindOptionsWhere<Affiliate> = {
-      ...where,
+      id: where.id,
+      name: where.name,
     };
-    if (where.merchantAffiliates) {
+    if (merchant?.id) {
       whereCondition.merchantAffiliates = {
-        merchant: {
-          id: where.merchantAffiliates.merchant.id,
-        },
+        merchantId: merchant.id,
       };
     }
 
@@ -48,11 +53,6 @@ export class AffiliateService {
       where: whereCondition,
       skip,
       take,
-      relations: {
-        merchantAffiliates: {
-          merchant: true,
-        },
-      },
     });
 
     return {
@@ -61,14 +61,9 @@ export class AffiliateService {
     };
   }
 
-  async findOne(id: string): Promise<Affiliate> {
+  async findOne(id: string, merchantId?: string): Promise<Affiliate> {
     const affiliate = await this.affiliateRepository.findOne({
-      where: { id },
-      relations: {
-        merchantAffiliates: {
-          merchant: true,
-        },
-      },
+      where: { id, merchantAffiliates: { merchantId } },
     });
 
     if (!affiliate) {
@@ -86,11 +81,8 @@ export class AffiliateService {
   }
 
   async create(
-    createAffiliateInput: CreateAffiliateInput & {
-      merchantAffiliate?: {
-        merchantId: string;
-      };
-    },
+    createAffiliateInput: CreateAffiliateInput,
+    merchant?: { id?: string; name?: string },
   ): Promise<Affiliate> {
     let affiliate = await this.affiliateRepository.findOne({
       where: { phone: createAffiliateInput.phone },
@@ -100,21 +92,32 @@ export class AffiliateService {
       affiliate = await this.affiliateRepository.save(affiliate);
     }
 
-    if (createAffiliateInput.merchantAffiliate) {
+    if (merchant?.id) {
       const merchantAffiliate = this.merchantAffiliateRepository.create({
         affiliateId: affiliate.id,
-        merchantId: createAffiliateInput.merchantAffiliate.merchantId,
+        merchantId: merchant.id,
       });
       await this.merchantAffiliateRepository.save(merchantAffiliate);
     }
+    const token = this.commonJwtService.sign(affiliate.id);
+    const url = `https://xltzx.com/app-crm?token=${token}`;
+    const shortLink = await this.shortLinkService.create({
+      url,
+    });
+
+    await this.smsService.sendInvite(createAffiliateInput.phone, {
+      mch: merchant?.name || merchant?.id || '',
+      uid: shortLink.id,
+    });
     return this.findOne(affiliate.id);
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete(id: string, merchantId?: string): Promise<boolean> {
     // 删除关联关系
-    await this.merchantAffiliateRepository.delete({ affiliateId: id });
-
-    await this.affiliateRepository.delete(id);
+    await this.merchantAffiliateRepository.delete({
+      affiliateId: id,
+      merchantId,
+    });
     return true;
   }
 }

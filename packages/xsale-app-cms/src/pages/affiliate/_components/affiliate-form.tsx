@@ -61,22 +61,6 @@ export const AffiliateForm = ({ formProps }: { formProps: FormProps }) => {
         <Input />
       </Form.Item>
 
-      <Form.Item label={t("affiliate.fields.bankName")} name={["bankName"]}>
-        <Input />
-      </Form.Item>
-      <Form.Item
-        label={t("affiliate.fields.accountName")}
-        name={["accountName"]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        label={t("affiliate.fields.bankAccount")}
-        name={["bankAccount"]}
-      >
-        <Input />
-      </Form.Item>
-
       <Form.Item
         label="关联商家"
         name={["merchantIds"]}

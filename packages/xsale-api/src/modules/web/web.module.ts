@@ -16,6 +16,7 @@ import { WechatPayModule } from '../_common/wechat-pay/wechat-pay.module';
 import { WechatModule } from '../_common/wechat/wechat.module';
 import { MerchantModule } from './merchant/merchant.module';
 import { AffiliateModule } from './affiliate/affiliate.module';
+import { ShortLinkModule } from '../_common/short-link/short-link.module';
 
 const webModules = [
   AuthModule,
@@ -27,6 +28,7 @@ const webModules = [
   WechatPayModule,
   WechatModule,
   AffiliateModule,
+  ShortLinkModule,
 ];
 
 @Module({

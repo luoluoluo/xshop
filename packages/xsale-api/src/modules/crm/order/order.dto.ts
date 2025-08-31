@@ -22,11 +22,6 @@ export class CreateOrderInput {
   @IsString()
   merchantId?: string;
 
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  affiliateId?: string;
-
   @Field(() => Int)
   @IsNotEmpty()
   @IsInt()
@@ -56,9 +51,6 @@ export class OrderWhereInput {
 
   @Field({ nullable: true })
   merchantId?: string;
-
-  @Field({ nullable: true })
-  isMerchantAffiliate?: boolean;
 
   @Field(() => OrderStatus, { nullable: true })
   status?: OrderStatus;

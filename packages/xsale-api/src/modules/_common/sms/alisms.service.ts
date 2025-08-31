@@ -59,4 +59,14 @@ export default class AlismsService {
       throw error;
     }
   }
+
+  async sendInvite(phone: string, data: { mch: string; uid: string }) {
+    await this.send({
+      phoneNumbers: phone,
+      signName: this.configService.get('ALIBABA_CLOUD_SMS_SIGN_NAME') || '',
+      templateCode:
+        this.configService.get('ALIBABA_CLOUD_SMS_TEMPLATE_INVITE') || '',
+      templateParam: JSON.stringify(data),
+    });
+  }
 }

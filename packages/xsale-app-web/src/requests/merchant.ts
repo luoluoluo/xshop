@@ -1,7 +1,7 @@
 // Get single merchant by ID
 export const getMerchant = /* GraphQL */ `
-  query merchant($id: String!, $affiliateId: String) {
-    merchant(id: $id, affiliateId: $affiliateId) {
+  query merchant($id: String!) {
+    merchant(id: $id) {
       id
       name
       description
@@ -9,14 +9,8 @@ export const getMerchant = /* GraphQL */ `
       images
       address
       phone
-      affiliateId
       createdAt
       updatedAt
-      affiliate {
-        id
-        name
-        phone
-      }
       businessScope
       wechatQrcode
     }
@@ -34,14 +28,8 @@ export const getMerchants = /* GraphQL */ `
         logo
         address
         phone
-        affiliateId
         createdAt
         updatedAt
-        affiliate {
-          id
-          name
-          phone
-        }
         businessScope
         wechatQrcode
       }

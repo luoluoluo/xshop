@@ -174,4 +174,8 @@ export class SmsService {
       return null;
     }
   }
+
+  sendInvite(phone: string, data: { mch: string; uid: string }) {
+    return this.alismsService.sendInvite(phone, data);
+  }
 }

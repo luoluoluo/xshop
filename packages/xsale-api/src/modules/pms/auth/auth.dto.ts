@@ -107,7 +107,10 @@ export class UpdateMeInput {
 @InputType()
 export class ApplyWechatMerchantInput {
   @Field()
-  idCardPhoto: string;
+  idCardFrontPhoto: string;
+
+  @Field()
+  idCardBackPhoto: string;
 
   @Field()
   businessLicensePhoto: string;

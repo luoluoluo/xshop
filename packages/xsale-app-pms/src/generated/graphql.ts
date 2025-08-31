@@ -40,7 +40,8 @@ export type AffiliateWhereInput = {
 export type ApplyWechatMerchantInput = {
   bankCardPhoto: Scalars['String']['input'];
   businessLicensePhoto: Scalars['String']['input'];
-  idCardPhoto: Scalars['String']['input'];
+  idCardBackPhoto: Scalars['String']['input'];
+  idCardFrontPhoto: Scalars['String']['input'];
 };
 
 export type Article = {
@@ -107,7 +108,8 @@ export type Merchant = {
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
-  idCardPhoto?: Maybe<Scalars['String']['output']>;
+  idCardBackPhoto?: Maybe<Scalars['String']['output']>;
+  idCardFrontPhoto?: Maybe<Scalars['String']['output']>;
   images?: Maybe<Array<Scalars['String']['output']>>;
   logo?: Maybe<Scalars['String']['output']>;
   merchantAffiliates?: Maybe<Array<MerchantAffiliate>>;
@@ -222,8 +224,6 @@ export type Order = {
   customer?: Maybe<Customer>;
   id: Scalars['String']['output'];
   merchant?: Maybe<Merchant>;
-  merchantAffiliate?: Maybe<Affiliate>;
-  merchantAffiliateId?: Maybe<Scalars['String']['output']>;
   merchantAmount?: Maybe<Scalars['Float']['output']>;
   merchantId?: Maybe<Scalars['String']['output']>;
   note?: Maybe<Scalars['String']['output']>;

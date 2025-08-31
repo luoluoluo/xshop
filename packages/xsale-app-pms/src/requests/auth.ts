@@ -11,7 +11,27 @@ export const me = /* GraphQL */ `
       address
       businessScope
       wechatQrcode
+      idCardFrontPhoto
+      idCardBackPhoto
+      businessLicensePhoto
+      bankCardPhoto
+      wechatMerchantStatus
+      wechatMerchantSignUrl
+      wechatMerchantNote
+      wechatMerchantId
       createdAt
+    }
+  }
+`;
+
+export const applyWechatMerchant = /* GraphQL */ `
+  mutation applyWechatMerchant($data: ApplyWechatMerchantInput!) {
+    applyWechatMerchant(data: $data) {
+      id
+      wechatMerchantStatus
+      wechatMerchantSignUrl
+      wechatMerchantNote
+      wechatMerchantId
     }
   }
 `;

@@ -95,14 +95,6 @@ export const getResources = (): ResourceProps[] => {
         icon: <DollarOutlined />,
       },
     },
-    {
-      name: "merchantWithdrawal",
-      list: "/merchant-withdrawal",
-      meta: {
-        parent: "finance",
-        icon: <></>,
-      },
-    },
     // {
     //   name: "couriers",
     //   list: "/couriers",

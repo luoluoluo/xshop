@@ -202,30 +202,6 @@ export const OrderList = () => {
         />
 
         <Table.Column
-          dataIndex="merchantAffiliate"
-          title={t("order.fields.merchantAffiliate")}
-          render={(merchantAffiliate: Affiliate) => {
-            return (
-              <div>
-                <div className="font-medium">
-                  {merchantAffiliate?.name || "-"}
-                </div>
-                <div className="text-sm text-gray-500">
-                  {merchantAffiliate?.phone || "-"}
-                </div>
-              </div>
-            );
-          }}
-        />
-        <Table.Column
-          dataIndex="merchantAffiliateAmount"
-          title={t("order.fields.merchantAffiliateAmount")}
-          render={(merchantAffiliateAmount: number) =>
-            `¥${merchantAffiliateAmount?.toFixed(2) || "0.00"}`
-          }
-        />
-
-        <Table.Column
           dataIndex="note"
           title={t("order.fields.note")}
           render={(note: string) => (

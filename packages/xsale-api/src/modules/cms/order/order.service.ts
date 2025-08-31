@@ -33,7 +33,6 @@ export class OrderService {
         merchant: true,
         affiliate: true,
         customer: true,
-        merchantAffiliate: true,
       },
     });
 

@@ -41,6 +41,7 @@ import {
 
 import { getResources } from "./config/app";
 import { OrderList, OrderShow } from "./pages/order";
+import { AffiliateCreate, AffiliateList } from "./pages/affiliate";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -113,6 +114,11 @@ function App() {
                     </Route>
 
                     <Route path="/settings" element={<Settings />} />
+
+                    <Route path="/affiliate">
+                      <Route index element={<AffiliateList />} />
+                      <Route path="new" element={<AffiliateCreate />} />
+                    </Route>
 
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>

@@ -95,8 +95,13 @@ export class Merchant extends Base {
 
   @Client(['cms', 'pms'])
   @Field(() => String, { nullable: true })
-  @Column({ name: 'id_card_photo', nullable: true })
-  idCardPhoto?: string;
+  @Column({ name: 'id_card_front_photo', nullable: true })
+  idCardFrontPhoto?: string;
+
+  @Client(['cms', 'pms'])
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'id_card_back_photo', nullable: true })
+  idCardBackPhoto?: string;
 
   @Client(['cms', 'pms'])
   @Field(() => WechatMerchantStatus, { nullable: true })

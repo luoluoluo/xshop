@@ -1,10 +1,17 @@
 import { SiteFooter } from "@/components/layouts/site-footer";
 import { SiteHeader } from "@/components/layouts/site-header";
+import { ShortLinkToast } from "@/components/short-link-toast/short-link-toast";
 import { Wechat } from "@/components/wechat";
 import { setting } from "@/config/config";
 import { getUrl } from "@/utils/index.server";
 
-export default function Page() {
+export default function Page({
+  searchParams,
+}: {
+  searchParams?: {
+    uid?: string;
+  };
+}) {
   const url = getUrl();
   const u = new URL(url);
 
@@ -74,6 +81,7 @@ export default function Page() {
           imgUrl: `${u.origin}/images/logo.png`,
         }}
       />
+      <ShortLinkToast id={searchParams?.uid} />
     </div>
   );
 }

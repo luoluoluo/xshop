@@ -3,21 +3,19 @@ export const getMerchants = /* GraphQL */ `
     merchants(where: $where, skip: $skip, take: $take) {
       data {
         id
-        affiliateId
         name
         logo
         phone
         address
         description
         isActive
-        balance
         createdAt
-        affiliate {
-          id
-          name
-        }
         businessScope
         wechatQrcode
+        wechatMerchantStatus
+        wechatMerchantSignUrl
+        wechatMerchantNote
+        wechatMerchantId
       }
       total
     }
@@ -28,7 +26,6 @@ export const getMerchant = /* GraphQL */ `
   query merchant($id: String!) {
     merchant(id: $id) {
       id
-      affiliateId
       name
       logo
       images
@@ -36,12 +33,7 @@ export const getMerchant = /* GraphQL */ `
       address
       description
       isActive
-      balance
       createdAt
-      affiliate {
-        id
-        name
-      }
       businessScope
       wechatQrcode
       wechatMerchantId
@@ -68,5 +60,35 @@ export const createMerchant = /* GraphQL */ `
 export const deleteMerchant = /* GraphQL */ `
   mutation deleteMerchant($id: String!) {
     deleteMerchant(id: $id)
+  }
+`;
+
+export const approveWechatMerchant = /* GraphQL */ `
+  mutation approveWechatMerchant($data: ApproveWechatMerchantInput!) {
+    approveWechatMerchant(data: $data) {
+      id
+      wechatMerchantStatus
+      wechatMerchantSignUrl
+    }
+  }
+`;
+
+export const rejectWechatMerchant = /* GraphQL */ `
+  mutation rejectWechatMerchant($data: RejectWechatMerchantInput!) {
+    rejectWechatMerchant(data: $data) {
+      id
+      wechatMerchantStatus
+      wechatMerchantNote
+    }
+  }
+`;
+
+export const completeWechatMerchant = /* GraphQL */ `
+  mutation completeWechatMerchant($data: CompleteWechatMerchantInput!) {
+    completeWechatMerchant(data: $data) {
+      id
+      wechatMerchantStatus
+      wechatMerchantId
+    }
   }
 `;

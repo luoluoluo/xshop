@@ -21,4 +21,9 @@ export class ShortLinkService {
 
     return shortLink;
   }
+
+  async create(data: { url: string }): Promise<ShortLink> {
+    const shortLink = this.shortLinkRepository.create(data);
+    return this.shortLinkRepository.save(shortLink);
+  }
 }

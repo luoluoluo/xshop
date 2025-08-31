@@ -279,15 +279,6 @@ export class CommonOrderService {
         throw new BadRequestException('只有已支付的订单才能完成');
       }
 
-      const merchantAffiliate = await queryRunner.manager.findOne(Affiliate, {
-        where: { id: order.merchantAffiliateId },
-        relations: ['wechatOAuth'],
-      });
-
-      if (!merchantAffiliate) {
-        throw new BadRequestException('商户客户经理不存在');
-      }
-
       const affiliate = await queryRunner.manager.findOne(Affiliate, {
         where: { id: order.affiliateId },
         relations: ['wechatOAuth'],

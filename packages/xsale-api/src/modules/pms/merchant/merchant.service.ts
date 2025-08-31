@@ -135,7 +135,8 @@ export class MerchantService {
     }
 
     try {
-      merchant.idCardPhoto = input.idCardPhoto;
+      merchant.idCardFrontPhoto = input.idCardFrontPhoto;
+      merchant.idCardBackPhoto = input.idCardBackPhoto;
       merchant.businessLicensePhoto = input.businessLicensePhoto;
       merchant.bankCardPhoto = input.bankCardPhoto;
       merchant.wechatMerchantStatus = WechatMerchantStatus.CREATED;

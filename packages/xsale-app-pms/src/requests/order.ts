@@ -24,11 +24,6 @@ export const getOrders = /* GraphQL */ `
           name
           phone
         }
-        merchantAffiliate {
-          id
-          name
-          phone
-        }
         affiliate {
           id
           name
@@ -66,11 +61,6 @@ export const getOrder = /* GraphQL */ `
         phone
       }
       merchant {
-        id
-        name
-        phone
-      }
-      merchantAffiliate {
         id
         name
         phone

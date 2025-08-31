@@ -147,7 +147,7 @@
       "image": "图片",
       "sort": "排序",
       "title": "标题",
-      "products": "产品",
+      "products": "商品",
       "isActive": {
         "label": "状态",
         "true": "可见",
@@ -183,8 +183,8 @@
       "restrictions": "限制条件",
       "usage": "使用情况",
       "note": "备注",
-      "applicableProducts": "适用产品",
-      "applicableCategories": "适用产品分类",
+      "applicableProducts": "适用商品",
+      "applicableCategories": "适用商品分类",
       "basicInfo": "基本信息",
       "discountInfo": "折扣信息",
       "dateInfo": "日期信息",
@@ -256,10 +256,10 @@
         "placeholder": "请输入备注"
       },
       "applicableProducts": {
-        "placeholder": "搜索并选择适用产品"
+        "placeholder": "搜索并选择适用商品"
       },
       "applicableCategories": {
-        "placeholder": "搜索并选择适用产品分类"
+        "placeholder": "搜索并选择适用商品分类"
       }
     },
     "status": {
@@ -425,7 +425,7 @@
       "title": "每日热门菜单"
     },
     "trendingProducts": {
-      "title": "热门产品"
+      "title": "热门商品"
     }
   },
   "enum": {
@@ -438,11 +438,11 @@
     }
   },
   "product": {
-    "product": "产品",
+    "product": "商品",
     "titles": {
-      "list": "产品",
-      "create": "创建产品",
-      "edit": "编辑产品"
+      "list": "商品",
+      "create": "创建商品",
+      "edit": "编辑商品"
     },
     "fields": {
       "id": "编号",
@@ -519,8 +519,8 @@
       }
     },
     "actions": {
-      "add": "添加新产品",
-      "edit": "编辑产品"
+      "add": "添加新商品",
+      "edit": "编辑商品"
     }
   },
   "reviews": {
@@ -590,16 +590,16 @@
       "submit": "筛选"
     },
     "buttons": {
-      "editProducts": "编辑产品",
-      "addProduct": "添加产品",
+      "editProducts": "编辑商品",
+      "addProduct": "添加商品",
       "outOfStock": "缺货",
-      "edit": "编辑产品"
+      "edit": "编辑商品"
     },
     "selectLocation": "在地图上选择商家位置",
-    "merchantProducts": "商家产品",
+    "merchantProducts": "商家商品",
     "tagFilterDescription": "使用标签筛选搜索结果",
     "all": "全部",
-    "productSearch": "产品搜索",
+    "productSearch": "商品搜索",
     "addNewMerchant": "添加新商家"
   },
   "user": {
@@ -792,15 +792,13 @@
       "id": "编号",
       "code": "订单号",
       "merchant": "商家",
-      "product": "产品",
+      "product": "商品",
       "quantity": "数量",
       "affiliate": "推广者",
       "merchantAffiliate": "招商经理",
       "customer": "客户",
       "amount": "金额",
       "affiliateAmount": "推广者佣金",
-      "merchantAffiliateAmount": "招商经理佣金",
-      "platformAmount": "平台佣金",
       "merchantAmount": "商户收入",
       "status": "状态",
       "note": "备注",
