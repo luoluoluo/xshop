@@ -1,6 +1,6 @@
 import { List, useTable } from "@refinedev/antd";
 import { useNotification, useTranslate } from "@refinedev/core";
-import { Form, Table, Tag, Tooltip, Button, Space, Radio } from "antd";
+import { Form, Table, Tag, Tooltip, Button, Space, Radio, Alert } from "antd";
 import { parse } from "graphql";
 import { getOrders, completeOrder, refundOrder } from "../../requests/order";
 import {
@@ -86,6 +86,13 @@ export const OrderList = () => {
 
   return (
     <List>
+      <Alert
+        message="提示"
+        description="支付超过七天的订单将自动完成，无需手动操作。"
+        type="info"
+        showIcon
+        className="mb-4"
+      />
       <Form layout="inline" className="mb-4">
         <Form.Item name="status" label="状态">
           <Radio.Group
