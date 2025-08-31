@@ -1,7 +1,17 @@
 import { DeleteButton, EditButton, List, useTable } from "@refinedev/antd";
 import { useState } from "react";
 import { useTranslate, type BaseRecord } from "@refinedev/core";
-import { Space, Table, Button, Modal, Form, Input, message } from "antd";
+import {
+  Space,
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  message,
+  Descriptions,
+  QRCode,
+} from "antd";
 import { parse } from "graphql";
 import {
   deleteMerchant,
@@ -10,7 +20,7 @@ import {
   rejectWechatMerchant,
   completeWechatMerchant,
 } from "../../requests/merchant";
-import { WechatMerchantStatus } from "../../generated/graphql";
+import { Merchant, WechatMerchantStatus } from "../../generated/graphql";
 import { request } from "../../utils/request";
 
 export const MerchantList = () => {
@@ -180,7 +190,7 @@ export const MerchantList = () => {
         <Table.Column
           dataIndex="wechatMerchantStatus"
           title="微信支付状态"
-          render={(status: WechatMerchantStatus) => {
+          render={(status: WechatMerchantStatus, record: BaseRecord) => {
             switch (status) {
               case WechatMerchantStatus.Created:
                 return "待审核";
@@ -193,6 +203,49 @@ export const MerchantList = () => {
               default:
                 return "未申请";
             }
+          }}
+        />
+        <Table.Column
+          dataIndex="wechatMerchantId"
+          title={t("merchant.fields.wechatMerchantId")}
+        />
+        <Table.Column
+          dataIndex="wechatMerchantSignUrl"
+          title={t("merchant.fields.wechatMerchantSignUrl")}
+          render={(url: string) => {
+            return url ? <QRCode value={url} size={100} /> : "-";
+          }}
+        />
+        <Table.Column
+          dataIndex="wechatMerchantNote"
+          title={t("merchant.fields.wechatMerchantNote")}
+        />
+        <Table.Column
+          dataIndex="idCardFrontPhoto"
+          title={t("merchant.fields.idCardFrontPhoto")}
+          render={(photo: string) => {
+            return photo ? <img className="w-auto h-16" src={photo} /> : "-";
+          }}
+        />
+        <Table.Column
+          dataIndex="idCardBackPhoto"
+          title={t("merchant.fields.idCardBackPhoto")}
+          render={(photo: string) => {
+            return photo ? <img className="w-auto h-16" src={photo} /> : "-";
+          }}
+        />
+        <Table.Column
+          dataIndex="businessLicensePhoto"
+          title={t("merchant.fields.businessLicensePhoto")}
+          render={(photo: string) => {
+            return photo ? <img className="w-auto h-16" src={photo} /> : "-";
+          }}
+        />
+        <Table.Column
+          dataIndex="bankCardPhoto"
+          title={t("merchant.fields.bankCardPhoto")}
+          render={(photo: string) => {
+            return photo ? <img className="w-auto h-16" src={photo} /> : "-";
           }}
         />
         <Table.Column

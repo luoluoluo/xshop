@@ -780,7 +780,14 @@
       "bankName": "银行名称",
       "wechatMerchantId": "微信商户号",
       "bankAccount": "银行账户",
-      "accountName": "账户名称"
+      "accountName": "账户名称",
+      "idCardFrontPhoto": "身份证正面",
+      "idCardBackPhoto": "身份证背面",
+      "businessLicensePhoto": "营业执照",
+      "bankCardPhoto": "银行卡",
+      "wechatMerchantSignUrl": "签约二维码",
+      "wechatMerchantNote": "签约备注",
+      "wechatMerchant": "微信商户信息"
     }
   },
   "order": {

@@ -16,6 +16,10 @@ export const getMerchants = /* GraphQL */ `
         wechatMerchantSignUrl
         wechatMerchantNote
         wechatMerchantId
+        idCardBackPhoto
+        idCardFrontPhoto
+        businessLicensePhoto
+        bankCardPhoto
       }
       total
     }
@@ -37,6 +41,13 @@ export const getMerchant = /* GraphQL */ `
       businessScope
       wechatQrcode
       wechatMerchantId
+      wechatMerchantStatus
+      wechatMerchantSignUrl
+      wechatMerchantNote
+      idCardBackPhoto
+      idCardFrontPhoto
+      businessLicensePhoto
+      bankCardPhoto
     }
   }
 `;

@@ -1,23 +1,10 @@
 import { Form, FormProps, Input, Select, Switch } from "antd";
 import { CustomUpload } from "../../../components/custom-upload";
-import { useEffect, useState } from "react";
-import { Affiliate, AffiliatePagination } from "../../../generated/graphql";
-import { getAffiliates } from "../../../requests/affiliate";
-import { request } from "../../../utils/request";
 import { useTranslate } from "@refinedev/core";
 import { CustomEditor } from "../../../components/custom-editor";
 
 export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
   const t = useTranslate();
-  const [affiliates, setAffiliates] = useState<Affiliate[]>();
-
-  useEffect(() => {
-    request<{ affiliates?: AffiliatePagination }>({
-      query: getAffiliates,
-    }).then((res) => {
-      setAffiliates(res.data?.affiliates?.data || []);
-    });
-  }, []);
 
   const onFinish = (values: any) => {
     if (formProps.onFinish) {
@@ -27,20 +14,6 @@ export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
 
   return (
     <Form {...{ ...formProps, onFinish }} layout="vertical">
-      <Form.Item
-        label={t("merchant.fields.affiliate")}
-        name={["affiliateId"]}
-        rules={[{ required: true }]}
-      >
-        <Select
-          allowClear
-          options={affiliates?.map((affiliate) => ({
-            label: affiliate.name,
-            value: affiliate.id,
-          }))}
-        />
-      </Form.Item>
-
       <Form.Item
         label={t("merchant.fields.logo")}
         name={["logo"]}
@@ -108,32 +81,6 @@ export const MerchantForm = ({ formProps }: { formProps: FormProps }) => {
         rules={[{ required: true }]}
       >
         <CustomEditor />
-      </Form.Item>
-
-      <Form.Item label={t("merchant.fields.bankName")} name={["bankName"]}>
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        label={t("merchant.fields.accountName")}
-        name={["accountName"]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        label={t("merchant.fields.bankAccount")}
-        name={["bankAccount"]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        label={t("merchant.fields.wechatMerchantId")}
-        name={["wechatMerchantId"]}
-        extra="服务商模式下必填"
-      >
-        <Input />
       </Form.Item>
 
       <Form.Item label={t("fields.isActive.label")} name={["isActive"]}>
