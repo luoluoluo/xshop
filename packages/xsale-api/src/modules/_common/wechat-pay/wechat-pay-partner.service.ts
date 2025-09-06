@@ -1,4 +1,3 @@
-import * as x509 from '@fidm/x509';
 import { Logger, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -6,26 +5,12 @@ import * as crypto from 'crypto';
 import { PaymentSuccessEvent } from '@/events/payment-success.event';
 
 const baseUrl = 'https://api.mch.weixin.qq.com';
-const getCertificatesUrl = `${baseUrl}/v3/certificates`;
 const transactionsJsapiUrl = `${baseUrl}/v3/pay/partner/transactions/jsapi`;
 const refundUrl = `${baseUrl}/v3/refund/domestic/refunds`;
 const profitsharingAddReceiversUrl = `${baseUrl}/v3/profitsharing/receivers/add`;
 const profitsharingCreateOrdersUrl = `${baseUrl}/v3/profitsharing/orders`;
 
 const authType = 'WECHATPAY2-SHA256-RSA2048';
-
-// 继承基本的接口定义
-interface Certificate {
-  effective_time: string;
-  expire_time: string;
-  serial_no: string;
-  encrypt_certificate: {
-    algorithm: string;
-    associated_data: string;
-    ciphertext: string;
-    nonce: string;
-  };
-}
 
 export interface PayAmount {
   total: number;
@@ -169,7 +154,6 @@ export interface PartnerWechatPayTransactionResult {
 @Injectable()
 export class WechatPayPartnerService {
   private readonly logger = new Logger(WechatPayPartnerService.name);
-  private certificateCache = new Map<string, string>();
   private config: {
     key: string;
     privateKey: string;
@@ -193,11 +177,6 @@ export class WechatPayPartnerService {
       notifyUrl: this.configService.get('WECHAT_PAY_NOTIFY_URL') || '',
       publicKeyId: this.configService.get('WECHAT_PAY_SP_PUBLIC_KEY_ID') || '',
     };
-  }
-
-  async initialize() {
-    this.logger.log('初始化微信服务商支付服务');
-    await this.preloadCertificates();
   }
 
   private decipherGcm = <T>({
@@ -299,6 +278,7 @@ export class WechatPayPartnerService {
         url,
         method,
         error: error.message,
+        authorization,
         spMchId: this.config.spMchId,
       });
       throw error;
@@ -520,44 +500,6 @@ export class WechatPayPartnerService {
     } catch (error) {
       this.logger.error('处理服务商支付成功业务逻辑失败', error);
       throw error;
-    }
-  }
-
-  private async preloadCertificates() {
-    try {
-      this.logger.log('开始预加载证书');
-      const result = await this.request<{ data: Certificate[] }>(
-        getCertificatesUrl,
-        {
-          method: 'GET',
-        },
-      );
-
-      if (result?.data?.length) {
-        result.data.forEach((item) => {
-          try {
-            const decryptCertificate = this.decipherGcm<string>({
-              ...item.encrypt_certificate,
-            });
-            const publicKey = x509.Certificate.fromPEM(
-              Buffer.from(decryptCertificate),
-            ).publicKey.toPEM();
-            this.certificateCache.set(item.serial_no, publicKey);
-          } catch (error) {
-            this.logger.error('预加载证书失败', {
-              serial: item.serial_no,
-              error: error.message,
-            });
-          }
-        });
-        this.logger.log('证书预加载完成', {
-          count: this.certificateCache.size,
-        });
-      }
-    } catch (error) {
-      this.logger.warn('证书预加载失败，将在需要时获取', {
-        error: error.message,
-      });
     }
   }
 }
