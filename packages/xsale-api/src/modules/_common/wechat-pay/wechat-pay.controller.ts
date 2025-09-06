@@ -7,16 +7,16 @@ import {
   Req,
   RawBodyRequest,
 } from '@nestjs/common';
-import {
-  WechatPayService,
-  WechatPayNotifyResponse,
-} from './wechat-pay.service';
+import { WechatPayNotifyResponse } from './wechat-pay.service';
+import { WechatPayPartnerService } from './wechat-pay-partner.service';
 
 @Controller('wechat-pay')
 export class WechatPayController {
   private readonly logger = new Logger(WechatPayController.name);
 
-  constructor(private readonly wechatPayService: WechatPayService) {}
+  constructor(
+    private readonly wechatPayPartnerService: WechatPayPartnerService,
+  ) {}
 
   /**
    * 微信支付回调接口
@@ -40,7 +40,7 @@ export class WechatPayController {
     });
 
     try {
-      const result = await this.wechatPayService.handlePaymentNotify(
+      const result = await this.wechatPayPartnerService.handlePaymentNotify(
         headers,
         bodyString,
       );
