@@ -165,7 +165,6 @@ export class WechatPayPartnerService {
     spMchId: string;
     spAppId: string;
     notifyUrl: string;
-    publicKeyId: string;
     certificate: string;
   };
 
@@ -180,7 +179,6 @@ export class WechatPayPartnerService {
       spMchId: this.configService.get('WECHAT_PAY_SP_MCHID') || '',
       spAppId: this.configService.get('WECHAT_APP_ID') || '',
       notifyUrl: this.configService.get('WECHAT_PAY_NOTIFY_URL') || '',
-      publicKeyId: this.configService.get('WECHAT_PAY_SP_PUBLIC_KEY_ID') || '',
       certificate: this.configService.get('WECHAT_PAY_SP_CERTIFICATE') || '',
     };
   }
