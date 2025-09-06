@@ -193,56 +193,6 @@ export class WechatPayPartnerService {
       notifyUrl: this.configService.get('WECHAT_PAY_NOTIFY_URL') || '',
       publicKeyId: this.configService.get('WECHAT_PAY_SP_PUBLIC_KEY_ID') || '',
     };
-
-    this.validateConfig();
-  }
-
-  private validateConfig() {
-    const requiredFields = ['key', 'privateKey', 'spMchId', 'spAppId'];
-    const missingFields = requiredFields.filter((field) => !this.config[field]);
-
-    if (missingFields.length > 0) {
-      const error = `微信服务商支付配置缺失: ${missingFields.join(', ')}`;
-      this.logger.error(error);
-      throw new Error(error);
-    }
-
-    // 验证私钥格式
-    try {
-      if (this.config.privateKey) {
-        crypto
-          .createSign('RSA-SHA256')
-          .update('test')
-          .sign(this.config.privateKey, 'base64');
-      }
-    } catch (error) {
-      this.logger.error(`微信支付私钥格式错误`, { error });
-      throw new Error('微信支付私钥格式错误');
-    }
-
-    // 验证商户证书格式
-    try {
-      if (this.config.publicKey) {
-        const certificate = x509.Certificate.fromPEM(
-          Buffer.from(this.config.publicKey),
-        );
-        this.logger.log('商户证书信息', {
-          serialNumber: certificate.serialNumber,
-          subject: certificate.subject,
-          issuer: certificate.issuer,
-        });
-      }
-    } catch (error) {
-      this.logger.warn('商户公钥证书格式可能有问题', { error: error.message });
-    }
-
-    this.logger.log('微信服务商支付配置验证通过', {
-      spMchId: this.config.spMchId,
-      spAppId: this.config.spAppId,
-      hasPrivateKey: !!this.config.privateKey,
-      hasPublicKey: !!this.config.publicKey,
-      hasKey: !!this.config.key,
-    });
   }
 
   async initialize() {
