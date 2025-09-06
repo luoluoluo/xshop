@@ -306,6 +306,21 @@ export class CommonOrderService {
       if (!affiliate?.wechatOAuth?.openId) {
         throw new Error('推广者的微信未绑定，无法进行分账');
       }
+      // 先添加接收方
+      try {
+        await this.wechatPayPartnerService.profitsharingAddReceivers({
+          sub_mchid: order.wechatMerchantId,
+          type: 'PERSONAL_OPENID',
+          relation_type: 'STAFF',
+          account: affiliate.wechatOAuth.openId,
+          name: affiliate.name,
+        });
+      } catch (error) {
+        this.logger.error('添加接收方失败', {
+          error,
+          orderId,
+        });
+      }
       const partnerProfitSharingParams: PartnerProfitsharingCreateOrdersRequest =
         {
           sub_mchid: order.wechatMerchantId,
