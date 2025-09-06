@@ -313,7 +313,6 @@ export class CommonOrderService {
           type: 'PERSONAL_OPENID',
           relation_type: 'STAFF',
           account: affiliate.wechatOAuth.openId,
-          name: affiliate.name,
         });
       } catch (error) {
         this.logger.error('添加接收方失败', {
