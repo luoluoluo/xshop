@@ -79,6 +79,7 @@ export interface PartnerProfitsharingReceiver {
 
 export interface PartnerProfitsharingAddReceiversRequest
   extends PartnerProfitsharingReceiver {
+  appid?: string;
   sub_mchid: string;
   sub_appid?: string;
 }
@@ -349,6 +350,7 @@ export class WechatPayPartnerService {
   async profitsharingAddReceivers(
     params: PartnerProfitsharingAddReceiversRequest,
   ) {
+    params.appid = params.appid || this.config.spAppId;
     const result = await this.request<ProfitsharingAddReceiversResponse>(
       profitsharingAddReceiversUrl,
       {
