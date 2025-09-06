@@ -1,3 +1,4 @@
+import * as x509 from '@fidm/x509';
 import { Logger, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -154,6 +155,7 @@ export interface PartnerWechatPayTransactionResult {
 @Injectable()
 export class WechatPayPartnerService {
   private readonly logger = new Logger(WechatPayPartnerService.name);
+  private certificateCache = new Map<string, string>();
   private config: {
     key: string;
     privateKey: string;
@@ -162,6 +164,7 @@ export class WechatPayPartnerService {
     spAppId: string;
     notifyUrl: string;
     publicKeyId: string;
+    certificate: string;
   };
 
   constructor(
@@ -176,6 +179,7 @@ export class WechatPayPartnerService {
       spAppId: this.configService.get('WECHAT_APP_ID') || '',
       notifyUrl: this.configService.get('WECHAT_PAY_NOTIFY_URL') || '',
       publicKeyId: this.configService.get('WECHAT_PAY_SP_PUBLIC_KEY_ID') || '',
+      certificate: this.configService.get('WECHAT_PAY_SP_CERTIFICATE') || '',
     };
   }
 
@@ -216,13 +220,13 @@ export class WechatPayPartnerService {
       .sign(this.config.privateKey, 'base64');
   };
 
-  // private getSN = (): string => {
-  //   if (!this.config.publicKey) throw new Error('缺少公钥');
-  //   const certificate = x509.Certificate.fromPEM(
-  //     Buffer.from(this.config.publicKey),
-  //   );
-  //   return certificate.serialNumber;
-  // };
+  private getSN = (): string => {
+    if (!this.config.certificate) throw new Error('缺少公钥');
+    const certificate = x509.Certificate.fromPEM(
+      Buffer.from(this.config.certificate),
+    );
+    return certificate.serialNumber;
+  };
 
   private request = async <T>(url: string, init?: RequestInit) => {
     const method = init?.method || 'GET';
@@ -234,7 +238,8 @@ export class WechatPayPartnerService {
     this.logger.log('签名字符串', { str, method, url });
 
     const signature = this.sha256WithRsa(str);
-    const authorization = `${authType} mchid="${this.config.spMchId}",nonce_str="${nonceStr}",timestamp="${timestamp}",serial_no="${this.config.publicKeyId}",signature="${signature}"`;
+    const sn = this.getSN();
+    const authorization = `${authType} mchid="${this.config.spMchId}",nonce_str="${nonceStr}",timestamp="${timestamp}",serial_no="${sn}",signature="${signature}"`;
 
     const headers = {
       Authorization: authorization,
@@ -252,7 +257,7 @@ export class WechatPayPartnerService {
         method,
         status: response.status,
         spMchId: this.config.spMchId,
-        serialNo: this.config.publicKeyId,
+        serialNo: sn,
       });
 
       if (!response.ok) {
@@ -278,7 +283,6 @@ export class WechatPayPartnerService {
         url,
         method,
         error: error.message,
-        authorization,
         spMchId: this.config.spMchId,
       });
       throw error;
@@ -349,7 +353,7 @@ export class WechatPayPartnerService {
       {
         method: 'POST',
         body: JSON.stringify(params),
-        headers: { 'Wechatpay-Serial': this.config.publicKeyId },
+        headers: { 'Wechatpay-Serial': this.getSN() },
       },
     );
 
@@ -370,7 +374,7 @@ export class WechatPayPartnerService {
       {
         method: 'POST',
         body: JSON.stringify(params),
-        headers: { 'Wechatpay-Serial': this.config.publicKeyId },
+        headers: { 'Wechatpay-Serial': this.getSN() },
       },
     );
 
@@ -465,13 +469,10 @@ export class WechatPayPartnerService {
     serial: string;
   }) {
     const { timestamp, nonce, body, signature } = params;
-    // const publicKey = await this.getCertificate(serial);
-    // if (!publicKey) {
-    //   throw new Error('平台证书序列号不相符，未找到平台序列号');
-    // }
+
     const verify = crypto.createVerify('RSA-SHA256');
     verify.update(`${timestamp}\n${nonce}\n${body}\n`);
-    return verify.verify(this.config.publicKey, signature, 'base64');
+    return verify.verify(this.config.privateKey, signature, 'base64');
   }
 
   private processPaymentSuccess(data: PartnerWechatPayTransactionResult) {
