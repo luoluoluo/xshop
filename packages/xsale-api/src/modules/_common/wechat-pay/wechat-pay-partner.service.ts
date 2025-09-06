@@ -91,6 +91,7 @@ export interface ProfitsharingAddReceiversResponse {
 
 // 服务商支付的分账订单
 export interface PartnerProfitsharingCreateOrdersRequest {
+  appid: string;
   sub_mchid: string;
   transaction_id: string;
   out_order_no: string;
@@ -369,6 +370,7 @@ export class WechatPayPartnerService {
   async profitsharingCreateOrders(
     params: PartnerProfitsharingCreateOrdersRequest,
   ) {
+    params.appid = params.appid || this.config.spAppId;
     const result = await this.request<ProfitsharingAddReceiversResponse>(
       profitsharingCreateOrdersUrl,
       {
