@@ -472,7 +472,7 @@ export class WechatPayPartnerService {
 
     const verify = crypto.createVerify('RSA-SHA256');
     verify.update(`${timestamp}\n${nonce}\n${body}\n`);
-    return verify.verify(this.config.privateKey, signature, 'base64');
+    return verify.verify(this.config.publicKey, signature, 'base64');
   }
 
   private processPaymentSuccess(data: PartnerWechatPayTransactionResult) {
