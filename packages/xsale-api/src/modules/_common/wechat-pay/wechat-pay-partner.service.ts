@@ -360,7 +360,9 @@ export class WechatPayPartnerService {
     params.sp_appid = params.sp_appid || this.config.spAppId;
     params.sp_mchid = params.sp_mchid || this.config.spMchId;
     if (!params.notify_url) params.notify_url = this.config.notifyUrl;
-    if (!params.sub_appid) params.sub_appid = this.config.spAppId;
+    if (!params.sp_appid) {
+      params.sub_appid = params.sub_appid || this.config.spAppId;
+    }
 
     const result = await this.request<TransactionResponse>(
       transactionsJsapiUrl,
