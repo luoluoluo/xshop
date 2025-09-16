@@ -1,0 +1,435 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Role {
+  id: ID!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  permissions: [String!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type User {
+  id: ID!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  email: String!
+  roles: [Role!]
+  phone: String
+}
+
+type UserPagination {
+  data: [User!]!
+  total: Int!
+}
+
+type AuthToken {
+  token: String!
+  user: User!
+  expiresIn: Float!
+}
+
+type RolePagination {
+  data: [Role!]!
+  total: Int!
+}
+
+type Permission {
+  resource: String!
+  action: String!
+  value: String!
+}
+
+type ProductCategory {
+  id: ID!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  parentId: String
+  parent: ProductCategory
+  name: String!
+  image: String
+  sort: Float!
+}
+
+type ProductOption {
+  id: ID!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  product: Product!
+  name: String!
+  values: [String!]!
+}
+
+type ProductVariant {
+  id: ID!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  product: Product!
+  code: String
+  options: [String!]!
+  price: Float!
+  stock: Float!
+  sort: Float!
+}
+
+type ProductCollection {
+  id: ID!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  image: String
+  name: String!
+  title: String!
+  description: String!
+  sort: Float!
+  products: [Product!]
+}
+
+type Product {
+  id: ID!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  categoryId: String
+  category: ProductCategory
+  title: String!
+  description: String!
+  content: String!
+  image: String!
+  images: [String!]
+  sort: Float!
+  options: [ProductOption!]
+  variants: [ProductVariant!]
+  collections: [ProductCollection!]
+}
+
+type ProductPagination {
+  data: [Product!]!
+  total: Int!
+}
+
+type ProductCategoryPagination {
+  data: [ProductCategory!]!
+  total: Int!
+}
+
+type ProductCollectionPagination {
+  data: [ProductCollection!]!
+  total: Int!
+}
+
+type SignedFileUrl {
+  uploadUrl: String!
+  downloadUrl: String!
+}
+
+type ArticleCategory {
+  id: ID!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  parentId: String
+  parent: ArticleCategory
+  name: String!
+  sort: Float!
+}
+
+type Article {
+  id: ID!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  description: String!
+  content: String!
+  image: String!
+  sort: Float!
+  categoryId: String
+  category: ArticleCategory
+}
+
+type ArticlePagination {
+  data: [Article!]!
+  total: Int!
+}
+
+type ArticleCategoryPagination {
+  data: [ArticleCategory!]!
+  total: Int!
+}
+
+type Menu {
+  id: ID!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  parentId: String
+  parent: Menu
+  type: String!
+  title: String!
+  link: String!
+  sort: Float!
+}
+
+type MenuPagination {
+  data: [Menu!]!
+  total: Int!
+}
+
+type Query {
+  menus(skip: Int, take: Int, where: MenuWhereInput! = {}): MenuPagination!
+  menu(id: ID!): Menu!
+  articles(skip: Int, take: Int): ArticlePagination!
+  article(id: ID!): Article!
+  articleCategories(skip: Int, take: Int, where: ArticleCategoryWhereInput! = {}): ArticleCategoryPagination!
+  articleCategory(id: ID!): ArticleCategory!
+  signedFileUrl(filename: String!): SignedFileUrl!
+  products(skip: Int, take: Int, where: ProductWhereInput! = {}): ProductPagination!
+  product(id: ID!): Product!
+  productCategories(skip: Int, take: Int, where: ProductCategoryWhereInput! = {}): ProductCategoryPagination!
+  productCategory(id: ID!): ProductCategory!
+  productCollections(skip: Int, take: Int, where: ProductCollectionWhereInput! = {}): ProductCollectionPagination!
+  productCollection(id: ID!): ProductCollection!
+  permissions: [Permission!]!
+  roles(skip: Int, take: Int, where: RoleWhereInput! = {}): RolePagination!
+  role(id: ID!): Role!
+  me: User!
+  users(skip: Int, take: Int, where: UserWhereInput! = {}): UserPagination!
+  user(id: ID!): User!
+}
+
+input MenuWhereInput {
+  id: String
+  type: String
+  parentId: String
+}
+
+input ArticleCategoryWhereInput {
+  id: String
+  name: String
+  parentId: String
+}
+
+input ProductWhereInput {
+  id: String
+  title: String
+  categoryId: String
+}
+
+input ProductCategoryWhereInput {
+  id: String
+  name: String
+  parentId: String
+}
+
+input ProductCollectionWhereInput {
+  id: String
+  name: String
+}
+
+input RoleWhereInput {
+  id: String
+}
+
+input UserWhereInput {
+  id: String
+  email: String
+}
+
+type Mutation {
+  createMenu(data: CreateMenuInput!): Menu!
+  updateMenu(id: ID!, data: UpdateMenuInput!): Menu!
+  deleteMenu(id: ID!): Boolean!
+  createArticle(data: CreateArticleInput!): Article!
+  updateArticle(id: ID!, data: UpdateArticleInput!): Article!
+  deleteArticle(id: ID!): Boolean!
+  createArticleCategory(data: CreateArticleCategoryInput!): ArticleCategory!
+  updateArticleCategory(id: ID!, data: UpdateArticleCategoryInput!): ArticleCategory!
+  deleteArticleCategory(id: ID!): Boolean!
+  createProduct(data: CreateProductInput!): Product!
+  updateProduct(id: ID!, data: UpdateProductInput!): Product!
+  deleteProduct(id: ID!): Boolean!
+  createProductCategory(data: CreateProductCategoryInput!): ProductCategory!
+  updateProductCategory(id: ID!, data: UpdateProductCategoryInput!): ProductCategory!
+  deleteProductCategory(id: ID!): Boolean!
+  createProductCollection(data: CreateProductCollectionInput!): ProductCollection!
+  updateProductCollection(id: ID!, data: UpdateProductCollectionInput!): ProductCollection!
+  deleteProductCollection(id: ID!): Boolean!
+  createRole(data: CreateRoleInput!): Role!
+  updateRole(id: ID!, data: UpdateRoleInput!): Role!
+  deleteRole(id: ID!): Boolean!
+  login(data: LoginInput!): AuthToken!
+  createUser(data: CreateUserInput!): User!
+  updateUser(id: ID!, data: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
+}
+
+input CreateMenuInput {
+  type: String!
+  parentId: String
+  title: String
+  link: String
+  sort: Int!
+  isActive: Boolean
+}
+
+input UpdateMenuInput {
+  type: String!
+  parentId: String
+  title: String
+  link: String
+  sort: Int
+  isActive: Boolean
+}
+
+input CreateArticleInput {
+  title: String!
+  description: String!
+  content: String!
+  image: String!
+  categoryId: String!
+  isActive: Boolean
+  sort: Int!
+}
+
+input UpdateArticleInput {
+  title: String
+  description: String
+  content: String
+  image: String
+  categoryId: String!
+  isActive: Boolean
+  sort: Int!
+}
+
+input CreateArticleCategoryInput {
+  parentId: String
+  name: String!
+  sort: Int!
+  isActive: Boolean
+}
+
+input UpdateArticleCategoryInput {
+  parentId: String
+  name: String
+  sort: Int
+  isActive: Boolean
+}
+
+input CreateProductInput {
+  title: String!
+  description: String!
+  content: String!
+  image: String!
+  images: [String!]
+  isActive: Boolean
+  categoryId: String
+  options: [ProductOptionInput!]
+  variants: [ProductVariantInput!]
+  sort: Int!
+}
+
+input ProductOptionInput {
+  name: String!
+  values: [String!]!
+}
+
+input ProductVariantInput {
+  options: [String!]!
+  price: Float!
+  stock: Float!
+  code: String
+}
+
+input UpdateProductInput {
+  title: String
+  description: String
+  content: String!
+  image: String
+  images: [String!]
+  price: Float
+  categoryId: String
+  options: [ProductOptionInput!]
+  variants: [ProductVariantInput!]
+  isActive: Boolean
+  sort: Int!
+}
+
+input CreateProductCategoryInput {
+  parentId: String
+  name: String!
+  image: String!
+  sort: Int!
+  isActive: Boolean
+}
+
+input UpdateProductCategoryInput {
+  parentId: String
+  name: String
+  image: String
+  sort: Int
+  isActive: Boolean
+}
+
+input CreateProductCollectionInput {
+  name: String!
+  title: String!
+  description: String!
+  image: String!
+  sort: Int!
+  isActive: Boolean
+}
+
+input UpdateProductCollectionInput {
+  name: String
+  title: String!
+  description: String!
+  image: String
+  sort: Int
+  isActive: Boolean
+}
+
+input CreateRoleInput {
+  name: String!
+  permissions: [String!]
+  isActive: Boolean = true
+}
+
+input UpdateRoleInput {
+  name: String
+  permissions: [String!]
+  isActive: Boolean
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String!
+  phone: String
+  roleIds: [String!]
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  password: String
+  roleIds: [String!]
+  isActive: Boolean
+}
