@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/auth";
 import { ConfigProvider } from "antd";
 import "antd/dist/reset.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,13 +49,27 @@ export default function RootLayout({
         {/* <script src="/scripts/baidu.js" /> */}
         <Analytics />
       </head>
-      <body className={cn(inter.className)}>
-        <AntdRegistry>
-          <ConfigProvider>
-            <AuthProvider>{children}</AuthProvider>
-          </ConfigProvider>
-        </AntdRegistry>
-        <Toaster />
+      <body className={cn(inter.className, "green")}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AntdRegistry>
+            <ConfigProvider
+              theme={{
+                token: {
+                  colorPrimary: "#07C160",
+                  colorSuccess: "#07C160",
+                },
+              }}
+            >
+              <AuthProvider>{children}</AuthProvider>
+            </ConfigProvider>
+          </AntdRegistry>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

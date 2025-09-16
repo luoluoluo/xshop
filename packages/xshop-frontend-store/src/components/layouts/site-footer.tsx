@@ -32,7 +32,7 @@ export function SiteFooter({ className }: { className?: string }) {
                 width="24"
                 className="rounded object-cover w-6 h-6"
               ></Image>
-              <span className="whitespace-nowrap text-primary font-bold max-w-[50vw] lg:max-w-xs overflow-hidden text-ellipsis">
+              <span className="whitespace-nowrap font-bold max-w-[50vw] lg:max-w-xs overflow-hidden text-ellipsis">
                 {setting.name}
               </span>
               <span className="sr-only">Home</span>

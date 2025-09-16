@@ -18,10 +18,7 @@ export const Logo = ({
     <Link
       prefetch={false}
       href={link || "/"}
-      className={cn(
-        "flex items-center flex-nowrap space-x-2 text-primary",
-        className,
-      )}
+      className={cn("flex items-center flex-nowrap space-x-2", className)}
     >
       <img
         src={logo || "/images/logo.png"}

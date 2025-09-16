@@ -57,7 +57,9 @@ const Dashboard = () => {
               </div>
             ) : (
               <div className="flex gap-1">
-                <div>{link}</div>
+                <a href={link} target="_blank">
+                  {link}
+                </a>
                 <Clipboard
                   value={link}
                   onSuccess={() => {
