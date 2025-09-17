@@ -176,22 +176,6 @@ export const Contact = ({
                 </div>
               </Clipboard>
             ) : null}
-            {user?.email ? (
-              <Clipboard
-                value={user?.email}
-                onSuccess={() => {
-                  toast({ title: "邮箱复制成功" });
-                }}
-              >
-                <div className="flex items-baseline">
-                  <Icons.email className="w-4 h-4" />{" "}
-                  <div className="ml-1 text-left">{user?.email}</div>
-                  <div className="px-1 py-[1px] text-xs bg-primary text-white rounded ml-2 h-auto">
-                    复制
-                  </div>
-                </div>
-              </Clipboard>
-            ) : null}
             {user?.wechatId ? (
               <Clipboard
                 value={user?.wechatId}
@@ -208,6 +192,23 @@ export const Contact = ({
                 </div>
               </Clipboard>
             ) : null}
+            {user?.email ? (
+              <Clipboard
+                value={user?.email}
+                onSuccess={() => {
+                  toast({ title: "邮箱复制成功" });
+                }}
+              >
+                <div className="flex items-baseline">
+                  <Icons.email className="w-4 h-4" />{" "}
+                  <div className="ml-1 text-left">{user?.email}</div>
+                  <div className="px-1 py-[1px] text-xs bg-primary text-white rounded ml-2 h-auto">
+                    复制
+                  </div>
+                </div>
+              </Clipboard>
+            ) : null}
+
             {user?.slug ? (
               <Clipboard
                 value={`https://xltzx.com/${user?.slug}`}
@@ -217,7 +218,7 @@ export const Contact = ({
               >
                 <div className="flex items-baseline">
                   <Icons.externalLink className="w-4 h-4" />{" "}
-                  <div className="ml-1 text-left">{user?.slug}</div>
+                  <div className="ml-1 text-left">{`https://xltzx.com/${user?.slug}`}</div>
                   <div className="px-1 py-[1px] text-xs bg-primary text-white rounded ml-2 h-auto">
                     复制
                   </div>
