@@ -19,6 +19,24 @@ import {
 import { WechatService } from '@/modules/_common/wechat/wechat.service';
 import { WechatMerchantStatus } from '@/types/wechat-merchant-status';
 
+const DISALLOWED_SLUGS = [
+  'admin',
+  'creator',
+  'store',
+  'user',
+  'withdrawal',
+  'product',
+  'order',
+  'link',
+  'setting',
+  'login',
+  'register',
+  'admin-api',
+  'creator-api',
+  'store-api',
+  'creator-api',
+];
+
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
@@ -115,6 +133,9 @@ export class UserService {
       throw new NotFoundException(`用戶ID ${id} 未找到`);
     }
     if (updateUserDto.slug && updateUserDto.slug !== user.slug) {
+      if (DISALLOWED_SLUGS.includes(updateUserDto.slug)) {
+        throw new ConflictException('主页链接重复，请修改主页链接');
+      }
       const existingUser = await this.userRepository.findOne({
         where: { slug: updateUserDto.slug },
       });
