@@ -20,6 +20,7 @@ import { AmountFormat } from "../amount";
 import { toast } from "../ui/use-toast";
 import { useAuth } from "@/contexts/auth";
 import { BuyNumber } from "./buy-number";
+import { updateMe } from "@/requests/auth.client";
 
 const FormSchema = z.object({
   phone: z.string().min(1, {
@@ -73,6 +74,14 @@ export function CheckoutSheet({
         affiliateId: getAffiliateId(),
         quantity,
       },
+    });
+    updateMe({
+      data: {
+        name: data.name,
+        phone: data.phone,
+      },
+    }).catch((e) => {
+      console.error(e);
     });
     setLoading(false);
     if (res.errors) {

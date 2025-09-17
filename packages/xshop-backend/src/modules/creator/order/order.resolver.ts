@@ -74,4 +74,19 @@ export class OrderResolver {
       reason,
     });
   }
+
+  @Mutation(() => Order)
+  @UseGuards(GqlAuthGuard)
+  async completeOrder(
+    @Context() ctx: StoreContext,
+    @Args('id') id: string,
+  ): Promise<Order> {
+    return this.commonOrderService.complete(id, {
+      customValidation: (order) => {
+        if (ctx.req.user?.id && order.merchantId !== ctx.req.user?.id) {
+          throw new Error(`Order ${id} not found`);
+        }
+      },
+    });
+  }
 }
