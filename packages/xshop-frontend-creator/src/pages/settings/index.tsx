@@ -12,9 +12,7 @@ import {
   Breadcrumb,
 } from "antd";
 import {
-  EnvironmentOutlined,
   ShopOutlined,
-  LockOutlined,
   BankOutlined,
   PhoneOutlined,
   MailOutlined,
@@ -359,15 +357,7 @@ export default function Setting() {
 
   const onFinish = (values: UpdateMeInput) => {
     setLoading(true);
-
-    // Remove undefined values
-    const updateData = Object.fromEntries(
-      Object.entries(values).filter(
-        ([_, value]) => value !== undefined && value !== "",
-      ),
-    );
-
-    updateMe({ data: updateData })
+    updateMe({ data: values })
       .then((res) => {
         if (res.errors) {
           console.error("Update error:", res.errors);
