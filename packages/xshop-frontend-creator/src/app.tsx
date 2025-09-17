@@ -3,8 +3,8 @@ import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
 import {
   ErrorComponent,
-  ThemedLayoutV2,
-  ThemedSiderV2,
+  ThemedLayout,
+  ThemedSider,
   useNotificationProvider,
 } from "@refinedev/antd";
 import "@refinedev/antd/dist/reset.css";
@@ -14,10 +14,10 @@ import routerBindings, {
   DocumentTitleHandler,
   NavigateToResource,
   UnsavedChangesNotifier,
-} from "@refinedev/react-router-v6";
+} from "@refinedev/react-router";
 import { ConfigProvider as AntdConfigProvider, App as AntdApp } from "antd";
 import zhCN from "antd/es/locale/zh_CN"; // 中文
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router";
 import { authProvider, TOKEN_KEY } from "./providers/auth";
 import { AppIcon } from "./components/app-icon";
 import { Header } from "./components/header";
@@ -30,7 +30,7 @@ import { dataProvider } from "./providers/data";
 import type { I18nProvider } from "@refinedev/core";
 import { useTranslation } from "react-i18next";
 import { Title } from "./components/title";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { getResources } from "./config/app";
 
 import Cookies from "js-cookie";
@@ -106,10 +106,10 @@ function App() {
                         key="authenticated-inner"
                         fallback={<CatchAllNavigate to="/login" />}
                       >
-                        <ThemedLayoutV2
+                        <ThemedLayout
                           Header={Header}
-                          Sider={(props) => (
-                            <ThemedSiderV2 {...props} Title={Title} fixed />
+                          Sider={(props: any) => (
+                            <ThemedSider {...props} Title={Title} fixed />
                           )}
                         >
                           <CanAccess
@@ -119,7 +119,7 @@ function App() {
                               <Outlet />
                             </div>
                           </CanAccess>
-                        </ThemedLayoutV2>
+                        </ThemedLayout>
                       </Authenticated>
                     }
                   >

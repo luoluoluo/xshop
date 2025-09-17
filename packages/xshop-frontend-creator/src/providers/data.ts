@@ -11,7 +11,7 @@ export const dataProvider = (): Required<DataProvider> => {
         data: [],
         total: 0,
       };
-      const { current = 1, pageSize = 10, mode } = pagination ?? {};
+      const { currentPage = 1, pageSize = 10, mode } = pagination ?? {};
       if (!meta?.gqlQuery) {
         return list;
       }
@@ -22,7 +22,7 @@ export const dataProvider = (): Required<DataProvider> => {
       };
       if (mode === "server") {
         variables.take = pageSize;
-        variables.skip = (current - 1) * pageSize;
+        variables.skip = (currentPage - 1) * pageSize;
       }
       const response = await request<BaseRecord>({
         query: meta.gqlQuery,

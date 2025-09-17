@@ -7,12 +7,12 @@ import { ROLE_QUERY } from "../../requests/role.graphql";
 const { Title } = Typography;
 
 export const RoleShow = () => {
-  const { queryResult } = useShow({
+  const { query, result } = useShow({
     meta: {
       gqlQuery: parse(ROLE_QUERY),
     },
   });
-  const { data, isLoading } = queryResult;
+  const { data, isLoading } = query;
 
   const record = data?.data;
 

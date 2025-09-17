@@ -1,4 +1,4 @@
-import type { RefineThemedLayoutV2HeaderProps } from "@refinedev/antd";
+import type { RefineThemedLayoutHeaderProps } from "@refinedev/antd";
 import { useGetIdentity } from "@refinedev/core";
 import { Layout as AntdLayout, Space, Switch, theme, Typography } from "antd";
 import React, { useContext } from "react";
@@ -14,7 +14,7 @@ import { User } from "../../generated/graphql";
 const { Text } = Typography;
 const { useToken } = theme;
 
-export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
+export const Header: React.FC<RefineThemedLayoutHeaderProps> = ({
   sticky = true,
 }) => {
   const { token } = useToken();

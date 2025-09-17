@@ -30,7 +30,7 @@ import {
   User,
   WechatMerchantStatus,
 } from "../../generated/graphql";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { useGetIdentity } from "@refinedev/core";
 
 const BasicSetting = ({

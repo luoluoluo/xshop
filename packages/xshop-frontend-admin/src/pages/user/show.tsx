@@ -7,12 +7,12 @@ import { USER_QUERY } from "../../requests/user.graphql";
 const { Title } = Typography;
 
 export const UserShow = () => {
-  const { queryResult } = useShow({
+  const { query, result } = useShow({
     meta: {
       gqlQuery: parse(USER_QUERY),
     },
   });
-  const { data, isLoading } = queryResult;
+  const { data, isLoading } = query;
 
   const record = data?.data;
 

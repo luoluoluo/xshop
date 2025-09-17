@@ -5,7 +5,7 @@ import * as Icons from "@ant-design/icons";
 import { Clipboard } from "../../components/clipboard";
 import { User, WechatMerchantStatus } from "../../generated/graphql";
 import { useGetIdentity } from "@refinedev/core";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 // 导航配置
 const navigationItems = [
