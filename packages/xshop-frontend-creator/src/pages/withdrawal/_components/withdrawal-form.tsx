@@ -7,7 +7,7 @@ import {
   Card,
   Typography,
 } from "antd";
-import { CreateWithdrawalInput } from "../../../generated/graphql";
+import { CreateWithdrawalInput, User } from "../../../generated/graphql";
 import { useTranslate, useGetIdentity } from "@refinedev/core";
 
 const { TextArea } = Input;
@@ -15,7 +15,7 @@ const { Title, Text } = Typography;
 
 export const WithdrawalForm = ({ formProps }: { formProps: FormProps }) => {
   const t = useTranslate();
-  const { data: me } = useGetIdentity();
+  const { data: me } = useGetIdentity<User>();
 
   const onFinish = (values: CreateWithdrawalInput) => {
     values.amount = Number(values?.amount || 0);
@@ -57,16 +57,6 @@ export const WithdrawalForm = ({ formProps }: { formProps: FormProps }) => {
             rules={[
               { required: true, message: "请输入提现金额" },
               { type: "number", min: 1, message: "提现金额必须大于0" },
-              {
-                validator: (_, value) => {
-                  if (value && me?.balance && value > me.balance) {
-                    return Promise.reject(
-                      new Error("提现金额不能超过当前余额"),
-                    );
-                  }
-                  return Promise.resolve();
-                },
-              },
             ]}
           >
             <InputNumber

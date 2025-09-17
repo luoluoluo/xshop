@@ -25,8 +25,6 @@ import { ColorModeContextProvider } from "./contexts/color-mode";
 
 import { Login } from "./pages/login";
 // import { Register } from "./pages/register";
-import { UserCreate, UserEdit, UserList, UserShow } from "./pages/user";
-import { RoleCreate, RoleEdit, RoleList, RoleShow } from "./pages/role";
 
 import { dataProvider } from "./providers/data";
 import type { I18nProvider } from "@refinedev/core";
