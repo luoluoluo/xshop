@@ -9,7 +9,6 @@ import { useAuth } from "@/contexts/auth";
 import { OrderStatus } from "@/generated/graphql";
 import { createOrderPayment, getOrderStatus } from "@/requests/order.client";
 import { getChannel } from "@/utils/index.client";
-import { useSearchParams } from "next/navigation";
 import QRCode from "qrcode";
 import { useCallback, useEffect, useState } from "react";
 
@@ -23,9 +22,6 @@ export const WechatPay = ({
   amount: string;
 }) => {
   const { me } = useAuth();
-  const searchParams = useSearchParams();
-  const state = searchParams.get("state");
-  const code = searchParams.get("code");
   const [payQrcode, setPayQrcode] = useState<string>();
   const [orderStatus, setOrderStatus] = useState<OrderStatus>();
 

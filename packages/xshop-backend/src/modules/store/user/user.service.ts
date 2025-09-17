@@ -16,7 +16,6 @@ import {
   UserWhereInput,
 } from './user.dto';
 import { WechatService } from '@/modules/_common/wechat/wechat.service';
-import { WechatMerchantStatus } from '@/types/wechat-merchant-status';
 
 @Injectable()
 export class UserService {

@@ -59,7 +59,7 @@ export async function middleware(request: Request) {
         getLogger().error(res.errors, "登录错误");
         return undefined;
       }
-      return token;
+      return res.data?.wechatLogin?.token;
     });
     if (token) {
       const isTokenValid = await checkToken(token);
