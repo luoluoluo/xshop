@@ -9,12 +9,6 @@ export const ME_QUERY = /* GraphQL */ `
       email
       wechatId
       description
-      idCardFrontPhoto
-      idCardBackPhoto
-      businessLicensePhoto
-      bankAccountName
-      bankAccountNumber
-      wechatMerchantStatus
       createdAt
       avatar
       backgroundImage
@@ -22,14 +16,10 @@ export const ME_QUERY = /* GraphQL */ `
   }
 `;
 
-export const CREATE_USER_WECHAT_MERCHANT_MUTATION = /* GraphQL */ `
-  mutation createUserWechatMerchant($data: CreateUserWechatMerchantInput!) {
-    createUserWechatMerchant(data: $data) {
+export const CHECK_TOKEN_QUERY = /* GraphQL */ `
+  query me {
+    me {
       id
-      wechatUserStatus
-      wechatUserSignUrl
-      wechatUserNote
-      wechatUserId
     }
   }
 `;

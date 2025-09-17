@@ -39,12 +39,12 @@ export const OrderItem = ({
   order,
   link,
   className,
-  affiliate,
+  isAffiliate,
 }: {
   order: Order;
   link?: boolean;
   className?: string;
-  affiliate?: boolean;
+  isAffiliate?: boolean;
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState<"cancel" | "pay" | "refund">();
@@ -54,6 +54,15 @@ export const OrderItem = ({
       `/pay?orderId=${order.id}&title=${order.productTitle}&amount=${order.amount}`,
     );
   };
+
+  let linkUrl: string | undefined;
+
+  if (link) {
+    linkUrl = `/order/${order.id}`;
+    if (isAffiliate) {
+      linkUrl += `?isAffiliate=${isAffiliate}`;
+    }
+  }
 
   return (
     <>
@@ -74,11 +83,7 @@ export const OrderItem = ({
           <div>{getStatusText(order.status!)}</div>
         </div>
         <div className="mt-2 flex flex-col gap-1 p-2">
-          <CardMeta
-            name="编号"
-            value={order.id}
-            link={link ? `/order/${order.id}` : undefined}
-          ></CardMeta>
+          <CardMeta name="编号" value={order.id} link={linkUrl}></CardMeta>
           <CardMeta
             name="下单时间"
             value={dayjs(order.createdAt)
@@ -165,58 +170,60 @@ export const OrderItem = ({
               <AmountFormat size="sm" value={order.amount || 0} />
             </div> */}
 
-            {affiliate ? (
+            {isAffiliate ? (
               <div className="flex justify-between items-center">
                 <div className="font-bold">推广佣金</div>
                 <AmountFormat value={order.affiliateAmount || 0} />
               </div>
-            ) : null}
-            <div className="flex justify-between items-center ">
-              <div className="font-bold">合计</div>
-              <AmountFormat value={order.amount || 0} />
-            </div>
+            ) : (
+              <div className="flex justify-between items-center ">
+                <div className="font-bold">合计</div>
+                <AmountFormat value={order.amount || 0} />
+              </div>
+            )}
           </>
         </div>
-
-        <CardFooter
-          actions={[
-            ...(order.status === OrderStatus.Created
-              ? [
-                  <Button
-                    key="pay"
-                    size="sm"
-                    disabled={loading === "pay"}
-                    onClick={() => {
-                      if (loading === "pay") return;
-                      setLoading("pay");
-                      onPay();
-                      setLoading(undefined);
-                    }}
-                  >
-                    立即支付
-                  </Button>,
-                ]
-              : []),
-            ...([OrderStatus.Paid].includes(order.status!)
-              ? [
-                  <Button
-                    key="refund"
-                    size="sm"
-                    disabled={loading === "refund"}
-                    variant="destructive"
-                    onClick={() => {
-                      toast({
-                        title: "订单处理中，请联系商家申请退款",
-                        variant: "destructive",
-                      });
-                    }}
-                  >
-                    申请退款
-                  </Button>,
-                ]
-              : []),
-          ]}
-        ></CardFooter>
+        {!isAffiliate && (
+          <CardFooter
+            actions={[
+              ...(order.status === OrderStatus.Created
+                ? [
+                    <Button
+                      key="pay"
+                      size="sm"
+                      disabled={loading === "pay"}
+                      onClick={() => {
+                        if (loading === "pay") return;
+                        setLoading("pay");
+                        onPay();
+                        setLoading(undefined);
+                      }}
+                    >
+                      立即支付
+                    </Button>,
+                  ]
+                : []),
+              ...([OrderStatus.Paid].includes(order.status!)
+                ? [
+                    <Button
+                      key="refund"
+                      size="sm"
+                      disabled={loading === "refund"}
+                      variant="destructive"
+                      onClick={() => {
+                        toast({
+                          title: "订单处理中，请联系商家申请退款",
+                          variant: "destructive",
+                        });
+                      }}
+                    >
+                      申请退款
+                    </Button>,
+                  ]
+                : []),
+            ]}
+          ></CardFooter>
+        )}
       </div>
     </>
   );

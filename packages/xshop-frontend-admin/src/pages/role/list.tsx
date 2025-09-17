@@ -8,11 +8,11 @@ import {
 import { useTranslate, type BaseRecord } from "@refinedev/core";
 import { Space, Table, Tag } from "antd";
 import { parse } from "graphql";
-import { DELETE_ROLE_MUTATION, ROLES_QUERY } from "../../requests/role";
+import { DELETE_ROLE_MUTATION, ROLES_QUERY } from "../../requests/role.graphql";
 import { Permission } from "../../generated/graphql";
 import { useEffect, useState } from "react";
 import { request } from "../../utils/request";
-import { GET_PERMISSIONS_QUERY } from "../../requests/permission";
+import { GET_PERMISSIONS_QUERY } from "../../requests/permission.graphql";
 import dayjs from "dayjs";
 
 export const RoleList = () => {

@@ -4,10 +4,8 @@ import { AFFILIATE_ID_KEY, cn } from "@/utils";
 import { User } from "@/generated/graphql";
 import QRCode from "qrcode";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Clipboard } from "../clipboard";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
-import { toast } from "../ui/use-toast";
 import { useAuth } from "@/contexts/auth";
 import { ShareDialog } from "../share-dialog/share-dialog";
 

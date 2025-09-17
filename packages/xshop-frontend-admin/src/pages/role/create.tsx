@@ -1,6 +1,6 @@
 import { Create, useForm } from "@refinedev/antd";
 import { parse } from "graphql";
-import { CREATE_ROLE_MUTATION } from "../../requests/role";
+import { CREATE_ROLE_MUTATION } from "../../requests/role.graphql";
 import { RoleForm } from "./_components/role-form";
 
 export const RoleCreate = () => {

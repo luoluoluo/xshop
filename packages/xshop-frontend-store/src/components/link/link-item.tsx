@@ -62,7 +62,7 @@ export const LinkItem = ({ link }: { link: LinkType }) => {
           )}
         </div>
 
-        <div className="hidden lg:block opacity-0 absolute left-0 bottom-[4rem] w-full py-2 px-4 box-border transition-all duration-200 ease-in-out group-hover:opacity-100">
+        <div className="hidden lg:block opacity-0 absolute left-0 bottom-[1rem] w-full py-2 px-4 box-border transition-all duration-200 ease-in-out group-hover:opacity-100">
           <div className="flex justify-center items-center w-full h-[2rem] rounded shadow-sm border text-black bg-white active:bg-primary active:text-white active:border-primary hover:bg-primary hover:text-white hover:border-primary cursor-pointer active:scale-110 transition-all duration-200 ease-in-out text-xs">
             访问链接
           </div>

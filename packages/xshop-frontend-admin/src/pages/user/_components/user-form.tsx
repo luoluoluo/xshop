@@ -2,7 +2,7 @@ import { Form, FormProps, Input, Select, Switch } from "antd";
 import { Role, RolePagination } from "../../../generated/graphql";
 import { useEffect, useState } from "react";
 import { request } from "../../../utils/request";
-import { ROLES_QUERY } from "../../../requests/role";
+import { ROLES_QUERY } from "../../../requests/role.graphql";
 import { useTranslate } from "@refinedev/core";
 export const UserForm = ({ formProps }: { formProps: FormProps }) => {
   const t = useTranslate();

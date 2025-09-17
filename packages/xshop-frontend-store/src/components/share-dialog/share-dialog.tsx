@@ -165,11 +165,18 @@ export const ShareDialog = ({
               登录后，
             </a>
           ) : null}
-          通过您分享的链接产生的订单，您均可获得
+          <span>通过您分享的链接产生的订单，您均可获得</span>
           <span className="font-bold text-red-500 mx-1 text-base">
             {commission ? `¥${commission}` : "5%~30%"}
           </span>
-          的佣金，佣金将在订单完成后自动转入您的微信零钱。
+          <span>的佣金，佣金将在订单完成后自动转入您的微信零钱。</span>
+          <span>
+            去
+            <a href="/affiliate" className="text-blue-500 underline">
+              推广中心
+            </a>
+            查看我的推广数据。
+          </span>
         </div>
       </DialogContent>
     </Dialog>

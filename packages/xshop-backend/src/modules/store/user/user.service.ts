@@ -11,7 +11,6 @@ import { hash, compare } from 'bcrypt';
 import { User } from '@/entities/user.entity';
 import {
   CreateUserInput,
-  CreateUserWechatMerchantInput,
   UpdateMeInput,
   UserPagination,
   UserWhereInput,
@@ -176,24 +175,6 @@ export class UserService {
       user.wechatOpenId = wechatAccessToken.openid;
     }
 
-    await this.userRepository.save(user);
-    return this.findOne(id);
-  }
-
-  async createUserWechatMerchant(
-    id: string,
-    data: CreateUserWechatMerchantInput,
-  ): Promise<User> {
-    const user = await this.findOne(id);
-    if (!user) {
-      throw new NotFoundException(`用戶ID ${id} 未找到`);
-    }
-    user.wechatMerchantId = data.bankAccountNumber;
-    user.bankAccountNumber = data.bankAccountNumber;
-    user.businessLicensePhoto = data.businessLicensePhoto;
-    user.idCardFrontPhoto = data.idCardFrontPhoto;
-    user.idCardBackPhoto = data.idCardBackPhoto;
-    user.wechatMerchantStatus = WechatMerchantStatus.CREATED;
     await this.userRepository.save(user);
     return this.findOne(id);
   }

@@ -23,8 +23,6 @@ import { AppIcon } from "./components/app-icon";
 import { Header } from "./components/header";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 
-import { UpdatePassword } from "./pages/update-password";
-import { ForgotPassword } from "./pages/forgot-password";
 import { Login } from "./pages/login";
 // import { Register } from "./pages/register";
 import { UserCreate, UserEdit, UserList, UserShow } from "./pages/user";
@@ -40,6 +38,7 @@ import { Title } from "./components/title";
 import { getResources } from "./config/app";
 
 import { ArticleCreate, ArticleEdit, ArticleList } from "./pages/article";
+import { WithdrawalList } from "./pages/withdrawal";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -118,6 +117,10 @@ function App() {
                       <Route path=":id/edit" element={<ArticleEdit />} />
                     </Route>
 
+                    <Route path="/withdrawal">
+                      <Route index element={<WithdrawalList />} />
+                    </Route>
+
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
                   <Route
@@ -132,14 +135,6 @@ function App() {
                   >
                     <Route path="/login" element={<Login />} />
                     {/* <Route path="/register" element={<Register />} /> */}
-                    <Route
-                      path="/forgot-password"
-                      element={<ForgotPassword />}
-                    />
-                    <Route
-                      path="/update-password"
-                      element={<UpdatePassword />}
-                    />
                   </Route>
                 </Routes>
 

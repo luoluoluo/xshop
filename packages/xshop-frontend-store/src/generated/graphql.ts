@@ -40,15 +40,6 @@ export type AuthToken = {
   user: User;
 };
 
-export type CreateLinkInput = {
-  friendId?: InputMaybe<Scalars['String']['input']>;
-  logo?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  qrcode?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Scalars['Int']['input']>;
-  url?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type CreateOrderInput = {
   affiliateId?: InputMaybe<Scalars['String']['input']>;
   note?: InputMaybe<Scalars['String']['input']>;
@@ -61,31 +52,6 @@ export type CreateOrderInput = {
 export type CreateOrderPaymentInput = {
   openId: Scalars['String']['input'];
   orderId: Scalars['String']['input'];
-};
-
-export type CreateProductInput = {
-  commission: Scalars['Float']['input'];
-  description?: InputMaybe<Scalars['String']['input']>;
-  images: Array<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  price: Scalars['Float']['input'];
-  sort?: InputMaybe<Scalars['Int']['input']>;
-  stock: Scalars['Int']['input'];
-  title: Scalars['String']['input'];
-};
-
-export type CreateUserWechatMerchantInput = {
-  bankAccountNumber: Scalars['String']['input'];
-  businessLicensePhoto: Scalars['String']['input'];
-  idCardBackPhoto: Scalars['String']['input'];
-  idCardFrontPhoto: Scalars['String']['input'];
-};
-
-export type CreateWithdrawalInput = {
-  amount: Scalars['Float']['input'];
-  bankAccountName: Scalars['String']['input'];
-  bankAccountNumber: Scalars['String']['input'];
-  note?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Link = {
@@ -122,28 +88,15 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createLink: Link;
   createOrder: Order;
   createOrderPayment: Payment;
-  createProduct: Product;
-  createUserWechatMerchant: User;
-  createWithdrawal: Withdrawal;
-  deleteLink: Scalars['Boolean']['output'];
-  deleteProduct: Scalars['Boolean']['output'];
   login: AuthToken;
   refundOrder: Order;
   register: AuthToken;
   sendSmsCode: Scalars['Boolean']['output'];
-  updateLink: Link;
   updateMe: User;
   updateMeWechatOAuth: User;
-  updateProduct: Product;
   wechatLogin: AuthToken;
-};
-
-
-export type MutationCreateLinkArgs = {
-  data: CreateLinkInput;
 };
 
 
@@ -154,31 +107,6 @@ export type MutationCreateOrderArgs = {
 
 export type MutationCreateOrderPaymentArgs = {
   data: CreateOrderPaymentInput;
-};
-
-
-export type MutationCreateProductArgs = {
-  data: CreateProductInput;
-};
-
-
-export type MutationCreateUserWechatMerchantArgs = {
-  data: CreateUserWechatMerchantInput;
-};
-
-
-export type MutationCreateWithdrawalArgs = {
-  data: CreateWithdrawalInput;
-};
-
-
-export type MutationDeleteLinkArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type MutationDeleteProductArgs = {
-  id: Scalars['String']['input'];
 };
 
 
@@ -203,12 +131,6 @@ export type MutationSendSmsCodeArgs = {
 };
 
 
-export type MutationUpdateLinkArgs = {
-  data: UpdateLinkInput;
-  id: Scalars['String']['input'];
-};
-
-
 export type MutationUpdateMeArgs = {
   data: UpdateMeInput;
 };
@@ -216,12 +138,6 @@ export type MutationUpdateMeArgs = {
 
 export type MutationUpdateMeWechatOAuthArgs = {
   code: Scalars['String']['input'];
-};
-
-
-export type MutationUpdateProductArgs = {
-  data: UpdateProductInput;
-  id: Scalars['String']['input'];
 };
 
 
@@ -322,10 +238,8 @@ export type ProductWhereInput = {
 
 export type Query = {
   __typename?: 'Query';
-  affiliateOrder: Order;
   article: Article;
   articles: ArticlePagination;
-  customerOrder: Order;
   link: Link;
   links: LinkPagination;
   me: User;
@@ -341,13 +255,6 @@ export type Query = {
   wechatJsConfig?: Maybe<WechatJsConfig>;
   wechatOauthUrl: Scalars['String']['output'];
   wechatVerifySignature: Scalars['Boolean']['output'];
-  withdrawal: Withdrawal;
-  withdrawals: WithdrawalPagination;
-};
-
-
-export type QueryAffiliateOrderArgs = {
-  id: Scalars['String']['input'];
 };
 
 
@@ -359,11 +266,6 @@ export type QueryArticleArgs = {
 export type QueryArticlesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QueryCustomerOrderArgs = {
-  id: Scalars['String']['input'];
 };
 
 
@@ -449,18 +351,6 @@ export type QueryWechatVerifySignatureArgs = {
   token: Scalars['String']['input'];
 };
 
-
-export type QueryWithdrawalArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryWithdrawalsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  take?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<WithdrawalWhereInput>;
-};
-
 export type RegisterInput = {
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -503,14 +393,6 @@ export type SorterInput = {
   field: Scalars['String']['input'];
 };
 
-export type UpdateLinkInput = {
-  logo?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  qrcode?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Scalars['Int']['input']>;
-  url?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type UpdateMeInput = {
   avatar?: InputMaybe<Scalars['String']['input']>;
   backgroundImage?: InputMaybe<Scalars['String']['input']>;
@@ -523,31 +405,15 @@ export type UpdateMeInput = {
   wechatId?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateProductInput = {
-  commission?: InputMaybe<Scalars['Float']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  images?: InputMaybe<Array<Scalars['String']['input']>>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  price?: InputMaybe<Scalars['Float']['input']>;
-  sort?: InputMaybe<Scalars['Int']['input']>;
-  stock?: InputMaybe<Scalars['Int']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type User = {
   __typename?: 'User';
   avatar?: Maybe<Scalars['String']['output']>;
   backgroundImage?: Maybe<Scalars['String']['output']>;
-  balance?: Maybe<Scalars['Float']['output']>;
-  bankAccountName?: Maybe<Scalars['String']['output']>;
-  bankAccountNumber?: Maybe<Scalars['String']['output']>;
   businessLicensePhoto?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
-  idCardBackPhoto?: Maybe<Scalars['String']['output']>;
-  idCardFrontPhoto?: Maybe<Scalars['String']['output']>;
   links?: Maybe<Array<Link>>;
   name?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
@@ -556,8 +422,6 @@ export type User = {
   title?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
   wechatId?: Maybe<Scalars['String']['output']>;
-  wechatMerchantId?: Maybe<Scalars['String']['output']>;
-  wechatMerchantStatus?: Maybe<WechatMerchantStatus>;
   wechatOpenId?: Maybe<Scalars['String']['output']>;
 };
 
@@ -609,18 +473,7 @@ export type Withdrawal = {
   userId?: Maybe<Scalars['String']['output']>;
 };
 
-export type WithdrawalPagination = {
-  __typename?: 'WithdrawalPagination';
-  data: Array<Withdrawal>;
-  total: Scalars['Int']['output'];
-};
-
 export enum WithdrawalStatus {
   Completed = 'COMPLETED',
   Created = 'CREATED'
 }
-
-export type WithdrawalWhereInput = {
-  id?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<WithdrawalStatus>;
-};

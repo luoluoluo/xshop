@@ -6,6 +6,7 @@ import { Client } from '@/decorators/client.decorator';
 import { WechatMerchantStatus } from '@/types/wechat-merchant-status';
 import { Link } from './link.entity';
 import { Product } from './product.entity';
+import { ClientType } from '@/types/client';
 
 @ObjectType()
 @Entity('user')
@@ -60,6 +61,7 @@ export class User extends Base {
   @Column({ name: 'wechat_open_id', nullable: true })
   wechatOpenId?: string;
 
+  @Client([ClientType.ADMIN, ClientType.CREATOR])
   @Field(() => Float, { nullable: true })
   @Column({
     name: 'balance',
@@ -71,14 +73,17 @@ export class User extends Base {
   })
   balance?: number;
 
+  @Client([ClientType.ADMIN, ClientType.CREATOR])
   @Field(() => String, { nullable: true })
   @Column({ name: 'wechat_merchant_id', nullable: true })
   wechatMerchantId?: string;
 
+  @Client([ClientType.ADMIN, ClientType.CREATOR])
   @Field(() => String, { nullable: true })
   @Column({ name: 'bank_account_number', nullable: true })
   bankAccountNumber?: string;
 
+  @Client([ClientType.ADMIN, ClientType.CREATOR])
   @Field(() => String, { nullable: true })
   @Column({ name: 'bank_account_name', nullable: true })
   bankAccountName?: string;
@@ -87,14 +92,17 @@ export class User extends Base {
   @Column({ name: 'business_license_photo', nullable: true })
   businessLicensePhoto?: string;
 
+  @Client([ClientType.ADMIN, ClientType.CREATOR])
   @Field(() => String, { nullable: true })
   @Column({ name: 'id_card_front_photo', nullable: true })
   idCardFrontPhoto?: string;
 
+  @Client([ClientType.ADMIN, ClientType.CREATOR])
   @Field(() => String, { nullable: true })
   @Column({ name: 'id_card_back_photo', nullable: true })
   idCardBackPhoto?: string;
 
+  @Client([ClientType.ADMIN, ClientType.CREATOR])
   @Field(() => WechatMerchantStatus, { nullable: true })
   @Column({
     name: 'wechat_merchant_status',
@@ -102,17 +110,17 @@ export class User extends Base {
   })
   wechatMerchantStatus?: WechatMerchantStatus;
 
-  @Client(['admin'])
+  @Client([ClientType.ADMIN])
   @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive?: boolean;
 
-  @Client(['admin'])
+  @Client([ClientType.ADMIN])
   @Field(() => Boolean, { nullable: true, defaultValue: false })
   @Column({ name: 'is_admin', default: false })
   isAdmin?: boolean;
 
-  @Client(['admin'])
+  @Client([ClientType.ADMIN])
   @Field(() => [Role], { nullable: true })
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable({

@@ -4,13 +4,7 @@ import { Wechat } from "@/components/wechat";
 import { setting } from "@/config/config";
 import { getUrl } from "@/utils/index.server";
 
-export default function Page({
-  searchParams,
-}: {
-  searchParams?: {
-    uid?: string;
-  };
-}) {
+export default function Page() {
   const url = getUrl();
   const u = new URL(url);
 
@@ -37,13 +31,13 @@ export default function Page({
           >
             <a
               className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
-              href="/workspace"
+              href="/creator"
             >
               立即使用
             </a>
             <a
               className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
-              href="/app-crm"
+              href="/lyj"
             >
               联系我们
             </a>

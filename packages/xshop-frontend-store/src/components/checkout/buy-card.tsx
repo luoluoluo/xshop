@@ -11,6 +11,7 @@ import { ShareDialog } from "../share-dialog/share-dialog";
 import { generateProductPosterUrl } from "../product/product-poster";
 import { Icons } from "../icons";
 import { useAuth } from "@/contexts/auth";
+import { getLoginUrl } from "@/utils/auth.client";
 
 export const BuyCard = ({ product }: { product: Product }) => {
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
@@ -72,6 +73,12 @@ export const BuyCard = ({ product }: { product: Product }) => {
           </Button>
           <CheckoutSheet product={product}>
             <Button
+              onClick={(e) => {
+                if (!me) {
+                  e.preventDefault();
+                  window.location.href = getLoginUrl();
+                }
+              }}
               size="sm"
               className={cn("w-full", btnDisabled ? "bg-gray-300" : "")}
               disabled={btnDisabled}

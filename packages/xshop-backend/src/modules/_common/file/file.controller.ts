@@ -12,7 +12,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
+import e, { Response } from 'express';
 import * as fs from 'fs';
 import { FileAuthPayload, FileService } from './file.service';
 
@@ -60,7 +60,10 @@ export class FileController {
     @Query('h') height?: string,
   ) {
     try {
-      const filePath = this.fileService.getPath(params.join('/'));
+      const filename = params.join('/');
+      const filePath = this.fileService.getPath(filename);
+
+      let fileBuffer: Buffer;
 
       // 检查文件是否存在
       if (!fs.existsSync(filePath)) {
@@ -81,24 +84,22 @@ export class FileController {
         }
 
         // 获取调整后的图片数据
-        const resizedImageBuffer = await this.fileService.getResizedImage(
+        fileBuffer = await this.fileService.getResizedImage(
           filePath,
           widthNum || undefined,
           heightNum || undefined,
         );
-
-        // 设置响应头
-        res.set({
-          'Content-Type': this.fileService.getContentType(params.join('/')),
-          'Content-Length': resizedImageBuffer.length.toString(),
-        });
-
-        // 发送调整后的图片
-        res.send(resizedImageBuffer);
       } else {
-        // 直接下载原文件
-        res.download(filePath);
+        fileBuffer = fs.readFileSync(filePath);
       }
+      // 设置响应头
+      res.set({
+        'Content-Type': this.fileService.getContentType(params.join('/')),
+        'Content-Length': fileBuffer.length.toString(),
+        'inline-disposition': 'inline',
+      });
+
+      res.send(fileBuffer);
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

@@ -2,6 +2,7 @@ import { Base } from './base.entity';
 import { Entity, Column } from 'typeorm';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Client } from '@/decorators/client.decorator';
+import { ClientType } from '@/types/client';
 
 @ObjectType()
 @Entity('article')
@@ -26,7 +27,7 @@ export class Article extends Base {
   @Column({ nullable: true })
   image?: string;
 
-  @Client(['admin'])
+  @Client([ClientType.ADMIN])
   @Field(() => Boolean, { nullable: true, defaultValue: true })
   @Column({ name: 'is_active', default: true })
   isActive?: boolean;

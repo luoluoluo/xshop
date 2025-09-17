@@ -5,10 +5,11 @@ import { getWechatOauthUrl, wechatLogin } from "@/requests/auth.client";
 import { cn } from "@/utils";
 import { setToken } from "@/utils/auth.client";
 import { getChannel } from "@/utils/index.client";
-import { message, QRCode } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Icons } from "@/components/icons";
+import { toast } from "@/components/ui/use-toast";
+import QRCode from "qrcode";
 
 export const LoginForm = ({ className }: { className?: string }) => {
   const [wechatOauthUrl, setWechatOauthUrl] = useState<string | null>(null);
@@ -42,7 +43,10 @@ export const LoginForm = ({ className }: { className?: string }) => {
       })
         .then((res) => {
           if (res.errors) {
-            message.error(res.errors[0].message);
+            toast({
+              title: res.errors[0].message,
+              variant: "destructive",
+            });
             return;
           }
           if (res.data?.wechatLogin) {
@@ -63,10 +67,15 @@ export const LoginForm = ({ className }: { className?: string }) => {
         .then((res) => {
           console.log(res);
           if (res.errors) {
-            message.error(res.errors[0].message);
+            toast({
+              title: res.errors[0].message,
+              variant: "destructive",
+            });
             return;
           }
-          setWechatOauthUrl(res.data?.wechatOauthUrl || null);
+          void QRCode.toDataURL(res.data?.wechatOauthUrl || "").then((url) => {
+            setWechatOauthUrl(url);
+          });
           // // 微信中自动oauth登录
           // if (isWechat) {
           //   window.location.href = res.data?.wechatOauthUrl || "";
@@ -128,7 +137,11 @@ export const LoginForm = ({ className }: { className?: string }) => {
         </>
       ) : (
         <>
-          <QRCode value={wechatOauthUrl} size={200} />
+          <img
+            src={wechatOauthUrl}
+            alt="微信扫码登录"
+            className="w-200 h-200"
+          />
           <div className="text-center mt-4">使用微信扫码登录</div>
         </>
       )}

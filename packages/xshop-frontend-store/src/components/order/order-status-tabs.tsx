@@ -2,7 +2,6 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { OrderStatus } from "@/generated/graphql";
 import { cn } from "@/utils";
-import { useEffect, useState } from "react";
 
 export const OrderStatusTabs = ({
   value,

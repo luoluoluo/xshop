@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.ant-table-thead > tr > th,td {
+  white-space: nowrap;
+}
+
+.ant-upload-list-item-mobile .ant-upload-list-item-actions {
+  opacity: 1; /* 强制显示动作按钮 */
+  pointer-events: auto; /* 启用触摸 */
+}
+
+.ant-upload-list-item-actions {
+  opacity: 1 !important;
+}
+.ant-upload-list-item-actions a,
+.ant-upload-list-item-actions button {
+  opacity: 1 !important;
+}
+.ant-upload-list-item::before {
+  opacity: 1 !important;
+}

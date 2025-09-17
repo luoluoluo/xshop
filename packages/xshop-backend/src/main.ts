@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AdminModule } from './modules/admin/admin.module';
 import { StoreModule } from './modules/store/store.module';
 import { TaskAppModule } from './modules/_common/task/task-app.module';
+import { CreatorModule } from './modules/creator/creator.module';
 // import { createLogger } from './core/logger.config';
 
 const getServers = () => {
@@ -16,6 +17,11 @@ const getServers = () => {
       module: StoreModule,
       port: process.env.STORE_PORT || 4001,
       name: 'store',
+    },
+    {
+      module: CreatorModule,
+      port: process.env.CREATOR_PORT || 4002,
+      name: 'creator',
     },
   ];
 };

@@ -1,7 +1,6 @@
 import { request } from "../utils/request.client";
 import {
   AuthToken,
-  CreateUserWechatMerchantInput,
   LoginInput,
   RegisterInput,
   SendSmsCodeInput,
@@ -12,7 +11,6 @@ import {
 } from "../generated/graphql";
 import {
   ME_QUERY,
-  CREATE_USER_WECHAT_MERCHANT_MUTATION,
   SEND_SMS_CODE_MUTATION,
   LOGIN_MUTATION,
   REGISTER_MUTATION,
@@ -25,15 +23,6 @@ import {
 export const getMe = () => {
   return request<{ me?: User }>({
     query: ME_QUERY,
-  });
-};
-
-export const createUserWechatMerchant = (variables: {
-  data: CreateUserWechatMerchantInput;
-}) => {
-  return request({
-    query: CREATE_USER_WECHAT_MERCHANT_MUTATION,
-    variables,
   });
 };
 

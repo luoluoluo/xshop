@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { snowflakeGenerator } from '@/core/snowflake';
+import { snowflakeGenerator } from '@/utils/snowflake';
 
 @ObjectType()
 export class Base {

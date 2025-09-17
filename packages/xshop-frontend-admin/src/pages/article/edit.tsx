@@ -1,7 +1,10 @@
 import { Edit, useForm } from "@refinedev/antd";
 
 import { parse } from "graphql";
-import { ARTICLE_QUERY, UPDATE_ARTICLE_MUTATION } from "../../requests/article";
+import {
+  ARTICLE_QUERY,
+  UPDATE_ARTICLE_MUTATION,
+} from "../../requests/article.graphql";
 import { ArticleForm } from "./_components/article-form";
 
 export const ArticleEdit = () => {

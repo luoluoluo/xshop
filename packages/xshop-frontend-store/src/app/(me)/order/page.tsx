@@ -5,7 +5,7 @@ import { OrderItem } from "@/components/order/order-item";
 import { OrderStatusTabs } from "@/components/order/order-status-tabs";
 import { Pagination } from "@/components/ui/pagination";
 import { OrderStatus } from "@/generated/graphql";
-import { getCustomerOrders } from "@/requests/order.server";
+import { getOrders } from "@/requests/order.server";
 import { checkToken } from "@/utils/auth.server";
 import { getLogger } from "@/utils/logger";
 
@@ -18,15 +18,16 @@ export function generateMetadata() {
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { page?: string; status?: OrderStatus };
+  searchParams: { page?: string; status?: OrderStatus; isAffiliate?: string };
 }) {
+  const isAffiliate = searchParams.isAffiliate === "true";
   checkToken();
   const page = Number(searchParams.page || "1");
 
   const skip = (page - 1) * 5;
   const take = 5;
 
-  const orders = await getCustomerOrders({
+  const orders = await getOrders({
     skip,
     take,
     where: { status: searchParams.status },
@@ -34,7 +35,7 @@ export default async function Page({
     if (res.errors) {
       getLogger().error(res.errors, "getOrders error");
     }
-    return res.data?.customerOrders;
+    return res.data?.orders;
   });
   return (
     <div className="relative flex min-h-screen flex-col">
@@ -46,7 +47,12 @@ export default async function Page({
             <>
               <div className="flex flex-col gap-8 mt-8">
                 {orders?.data?.map((v) => (
-                  <OrderItem link key={v.id} order={v}></OrderItem>
+                  <OrderItem
+                    link
+                    key={v.id}
+                    order={v}
+                    isAffiliate={isAffiliate}
+                  ></OrderItem>
                 ))}
               </div>
               <Pagination

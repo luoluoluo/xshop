@@ -10,7 +10,7 @@ import {
 } from "antd";
 import { request } from "../../../utils/request";
 import { Permission } from "../../../generated/graphql";
-import { GET_PERMISSIONS_QUERY } from "../../../requests/permission";
+import { GET_PERMISSIONS_QUERY } from "../../../requests/permission.graphql";
 import { useEffect, useState } from "react";
 import { useTranslate } from "@refinedev/core";
 import { FormProps } from "antd/lib";

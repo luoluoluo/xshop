@@ -67,18 +67,3 @@ export class UserPagination {
   @Field(() => Int)
   total: number;
 }
-
-@InputType()
-export class CreateUserWechatMerchantInput {
-  @Field(() => String)
-  bankAccountNumber: string;
-
-  @Field(() => String)
-  businessLicensePhoto: string;
-
-  @Field(() => String)
-  idCardFrontPhoto: string;
-
-  @Field(() => String)
-  idCardBackPhoto: string;
-}

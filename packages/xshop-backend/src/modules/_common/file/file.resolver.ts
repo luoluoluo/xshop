@@ -15,8 +15,8 @@ export class FileResolver {
     const token = this.fileService.sign(filename);
     const fileUploadUrl = this.configService.get<string>('FILE_URL');
     return {
-      uploadUrl: `${fileUploadUrl}/file?token=${token}`,
-      downloadUrl: `${fileUploadUrl}/file/${filename}`,
+      uploadUrl: `${fileUploadUrl}?token=${token}`,
+      downloadUrl: `${fileUploadUrl}/${filename}`,
     };
   }
 }

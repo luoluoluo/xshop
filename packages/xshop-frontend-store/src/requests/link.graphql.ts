@@ -46,25 +46,3 @@ export const LINK_QUERY = /* GraphQL */ `
     }
   }
 `;
-
-export const DELETE_LINK_MUTATION = /* GraphQL */ `
-  mutation deleteLink($id: String!) {
-    deleteLink(id: $id)
-  }
-`;
-
-export const CREATE_LINK_MUTATION = /* GraphQL */ `
-  mutation createLink($data: CreateLinkInput!) {
-    createLink(data: $data) {
-      id
-    }
-  }
-`;
-
-export const UPDATE_LINK_MUTATION = /* GraphQL */ `
-  mutation updateLink($id: String!, $data: UpdateLinkInput!) {
-    updateLink(id: $id, data: $data) {
-      id
-    }
-  }
-`;

@@ -50,25 +50,3 @@ export const PRODUCT_QUERY = /* GraphQL */ `
     }
   }
 `;
-
-export const DELETE_PRODUCT_MUTATION = /* GraphQL */ `
-  mutation deleteProduct($id: String!) {
-    deleteProduct(id: $id)
-  }
-`;
-
-export const CREATE_PRODUCT_MUTATION = /* GraphQL */ `
-  mutation createProduct($data: CreateProductInput!) {
-    createProduct(data: $data) {
-      id
-    }
-  }
-`;
-
-export const UPDATE_PRODUCT_MUTATION = /* GraphQL */ `
-  mutation updateProduct($id: String!, $data: UpdateProductInput!) {
-    updateProduct(id: $id, data: $data) {
-      id
-    }
-  }
-`;

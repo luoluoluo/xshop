@@ -63,20 +63,6 @@ export class OrderWhereInput {
 }
 
 @InputType()
-export class RefundOrderInput {
-  @Field(() => String)
-  @IsNotEmpty()
-  @IsString()
-  orderId: string;
-
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  @Length(1, 200)
-  reason?: string;
-}
-
-@InputType()
 export class CreateOrderPaymentInput {
   @Field(() => String)
   @IsNotEmpty()

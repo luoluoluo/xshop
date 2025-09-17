@@ -5,10 +5,7 @@ import { Inter } from "next/font/google";
 import { Analytics } from "./analytics";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/auth";
-import { ConfigProvider } from "antd";
-import "antd/dist/reset.css";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { ThemeProvider } from "next-themes";
+import { getMe, getToken } from "@/utils/auth.server";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,11 +28,14 @@ export function generateViewport() {
     userScalable: "no",
   };
 }
-export default function RootLayout({
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const token = getToken();
+  const me = await getMe();
   return (
     <html lang="en">
       <head>
@@ -50,26 +50,8 @@ export default function RootLayout({
         <Analytics />
       </head>
       <body className={cn(inter.className, "green")}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AntdRegistry>
-            <ConfigProvider
-              theme={{
-                token: {
-                  colorPrimary: "#07C160",
-                  colorSuccess: "#07C160",
-                },
-              }}
-            >
-              <AuthProvider>{children}</AuthProvider>
-            </ConfigProvider>
-          </AntdRegistry>
-          <Toaster />
-        </ThemeProvider>
+        <AuthProvider initialState={{ token, me }}>{children}</AuthProvider>
+        <Toaster />
       </body>
     </html>
   );

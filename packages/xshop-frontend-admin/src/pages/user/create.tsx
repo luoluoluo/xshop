@@ -1,6 +1,6 @@
 import { Create, useForm } from "@refinedev/antd";
 import { parse } from "graphql";
-import { CREATE_USER_MUTATION } from "../../requests/user";
+import { CREATE_USER_MUTATION } from "../../requests/user.graphql";
 import { UserForm } from "./_components/user-form";
 
 export const UserCreate = () => {

@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { AuthPayload, AuthToken } from './auth.dto';
 import { User } from '@/entities/user.entity';
-import { getJwtExpiresIn } from '../../../core/auth.config';
+import { getJwtExpiresIn } from '../../../config/auth.config';
 import { CommonAuthService } from '../../_common/auth/auth.service';
 
 @Injectable()

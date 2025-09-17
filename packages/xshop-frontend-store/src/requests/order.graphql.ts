@@ -3,9 +3,9 @@ export const ORDERS_QUERY = /* GraphQL */ `
     orders(where: $where, skip: $skip, take: $take) {
       data {
         id
+        productId
         amount
         affiliateAmount
-        merchantAmount
         quantity
         status
         note
@@ -15,21 +15,6 @@ export const ORDERS_QUERY = /* GraphQL */ `
         completedAt
         cancelledAt
         refundedAt
-        customer {
-          id
-          name
-          phone
-        }
-        merchant {
-          id
-          name
-          phone
-        }
-        affiliate {
-          id
-          name
-          phone
-        }
         productTitle
         productImage
         productPrice
@@ -45,83 +30,9 @@ export const ORDER_QUERY = /* GraphQL */ `
   query order($id: String!) {
     order(id: $id) {
       id
-      merchantId
+      productId
       amount
       affiliateAmount
-      merchantAmount
-      quantity
-      status
-      note
-      createdAt
-      updatedAt
-      paidAt
-      completedAt
-      cancelledAt
-      refundedAt
-      customer {
-        id
-        name
-        phone
-        avatar
-      }
-      merchant {
-        id
-        name
-        phone
-        avatar
-      }
-      affiliate {
-        id
-        name
-        phone
-        avatar
-      }
-      productTitle
-      productImage
-      productPrice
-      receiverName
-      receiverPhone
-    }
-  }
-`;
-
-export const AFFILIATE_ORDERS_QUERY = /* GraphQL */ `
-  query affiliateOrders($where: OrderWhereInput, $skip: Int, $take: Int) {
-    affiliateOrders(where: $where, skip: $skip, take: $take) {
-      data {
-        id
-        merchantId
-        amount
-        affiliateAmount
-        merchantAmount
-        quantity
-        status
-        note
-        createdAt
-        updatedAt
-        paidAt
-        completedAt
-        cancelledAt
-        refundedAt
-        productTitle
-        productImage
-        productPrice
-        receiverName
-        receiverPhone
-      }
-      total
-    }
-  }
-`;
-
-export const AFFILIATE_ORDER_QUERY = /* GraphQL */ `
-  query affiliateOrder($id: String!) {
-    affiliateOrder(id: $id) {
-      id
-      merchantId
-      amount
-      affiliateAmount
-      merchantAmount
       quantity
       status
       note
@@ -136,77 +47,6 @@ export const AFFILIATE_ORDER_QUERY = /* GraphQL */ `
       productPrice
       receiverName
       receiverPhone
-    }
-  }
-`;
-
-export const CUSTOMER_ORDERS_QUERY = /* GraphQL */ `
-  query customerOrders($where: OrderWhereInput, $skip: Int, $take: Int) {
-    customerOrders(where: $where, skip: $skip, take: $take) {
-      data {
-        id
-        merchantId
-        amount
-        affiliateAmount
-        merchantAmount
-        quantity
-        status
-        note
-        createdAt
-        updatedAt
-        paidAt
-        completedAt
-        cancelledAt
-        refundedAt
-        productTitle
-        productImage
-        productPrice
-        receiverName
-        receiverPhone
-      }
-      total
-    }
-  }
-`;
-
-export const CUSTOMER_ORDER_QUERY = /* GraphQL */ `
-  query customerOrder($id: String!) {
-    customerOrder(id: $id) {
-      id
-      merchantId
-      amount
-      affiliateAmount
-      merchantAmount
-      quantity
-      status
-      note
-      createdAt
-      updatedAt
-      paidAt
-      completedAt
-      cancelledAt
-      refundedAt
-      productTitle
-      productImage
-      productPrice
-      receiverName
-      receiverPhone
-    }
-  }
-`;
-
-export const COMPLETE_ORDER_MUTATION = /* GraphQL */ `
-  mutation completeOrder($id: String!) {
-    completeOrder(id: $id) {
-      id
-    }
-  }
-`;
-
-export const REFUND_ORDER_MUTATION = /* GraphQL */ `
-  mutation refundOrder($id: String!) {
-    refundOrder(id: $id) {
-      id
     }
   }
 `;

@@ -8,7 +8,7 @@ export const Login = () => {
       type="login"
       registerLink={false}
       rememberMe={false}
-      forgotPasswordLink={null}
+      forgotPasswordLink={false}
     />
   );
 };

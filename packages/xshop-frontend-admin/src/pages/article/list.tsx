@@ -5,7 +5,7 @@ import { parse } from "graphql";
 import {
   DELETE_ARTICLE_MUTATION,
   ARTICLES_QUERY,
-} from "../../requests/article";
+} from "../../requests/article.graphql";
 
 export const ArticleList = () => {
   const t = useTranslate();

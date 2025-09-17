@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Order } from '@/entities/order.entity';
 import { TaskService } from './task.service';
-import { createTypeOrmConfig } from '@/core/type-orm.config';
+import { createTypeOrmConfig } from '@/config/type-orm.config';
 import { ConfigModule } from '@nestjs/config';
 import { Product } from '@/entities/product.entity';
 import { OrderModule } from '../order/order.module';

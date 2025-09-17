@@ -31,13 +31,16 @@ export class OrderResolver {
     @Args('take', { type: () => Int, nullable: true }) take: number,
     @Args('where', { type: () => OrderWhereInput, defaultValue: {} })
     where?: OrderWhereInput,
+    @Args('isAffiliate', { type: () => Boolean, nullable: true })
+    isAffiliate?: boolean,
   ): Promise<OrderPagination> {
     return this.orderService.findAll({
       take,
       skip,
       where: {
         ...where,
-        merchantId: ctx.req.user?.id,
+        customerId: isAffiliate ? undefined : ctx.req.user?.id,
+        affiliateId: isAffiliate ? ctx.req.user?.id : undefined,
       },
     });
   }
@@ -47,67 +50,14 @@ export class OrderResolver {
   async order(
     @Context() ctx: StoreContext,
     @Args('id') id: string,
+    @Args('isAffiliate', { type: () => Boolean, nullable: true })
+    isAffiliate?: boolean,
   ): Promise<Order> {
     return this.orderService.findOne(id, {
-      merchantId: ctx.req.user?.id,
-    });
-  }
-
-  @Query(() => OrderPagination)
-  async affiliateOrders(
-    @Context() ctx: StoreContext,
-    @Args('skip', { type: () => Int, nullable: true }) skip: number,
-    @Args('take', { type: () => Int, nullable: true }) take: number,
-    @Args('where', { type: () => OrderWhereInput, defaultValue: {} })
-    where?: OrderWhereInput,
-  ): Promise<OrderPagination> {
-    return this.orderService.findAll({
-      take,
-      skip,
       where: {
-        ...where,
-        affiliateId: ctx.req.user?.id,
+        customerId: isAffiliate ? undefined : ctx.req.user?.id,
+        affiliateId: isAffiliate ? ctx.req.user?.id : undefined,
       },
-    });
-  }
-
-  @Query(() => Order)
-  @UseGuards(GqlAuthGuard)
-  async affiliateOrder(
-    @Context() ctx: StoreContext,
-    @Args('id') id: string,
-  ): Promise<Order> {
-    return this.orderService.findOne(id, {
-      affiliateId: ctx.req.user?.id,
-    });
-  }
-
-  @Query(() => OrderPagination)
-  async customerOrders(
-    @Context() ctx: StoreContext,
-    @Args('skip', { type: () => Int, nullable: true }) skip: number,
-    @Args('take', { type: () => Int, nullable: true }) take: number,
-    @Args('where', { type: () => OrderWhereInput, defaultValue: {} })
-    where?: OrderWhereInput,
-  ): Promise<OrderPagination> {
-    return this.orderService.findAll({
-      take,
-      skip,
-      where: {
-        ...where,
-        customerId: ctx.req.user?.id,
-      },
-    });
-  }
-
-  @Query(() => Order)
-  @UseGuards(GqlAuthGuard)
-  async customerOrder(
-    @Context() ctx: StoreContext,
-    @Args('id') id: string,
-  ): Promise<Order> {
-    return this.orderService.findOne(id, {
-      customerId: ctx.req.user?.id,
     });
   }
 
@@ -122,22 +72,10 @@ export class OrderResolver {
 
   @Mutation(() => Payment)
   async createOrderPayment(
-    @Context() context: StoreContext,
     @Args('data') data: CreateOrderPaymentInput,
   ): Promise<Payment> {
-    /** notify url  */
-    const { req } = context;
-    const host = req.get('host');
-    const isLocalhost =
-      host?.includes('localhost') || host?.includes('127.0.0.1');
-    const protocol = isLocalhost ? 'http' : 'https';
-    const baseUrl = `${protocol}://${host}`;
-    const notifyUrl = `${baseUrl}/wechat-pay/notify`;
-    /** notify url end */
-
     return this.commonOrderService.createPayment({
       orderId: data.orderId,
-      notifyUrl,
       openId: data.openId,
     });
   }

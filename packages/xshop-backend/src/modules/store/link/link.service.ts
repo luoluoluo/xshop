@@ -7,12 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, ILike, Repository } from 'typeorm';
 import { Link } from '@/entities/link.entity';
-import {
-  CreateLinkInput,
-  LinkPagination,
-  LinkWhereInput,
-  UpdateLinkInput,
-} from './link.dto';
+import { LinkPagination, LinkWhereInput } from './link.dto';
 import { SorterInput } from '@/types/sorter';
 
 @Injectable()
@@ -69,58 +64,5 @@ export class LinkService {
       throw new NotFoundException(`链接ID ${id} 未找到`);
     }
     return link;
-  }
-
-  async create(
-    createLinkDto: CreateLinkInput & { userId?: string },
-  ): Promise<Link> {
-    try {
-      const link = this.linkRepository.create({
-        ...createLinkDto,
-      });
-      return this.linkRepository.save(link);
-    } catch (err) {
-      this.logger.error(`创建链接失败`, {
-        error: err,
-        createDto: createLinkDto,
-      });
-      throw new InternalServerErrorException('创建链接失败');
-    }
-  }
-
-  async update(
-    id: string,
-    updateLinkDto: UpdateLinkInput,
-    userId?: string,
-  ): Promise<Link> {
-    const link = await this.linkRepository.findOne({
-      where: { id, userId },
-    });
-    if (!link) {
-      throw new NotFoundException(`链接ID ${id} 未找到`);
-    }
-
-    try {
-      Object.assign(link, updateLinkDto);
-      return this.linkRepository.save(link);
-    } catch (err) {
-      this.logger.error(`更新链接失败`, {
-        error: err,
-        linkId: id,
-        updateDto: updateLinkDto,
-      });
-      throw new InternalServerErrorException('更新链接失败');
-    }
-  }
-
-  async delete(id: string, userId?: string): Promise<boolean> {
-    const result = await this.linkRepository.delete({
-      id,
-      userId,
-    });
-    if (result.affected === 0) {
-      throw new NotFoundException(`链接ID ${id} 未找到`);
-    }
-    return true;
   }
 }

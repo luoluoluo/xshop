@@ -7,8 +7,8 @@ import { GqlAuthGuard } from './guards/gql-auth.guard';
 import { UserModule } from '../user/user.module';
 import { AuthResolver } from './auth.resolver';
 import { ConfigService } from '@nestjs/config';
-import { ADMIN_JWT_STRATEGY } from '@/core/constants';
-import { getJwtOptions } from '../../../core/auth.config';
+import { ADMIN_JWT_STRATEGY } from '@/constants/jwt-strategy';
+import { getJwtOptions } from '../../../config/auth.config';
 import { AuthModule as CommonAuthModule } from '../../_common/auth/auth.module';
 
 @Module({

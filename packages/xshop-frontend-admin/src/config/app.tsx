@@ -43,6 +43,13 @@ export const getResources = (): ResourceProps[] => {
     //   },
     // },
     {
+      name: "withdrawal",
+      list: "/withdrawal",
+      meta: {
+        icon: <DollarOutlined />,
+      },
+    },
+    {
       name: "user",
       list: "/user",
       show: "/user/:id",

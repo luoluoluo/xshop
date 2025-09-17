@@ -2,7 +2,7 @@ import { DateField, MarkdownField, Show, TextField } from "@refinedev/antd";
 import { useShow } from "@refinedev/core";
 import { Typography } from "antd";
 import { parse } from "graphql";
-import { USER_QUERY } from "../../requests/user";
+import { USER_QUERY } from "../../requests/user.graphql";
 
 const { Title } = Typography;
 

@@ -1,4 +1,4 @@
-import { getJwtExpiresIn, getJwtOptions } from '@/core/auth.config';
+import { getJwtExpiresIn, getJwtOptions } from '@/config/auth.config';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';

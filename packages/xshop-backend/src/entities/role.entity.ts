@@ -3,9 +3,10 @@ import { User } from './user.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Base } from './base.entity';
 import { Client } from '@/decorators/client.decorator';
+import { ClientType } from '@/types/client';
 
 @ObjectType()
-@Client('admin')
+@Client([ClientType.ADMIN])
 @Entity('role')
 export class Role extends Base {
   @Field({ nullable: true })

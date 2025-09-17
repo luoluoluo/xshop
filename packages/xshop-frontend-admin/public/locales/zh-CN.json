@@ -600,7 +600,7 @@
     "tagFilterDescription": "使用标签筛选搜索结果",
     "all": "全部",
     "productSearch": "商品搜索",
-    "addNewMerchant": "添加新商家"
+    "addNewCreator": "添加新商家"
   },
   "user": {
     "user": "用户",
@@ -849,19 +849,22 @@
     },
     "fields": {
       "id": "编号",
-      "merchant": "商家",
-      "amount": "金额",
-      "account": "账户",
-      "bank": "银行",
-      "bankAccount": "银行账户",
-      "accountName": "账户名称",
-      "accountNumber": "账户号码",
-      "accountBank": "账户银行",
+      "amount": "提现金额",
+      "taxAmount": "税费金额",
+      "afterTaxAmount": "实际到账金额",
       "status": "状态",
+      "bankAccountName": "银行账户名",
+      "bankAccountNumber": "银行账户号",
       "note": "备注",
+      "complete": "完成",
+      "completeConfirm": "确定要完成此提现申请吗？",
       "approvedAt": "审批通过时间",
       "completedAt": "完成时间",
-      "createdAt": "创建时间"
+      "createdAt": "创建时间",
+      "user": "用户",
+      "name": "姓名",
+      "phone": "电话",
+      "balance": "余额"
     }
   },
   "affiliate": {

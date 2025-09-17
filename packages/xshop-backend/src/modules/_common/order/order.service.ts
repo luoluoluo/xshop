@@ -386,7 +386,7 @@ export class CommonOrderService {
 
   async createPayment(options: {
     orderId: string;
-    notifyUrl: string;
+    notifyUrl?: string;
     openId: string;
   }): Promise<Payment> {
     // 验证订单

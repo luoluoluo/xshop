@@ -1,6 +1,6 @@
 import { Create, useForm } from "@refinedev/antd";
 import { parse } from "graphql";
-import { CREATE_ARTICLE_MUTATION } from "../../requests/article";
+import { CREATE_ARTICLE_MUTATION } from "../../requests/article.graphql";
 import { ArticleForm } from "./_components/article-form";
 
 export const ArticleCreate = () => {

@@ -1,12 +1,7 @@
 import { Resolver, Query, Args, Int, Mutation, Context } from '@nestjs/graphql';
 import { Link } from '@/entities/link.entity';
 import { LinkService } from './link.service';
-import {
-  CreateLinkInput,
-  LinkPagination,
-  LinkWhereInput,
-  UpdateLinkInput,
-} from './link.dto';
+import { LinkPagination, LinkWhereInput } from './link.dto';
 import { SorterInput } from '@/types/sorter';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
@@ -41,36 +36,5 @@ export class LinkResolver {
   @Query(() => Link)
   async link(@Args('id') id: string): Promise<Link> {
     return await this.linkService.findOne(id);
-  }
-
-  @Mutation(() => Link)
-  @UseGuards(GqlAuthGuard)
-  async createLink(
-    @Context() ctx: StoreContext,
-    @Args('data') data: CreateLinkInput,
-  ): Promise<Link> {
-    return await this.linkService.create({
-      ...data,
-      userId: ctx.req.user?.id,
-    });
-  }
-
-  @Mutation(() => Link)
-  @UseGuards(GqlAuthGuard)
-  async updateLink(
-    @Context() ctx: StoreContext,
-    @Args('id') id: string,
-    @Args('data') data: UpdateLinkInput,
-  ): Promise<Link> {
-    return await this.linkService.update(id, data, ctx.req.user?.id);
-  }
-
-  @Mutation(() => Boolean)
-  @UseGuards(GqlAuthGuard)
-  async deleteLink(
-    @Context() ctx: StoreContext,
-    @Args('id') id: string,
-  ): Promise<boolean> {
-    return await this.linkService.delete(id, ctx.req.user?.id);
   }
 }

@@ -5,8 +5,8 @@ import * as dayjs from 'dayjs';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as sharp from 'sharp';
-import { getJwtExpiresIn } from '@/core/auth.config';
-import { getJwtOptions } from '@/core/auth.config';
+import { getJwtExpiresIn } from '@/config/auth.config';
+import { getJwtOptions } from '@/config/auth.config';
 import { Logger } from '@nestjs/common';
 
 export class FileAuthPayload {

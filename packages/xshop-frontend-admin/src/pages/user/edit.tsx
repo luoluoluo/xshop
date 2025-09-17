@@ -1,6 +1,6 @@
 import { Edit, useForm } from "@refinedev/antd";
 import { parse } from "graphql";
-import { USER_QUERY, UPDATE_USER_MUTATION } from "../../requests/user";
+import { USER_QUERY, UPDATE_USER_MUTATION } from "../../requests/user.graphql";
 import { UserForm } from "./_components/user-form";
 import { Role, UpdateUserInput, User } from "../../generated/graphql";
 import { HttpError } from "@refinedev/core";

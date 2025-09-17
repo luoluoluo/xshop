@@ -3,7 +3,7 @@ import { useTranslate, type BaseRecord } from "@refinedev/core";
 import { Space, Table } from "antd";
 import { parse } from "graphql";
 import dayjs from "dayjs";
-import { USERS_QUERY, DELETE_USER_MUTATION } from "../../requests/user";
+import { USERS_QUERY, DELETE_USER_MUTATION } from "../../requests/user.graphql";
 
 export const UserList = () => {
   const t = useTranslate();

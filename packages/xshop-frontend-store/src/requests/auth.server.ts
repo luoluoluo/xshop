@@ -1,7 +1,6 @@
 import { request } from "../utils/request.server";
 import {
   AuthToken,
-  CreateUserWechatMerchantInput,
   LoginInput,
   RegisterInput,
   SendSmsCodeInput,
@@ -11,14 +10,15 @@ import {
 } from "../generated/graphql";
 import {
   ME_QUERY,
-  CREATE_USER_WECHAT_MERCHANT_MUTATION,
   SEND_SMS_CODE_MUTATION,
   LOGIN_MUTATION,
   REGISTER_MUTATION,
   UPDATE_ME_MUTATION,
   WECHAT_LOGIN_MUTATION,
   WECHAT_OAUTH_URL_QUERY,
+  CHECK_TOKEN_QUERY,
 } from "./auth.graphql";
+import { getLogger } from "@/utils/logger";
 
 export const getMe = (token?: string) => {
   return request<{ me?: User }>(
@@ -29,12 +29,21 @@ export const getMe = (token?: string) => {
   );
 };
 
-export const createUserWechatMerchant = (variables: {
-  data: CreateUserWechatMerchantInput;
-}) => {
-  return request({
-    query: CREATE_USER_WECHAT_MERCHANT_MUTATION,
-    variables,
+export const checkToken = async (token?: string) => {
+  return request<{ me?: User }>(
+    {
+      query: CHECK_TOKEN_QUERY,
+    },
+    token ? { Authorization: `Bearer ${token}` } : undefined,
+  ).then((res) => {
+    if (res.errors) {
+      getLogger().error("checkToken", {
+        token,
+        errors: res.errors,
+      });
+      return false;
+    }
+    return true;
   });
 };
 

@@ -1,10 +1,17 @@
 import dayjs from "dayjs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import {
+  checkToken,
+  getWechatOauthUrl,
+  wechatLogin,
+} from "./requests/auth.server";
 import { AFFILIATE_ID_KEY, URL_KEY } from "./utils";
 import { TOKEN_KEY } from "./utils/auth";
+import { getLogger } from "./utils/logger";
+import { getChannel } from "./utils/index.server";
 
-export function middleware(request: Request) {
+export async function middleware(request: Request) {
   if (request.method !== "GET") {
     return;
   }
@@ -19,28 +26,71 @@ export function middleware(request: Request) {
       u.origin,
       `${host?.includes("localhost") ? "http" : "https"}://${host}`,
     );
-  const affiliateId = searchParams.get(AFFILIATE_ID_KEY);
-
-  const paramsToken = searchParams.get(TOKEN_KEY);
-  const cookieToken = cookies().get(TOKEN_KEY)?.value;
-  const token = paramsToken || cookieToken;
-
-  // set header url
   requestHeaders.set(URL_KEY, xurl);
-  // set header affiliateId
+
+  let token = searchParams.get(TOKEN_KEY) || cookies().get(TOKEN_KEY)?.value;
+  // 推广id
+  const affiliateId = searchParams.get(AFFILIATE_ID_KEY);
   if (affiliateId) {
     requestHeaders.set(AFFILIATE_ID_KEY, affiliateId);
   }
-  // set header token
+
+  // 检查token
+  if (token) {
+    const isTokenValid = await checkToken(token);
+    if (!isTokenValid) {
+      token = undefined;
+    }
+  }
+  const channel = getChannel({
+    headers: requestHeaders,
+  });
+  const state = searchParams.get("state");
+  const code = searchParams.get("code");
+  /* 微信登录  start */
+  if (code && state) {
+    token = await wechatLogin({
+      data: {
+        code,
+        state,
+      },
+    }).then((res) => {
+      if (res.errors) {
+        getLogger().error(res.errors, "登录错误");
+        return undefined;
+      }
+      return token;
+    });
+    if (token) {
+      const isTokenValid = await checkToken(token);
+      if (!isTokenValid) {
+        token = undefined;
+      }
+    } else {
+      token = undefined;
+    }
+  } else if (!token && channel === "wechat") {
+    // wechat oauth
+    const wechatOauthUrl = await getWechatOauthUrl({
+      redirectUrl: xurl,
+      state: "wechat",
+    }).then((res) => {
+      if (res.errors) {
+        getLogger().error(res.errors, "登录错误");
+        return undefined;
+      }
+      return res.data?.wechatOauthUrl;
+    });
+    if (wechatOauthUrl) {
+      return NextResponse.redirect(wechatOauthUrl);
+    }
+  }
+  /* 微信登录  end */
+
   if (token) {
     requestHeaders.set(TOKEN_KEY, token);
   } else {
     requestHeaders.delete(TOKEN_KEY);
-  }
-
-  // set header affiliateId
-  if (affiliateId) {
-    requestHeaders.set(AFFILIATE_ID_KEY, affiliateId);
   }
 
   const response = NextResponse.next({
@@ -50,19 +100,17 @@ export function middleware(request: Request) {
     },
   });
 
-  response.cookies.set(URL_KEY, xurl);
-
-  // set cookie token
-  if (paramsToken) {
-    response.cookies.set(TOKEN_KEY, paramsToken, {
-      expires: dayjs().add(30, "days").toDate(),
-    });
-  }
-  // set cookie affiliateId
   if (affiliateId) {
     response.cookies.set(AFFILIATE_ID_KEY, affiliateId, {
       expires: dayjs().add(30, "days").toDate(),
     });
+  }
+  if (token) {
+    response.cookies.set(TOKEN_KEY, token, {
+      expires: dayjs().add(30, "days").toDate(),
+    });
+  } else {
+    response.cookies.delete(TOKEN_KEY);
   }
 
   return response;
