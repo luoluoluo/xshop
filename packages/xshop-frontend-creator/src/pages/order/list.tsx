@@ -216,7 +216,7 @@ export const OrderList = () => {
           width={150}
           render={(_, record: Order) => (
             <Space direction="vertical">
-              <ShowButton recordItemId={record.id} />
+              <ShowButton size="small" recordItemId={record.id} />
               {record.status === OrderStatus.Paid && (
                 <>
                   <Button
