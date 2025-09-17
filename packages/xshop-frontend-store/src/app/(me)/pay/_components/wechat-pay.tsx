@@ -5,14 +5,10 @@ import { CardMeta } from "@/components/card";
 import { Icons } from "@/components/icons";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
-import { OrderStatus, Payment, WechatAccessToken } from "@/generated/graphql";
-import {
-  getWechatAccessToken,
-  getWechatOauthUrl,
-} from "@/requests/auth.client";
+import { useAuth } from "@/contexts/auth";
+import { OrderStatus } from "@/generated/graphql";
 import { createOrderPayment, getOrderStatus } from "@/requests/order.client";
 import { getChannel } from "@/utils/index.client";
-import { request } from "@/utils/request.client";
 import { useSearchParams } from "next/navigation";
 import QRCode from "qrcode";
 import { useCallback, useEffect, useState } from "react";
@@ -26,6 +22,7 @@ export const WechatPay = ({
   title: string;
   amount: string;
 }) => {
+  const { me } = useAuth();
   const searchParams = useSearchParams();
   const state = searchParams.get("state");
   const code = searchParams.get("code");
@@ -79,59 +76,31 @@ export const WechatPay = ({
     }
     const channel = getChannel();
     if (channel === "wechat") {
-      if (!openId) {
-        // 微信oauth 回调
-        if (code && state && state === "wechat") {
-          void getWechatAccessToken({
-            code,
-          }).then((res) => {
-            if (res.errors) {
-              return toast({
-                title: res.errors?.[0]?.message,
-                variant: "destructive",
-              });
-            } else {
-              setOpenId(res.data?.wechatAccessToken?.openId);
-            }
-          });
-        } else {
-          void getWechatOauthUrl({
-            redirectUrl: payUrl,
-            scope: "snsapi_base",
-            state: "wechat",
-          }).then((res) => {
-            if (res.data?.wechatOauthUrl) {
-              window.location.href = res.data?.wechatOauthUrl;
-            }
-          });
+      void createOrderPayment({
+        data: {
+          orderId,
+          openId: me?.wechatOpenId,
+        },
+      }).then((res) => {
+        if (res.errors) {
+          const error = res.errors[0];
+          return toast({ title: error.message, variant: "destructive" });
         }
-      } else {
-        void createOrderPayment({
-          data: {
-            orderId,
-            openId,
-          },
-        }).then((res) => {
-          if (res.errors) {
-            const error = res.errors[0];
-            return toast({ title: error.message, variant: "destructive" });
-          }
-          if (window?.WeixinJSBridge) {
-            window.WeixinJSBridge.invoke(
-              "getBrandWCPayRequest",
-              res.data?.createOrderPayment,
-              (res: any) => {
-                if (res.err_msg == "get_brand_wcpay_request:ok") {
-                  window.location.href = `${orderUrl}?contact=true`;
-                } else {
-                  toast({ title: "支付失败", variant: "destructive" });
-                  window.location.href = orderUrl;
-                }
-              },
-            );
-          }
-        });
-      }
+        if (window?.WeixinJSBridge) {
+          window.WeixinJSBridge.invoke(
+            "getBrandWCPayRequest",
+            res.data?.createOrderPayment,
+            (res: any) => {
+              if (res.err_msg == "get_brand_wcpay_request:ok") {
+                window.location.href = `${orderUrl}?contact=true`;
+              } else {
+                toast({ title: "支付失败", variant: "destructive" });
+                window.location.href = orderUrl;
+              }
+            },
+          );
+        }
+      });
     } else {
       QRCode.toDataURL(payUrl, {
         width: 300,

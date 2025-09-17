@@ -12,6 +12,7 @@ export const ME_QUERY = /* GraphQL */ `
       createdAt
       avatar
       backgroundImage
+      wechatOpenId
     }
   }
 `;
