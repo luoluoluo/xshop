@@ -8,6 +8,32 @@ import { GET_USER } from "@/requests/user.server";
 import { getUrl } from "@/utils/index.server";
 import { notFound } from "next/navigation";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: {
+    slug: string;
+  };
+}) {
+  const url = getUrl();
+  const u = new URL(url);
+  const user = await GET_USER({ id: params.slug }).then(
+    (res) => res.data?.user,
+  );
+  if (!user) {
+    return notFound();
+  }
+  return {
+    title: `${user.name} - ${user.title}`,
+    description: user.description,
+    openGraph: {
+      title: `${user.name} - ${user.title}`,
+      description: user.description,
+      images: [user.avatar || `${u.origin}/images/logo.png`],
+    },
+  };
+}
+
 export default async function Page({
   params,
 }: {
@@ -49,9 +75,9 @@ export default async function Page({
       <SiteFooter className="mt-16 lg:lg-24" />
       <Wechat
         shareConfig={{
-          title: setting.title,
-          desc: setting.description,
-          imgUrl: `${u.origin}/images/logo.png`,
+          title: `${user.title} - ${user.title}`,
+          desc: user.description || setting.description,
+          imgUrl: user.avatar || `${u.origin}/images/logo.png`,
         }}
       />
     </div>
