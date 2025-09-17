@@ -27,7 +27,6 @@ export const WechatPay = ({
   const state = searchParams.get("state");
   const code = searchParams.get("code");
   const [payQrcode, setPayQrcode] = useState<string>();
-  const [openId, setOpenId] = useState<string>();
   const [orderStatus, setOrderStatus] = useState<OrderStatus>();
 
   // // 跳转到订单页面前更新历史记录
@@ -65,7 +64,7 @@ export const WechatPay = ({
   }, [loadOrderStatus]);
 
   useEffect(() => {
-    if (!orderStatus) {
+    if (!orderStatus || !me?.wechatOpenId) {
       return;
     }
     const payUrl = `${window.location.href}`;
@@ -79,7 +78,7 @@ export const WechatPay = ({
       void createOrderPayment({
         data: {
           orderId,
-          openId: me?.wechatOpenId,
+          openId: me.wechatOpenId,
         },
       }).then((res) => {
         if (res.errors) {
@@ -114,7 +113,7 @@ export const WechatPay = ({
         });
       return;
     }
-  }, [openId, code, state, orderId, orderStatus]);
+  }, [orderId, orderStatus, me?.wechatOpenId]);
 
   return (
     <>
