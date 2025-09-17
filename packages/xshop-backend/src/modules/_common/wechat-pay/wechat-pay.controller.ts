@@ -41,6 +41,16 @@ export class WechatPayController {
       bodyString,
     });
 
+    // 平台正式直接返回成功
+    if (
+      headers['wechatpay-serial'] === '334B647A92DE5E34997AE3403BBCF6883EF6D2BD'
+    ) {
+      return {
+        code: 'SUCCESS',
+        message: 'success',
+      };
+    }
+
     try {
       const result = this.wechatPayService.handlePaymentNotify(
         headers,
