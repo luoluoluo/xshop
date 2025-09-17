@@ -6,25 +6,12 @@ import * as crypto from 'crypto';
 import { PaymentSuccessEvent } from '@/events/payment-success.event';
 
 const BASE_URL = 'https://api.mch.weixin.qq.com';
-const GET_CERTIFICATES_URL = `${BASE_URL}/v3/certificates`;
 const TRANSACTIONS_JSAPI_URL = `${BASE_URL}/v3/pay/transactions/jsapi`;
 const REFUND_URL = `${BASE_URL}/v3/refund/domestic/refunds`;
 const PROFITSHARING_ADD_RECEIVERS_URL = `${BASE_URL}/v3/profitsharing/receivers/add`;
 const PROFITSHARING_CREATE_ORDERS_URL = `${BASE_URL}/v3/profitsharing/orders`;
 
 const AUTH_TYPE = 'WECHATPAY2-SHA256-RSA2048';
-
-interface Certificate {
-  effective_time: string;
-  expire_time: string;
-  serial_no: string;
-  encrypt_certificate: {
-    algorithm: string;
-    associated_data: string;
-    ciphertext: string;
-    nonce: string;
-  };
-}
 
 export interface PayAmount {
   total: number;
@@ -192,7 +179,6 @@ export interface WechatPayRefundResult {
 @Injectable()
 export class WechatPayService {
   private readonly logger = new Logger(WechatPayService.name);
-  private certificateCache = new Map<string, string>();
   private config: {
     key: string;
     privateKey: string;
@@ -200,6 +186,7 @@ export class WechatPayService {
     mchId: string;
     appId: string;
     notifyUrl: string;
+    certificate: string;
   };
 
   constructor(
@@ -209,6 +196,7 @@ export class WechatPayService {
     this.config = {
       key: this.configService.get('WECHAT_PAY_KEY') || '',
       privateKey: this.configService.get('WECHAT_PAY_PRIVATE_KEY') || '',
+      certificate: this.configService.get('WECHAT_PAY_CERTIFICATE') || '',
       publicKey: this.configService.get('WECHAT_PAY_PUBLIC_KEY') || '',
       mchId: this.configService.get('WECHAT_PAY_MCHID') || '',
       appId: this.configService.get('WECHAT_APP_ID') || '',
@@ -247,9 +235,9 @@ export class WechatPayService {
 
     // 验证商户证书格式（如果配置了的话）
     try {
-      if (this.config.publicKey) {
+      if (this.config.certificate) {
         const certificate = x509.Certificate.fromPEM(
-          Buffer.from(this.config.publicKey),
+          Buffer.from(this.config.certificate),
         );
         this.logger.log('商户证书信息', {
           serialNumber: certificate.serialNumber,
@@ -268,15 +256,9 @@ export class WechatPayService {
       mchId: this.config.mchId,
       appId: this.config.appId,
       hasPrivateKey: !!this.config.privateKey,
-      hasPublicKey: !!this.config.publicKey,
+      hasPublicKey: !!this.config.certificate,
       hasKey: !!this.config.key,
     });
-  }
-
-  // 添加初始化方法
-  async initialize() {
-    this.logger.log('初始化微信支付服务');
-    await this.preloadCertificates();
   }
 
   decipherGcm = <T>({
@@ -320,9 +302,9 @@ export class WechatPayService {
   };
 
   getSN = (): string => {
-    if (!this.config.publicKey) throw new Error('缺少公钥');
+    if (!this.config.certificate) throw new Error('缺少公钥');
     const certificate = x509.Certificate.fromPEM(
-      Buffer.from(this.config.publicKey),
+      Buffer.from(this.config.certificate),
     );
     return certificate.serialNumber;
   };
@@ -391,77 +373,19 @@ export class WechatPayService {
     }
   };
 
-  getCertificate = async (serial: string) => {
-    // 检查缓存
-    if (this.certificateCache.has(serial)) {
-      this.logger.log('从缓存获取证书', { serial });
-      return this.certificateCache.get(serial);
-    }
-
-    try {
-      this.logger.log('从API获取证书', { serial });
-      const result = await this.request<{ data: Certificate[] }>(
-        GET_CERTIFICATES_URL,
-        { method: 'GET' },
-      );
-
-      this.logger.log('获取证书API响应', { result, serial });
-
-      // 检查响应是否包含期望的数据结构
-      if (!result || !result.data || !Array.isArray(result.data)) {
-        this.logger.error('获取证书API响应格式错误', { result, serial });
-        throw new Error('获取证书API响应格式错误或data字段缺失');
-      }
-
-      // 处理所有证书并缓存
-      result.data.forEach((item) => {
-        try {
-          const decryptCertificate = this.decipherGcm<string>({
-            ...item.encrypt_certificate,
-          });
-          const publicKey = x509.Certificate.fromPEM(
-            Buffer.from(decryptCertificate),
-          ).publicKey.toPEM();
-
-          // 缓存证书
-          this.certificateCache.set(item.serial_no, publicKey);
-          this.logger.log('证书已缓存', { serial: item.serial_no });
-        } catch (error) {
-          this.logger.error('解密证书失败', {
-            serial: item.serial_no,
-            error: error.message,
-          });
-        }
-      });
-
-      const certificate = this.certificateCache.get(serial);
-      if (!certificate) {
-        throw new Error(`未找到序列号为 ${serial} 的证书`);
-      }
-
-      return certificate;
-    } catch (error) {
-      this.logger.error('获取证书失败', { error: error.message, serial });
-      throw error;
-    }
-  };
-
-  verifySign = async (params: {
+  private verifySign(params: {
     timestamp: string | number;
     nonce: string;
     body: string;
     signature: string;
     serial: string;
-  }) => {
-    const { timestamp, nonce, body, signature, serial } = params;
-    const publicKey = await this.getCertificate(serial);
-    if (!publicKey) {
-      throw new Error('平台证书序列号不相符，未找到平台序列号');
-    }
+  }) {
+    const { timestamp, nonce, body, signature } = params;
+
     const verify = crypto.createVerify('RSA-SHA256');
     verify.update(`${timestamp}\n${nonce}\n${body}\n`);
-    return verify.verify(publicKey, signature, 'base64');
-  };
+    return verify.verify(this.config.publicKey, signature, 'base64');
+  }
 
   createTransactionsJsapi = async (params: TransactionRequest) => {
     if (!params.appid) params.appid = this.config.appId;
@@ -548,10 +472,10 @@ export class WechatPayService {
    * @param body 请求体
    * @returns 处理结果
    */
-  handlePaymentNotify = async (
+  handlePaymentNotify = (
     headers: Record<string, string>,
     body: string,
-  ): Promise<WechatPayNotifyResponse> => {
+  ): WechatPayNotifyResponse => {
     try {
       // 验证签名
       const timestamp = headers['wechatpay-timestamp'];
@@ -565,7 +489,7 @@ export class WechatPayService {
       }
 
       // 验证签名
-      const isValid = await this.verifySign({
+      const isValid = this.verifySign({
         timestamp,
         nonce,
         body,
@@ -651,41 +575,4 @@ export class WechatPayService {
       this.logger.error('处理支付成功业务逻辑失败', error);
     }
   };
-
-  // 添加预加载证书的方法
-  private async preloadCertificates() {
-    try {
-      this.logger.log('开始预加载证书');
-      const result = await this.request<{ data: Certificate[] }>(
-        GET_CERTIFICATES_URL,
-        { method: 'GET' },
-      );
-
-      if (result?.data?.length) {
-        result.data.forEach((item) => {
-          try {
-            const decryptCertificate = this.decipherGcm<string>({
-              ...item.encrypt_certificate,
-            });
-            const publicKey = x509.Certificate.fromPEM(
-              Buffer.from(decryptCertificate),
-            ).publicKey.toPEM();
-            this.certificateCache.set(item.serial_no, publicKey);
-          } catch (error) {
-            this.logger.error('预加载证书失败', {
-              serial: item.serial_no,
-              error: error.message,
-            });
-          }
-        });
-        this.logger.log('证书预加载完成', {
-          count: this.certificateCache.size,
-        });
-      }
-    } catch (error) {
-      this.logger.warn('证书预加载失败，将在需要时获取', {
-        error: error.message,
-      });
-    }
-  }
 }

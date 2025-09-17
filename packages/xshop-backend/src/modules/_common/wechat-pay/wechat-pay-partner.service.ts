@@ -157,7 +157,6 @@ export interface PartnerWechatPayTransactionResult {
 @Injectable()
 export class WechatPayPartnerService {
   private readonly logger = new Logger(WechatPayPartnerService.name);
-  private certificateCache = new Map<string, string>();
   private config: {
     key: string;
     privateKey: string;
@@ -178,7 +177,7 @@ export class WechatPayPartnerService {
       publicKey: this.configService.get('WECHAT_PAY_SP_PUBLIC_KEY') || '',
       spMchId: this.configService.get('WECHAT_PAY_SP_MCHID') || '',
       spAppId: this.configService.get('WECHAT_APP_ID') || '',
-      notifyUrl: this.configService.get('WECHAT_PAY_NOTIFY_URL') || '',
+      notifyUrl: this.configService.get('WECHAT_PAY_SP_NOTIFY_URL') || '',
       certificate: this.configService.get('WECHAT_PAY_SP_CERTIFICATE') || '',
     };
   }
