@@ -82,9 +82,21 @@ function App() {
                 options={{
                   syncWithLocation: true,
                   warnWhenUnsavedChanges: true,
-                  useNewQueryKeys: true,
                   title: { text: t("title"), icon: <AppIcon /> },
                   disableTelemetry: true,
+                  reactQuery: {
+                    clientConfig: {
+                      defaultOptions: {
+                        queries: {
+                          refetchOnWindowFocus: false,
+                          retry: false,
+                        },
+                        mutations: {
+                          retry: false,
+                        },
+                      },
+                    },
+                  },
                 }}
               >
                 <Routes>
