@@ -4,6 +4,7 @@ export const ORDERS_QUERY = /* GraphQL */ `
       data {
         id
         productId
+        merchantId
         amount
         affiliateAmount
         quantity
@@ -31,6 +32,7 @@ export const ORDER_QUERY = /* GraphQL */ `
     order(id: $id) {
       id
       productId
+      merchantId
       amount
       affiliateAmount
       quantity

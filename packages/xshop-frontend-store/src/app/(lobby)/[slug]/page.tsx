@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/layouts/site-header";
 import { ContentTabs } from "@/components/tabs/content-tabs";
 import { Wechat } from "@/components/wechat";
 import { setting } from "@/config/config";
-import { GET_USER } from "@/requests/user.server";
+import { getUser } from "@/requests/user.server";
 import { getUrl } from "@/utils/index.server";
 import { notFound } from "next/navigation";
 
@@ -17,9 +17,7 @@ export async function generateMetadata({
 }) {
   const url = getUrl();
   const u = new URL(url);
-  const user = await GET_USER({ id: params.slug }).then(
-    (res) => res.data?.user,
-  );
+  const user = await getUser({ id: params.slug }).then((res) => res.data?.user);
   if (!user) {
     return notFound();
   }
@@ -43,9 +41,7 @@ export default async function Page({
 }) {
   const url = getUrl();
   const u = new URL(url);
-  const user = await GET_USER({ id: params.slug }).then(
-    (res) => res.data?.user,
-  );
+  const user = await getUser({ id: params.slug }).then((res) => res.data?.user);
   if (!user) {
     return notFound();
   }

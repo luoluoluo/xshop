@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/layouts/site-header";
 import { Wechat } from "@/components/wechat";
 import { getProduct } from "@/requests/product.server";
 import { getLogger } from "@/utils/logger";
-import { GET_USER } from "@/requests/user.server";
+import { getUser } from "@/requests/user.server";
 import { BusinessCard } from "@/components/business-card/business-card";
 import { ProductImages } from "@/components/product/product-images";
 
@@ -57,9 +57,9 @@ export default async function Page({ params }: { params: { pid: string } }) {
     return res.data?.product;
   });
   if (!product) return null;
-  const user = await GET_USER({ id: product.userId! }).then((res) => {
+  const user = await getUser({ id: product.userId! }).then((res) => {
     if (res.errors) {
-      getLogger().error(res.errors, "GET_USER error");
+      getLogger().error(res.errors, "getUser error");
     }
     return res.data?.user;
   });

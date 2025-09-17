@@ -3,7 +3,7 @@ import { SiteHeader } from "@/components/layouts/site-header";
 import { getOrder } from "@/requests/order.server";
 import { checkToken } from "@/utils/auth.server";
 import { getLogger } from "@/utils/logger";
-import { GET_USER } from "@/requests/user.server";
+import { getUser } from "@/requests/user.server";
 import { BusinessCard } from "@/components/business-card/business-card";
 import { OrderItem } from "@/components/order/order-item";
 
@@ -34,11 +34,11 @@ export default async function Page({
     return <></>;
   }
 
-  const user = await GET_USER({
+  const user = await getUser({
     id: order.merchantId!,
   }).then((res) => {
     if (res.errors) {
-      getLogger().error(res.errors, "GET_USER error");
+      getLogger().error(res.errors, "getUser error");
     }
     return res.data?.user;
   });
