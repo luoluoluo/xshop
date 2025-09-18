@@ -27,7 +27,7 @@ export const ProductItem = ({ product }: { product: Product }) => {
           {product.title}
         </div>
         <div className="text-xs text-gray-500 truncate whitespace-pre-wrap mt-1">
-          {product.description}
+          {product.description?.slice(0, 100)}...
         </div>
         <div className="text-sm mt-2">
           <AmountFormat size="sm" value={product?.price || 0} />
