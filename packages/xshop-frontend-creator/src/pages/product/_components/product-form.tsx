@@ -37,11 +37,11 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
         name={["title"]}
         rules={[{ required: true }]}
       >
-        <Input />
+        <Input maxLength={80} showCount />
       </Form.Item>
 
       <Form.Item label={t("product.fields.description")} name={["description"]}>
-        <Input.TextArea maxLength={500} />
+        <Input.TextArea maxLength={500} showCount />
       </Form.Item>
 
       <Form.Item
@@ -49,7 +49,7 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
         name={["price"]}
         rules={[{ required: true }]}
       >
-        <Input />
+        <InputNumber />
       </Form.Item>
 
       <Form.Item
