@@ -47,9 +47,11 @@ export const ContentTabs = ({ products, links }: ContentTabsProps) => {
         {activeTab === "products" ? (
           products?.length ? (
             <div className="my-4">
-              <div className="w-full grid flex-1 grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="w-full columns-2 gap-4 space-y-4">
                 {products.map((product) => (
-                  <ProductItem key={product.id} product={product} />
+                  <div key={product.id} className="break-inside-avoid mb-4">
+                    <ProductItem product={product} />
+                  </div>
                 ))}
               </div>
             </div>
@@ -58,9 +60,11 @@ export const ContentTabs = ({ products, links }: ContentTabsProps) => {
           )
         ) : links?.length ? (
           <div className="my-4">
-            <div className="w-full grid flex-1 grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="w-full columns-2 gap-4 space-y-4">
               {links.map((link) => (
-                <LinkItem key={link.id} link={link} />
+                <div key={link.id} className="break-inside-avoid mb-4">
+                  <LinkItem link={link} />
+                </div>
               ))}
             </div>
           </div>
