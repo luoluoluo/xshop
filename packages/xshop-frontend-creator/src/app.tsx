@@ -115,7 +115,7 @@ function App() {
                           <CanAccess
                             fallback={<NavigateToResource resource="product" />}
                           >
-                            <div className="pt-8 lg:mt-0">
+                            <div className="py-8 lg:mt-0">
                               <Outlet />
                             </div>
                           </CanAccess>
