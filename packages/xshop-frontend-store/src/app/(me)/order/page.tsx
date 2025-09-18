@@ -18,9 +18,9 @@ export function generateMetadata() {
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { page?: string; status?: OrderStatus; isAffiliate?: string };
+  searchParams: { page?: string; status?: OrderStatus; type?: string };
 }) {
-  const isAffiliate = searchParams.isAffiliate === "true";
+  const isAffiliate = searchParams.type === "aff";
   checkToken();
   const page = Number(searchParams.page || "1");
 

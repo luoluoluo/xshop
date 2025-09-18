@@ -12,8 +12,6 @@ import NextImage from "next/image";
 import { useState } from "react";
 import { useAuth } from "@/contexts/auth";
 import { getLoginUrl } from "@/utils/auth.client";
-import { AmountFormat } from "../amount";
-import Link from "next/link";
 
 interface ShareDialogProps {
   open: boolean;
@@ -171,11 +169,10 @@ export const ShareDialog = ({
           </span>
           <span>的佣金，佣金将在订单完成后自动转入您的微信零钱。</span>
           <span>
-            去
-            <a href="/affiliate" className="text-blue-500 underline">
-              推广中心
+            查看
+            <a href={`/order?type=aff`} className="text-blue-500 underline">
+              推广订单
             </a>
-            查看我的推广数据。
           </span>
         </div>
       </DialogContent>

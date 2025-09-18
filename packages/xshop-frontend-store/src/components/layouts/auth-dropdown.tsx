@@ -54,7 +54,7 @@ export function AuthDropdown({ className }: { className?: string }) {
               </DropdownMenuItem>
 
               <DropdownMenuItem asChild>
-                <Link prefetch={false} href={`/order?isAffiliate=true`}>
+                <Link prefetch={false} href={`/order?type=aff`}>
                   <Share1Icon className="mr-2 w-4" aria-hidden="true" />
                   推广订单
                 </Link>

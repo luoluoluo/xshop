@@ -60,7 +60,7 @@ export const OrderItem = ({
   if (link) {
     linkUrl = `/order/${order.id}`;
     if (isAffiliate) {
-      linkUrl += `?isAffiliate=${isAffiliate}`;
+      linkUrl += `?type=aff`;
     }
   }
 
