@@ -2,6 +2,7 @@ import { setting } from "@/config/config";
 import { cn } from "@/utils";
 import Link from "next/link";
 import { AuthDropdown } from "./auth-dropdown";
+import { CreatorButton } from "./creator-button";
 
 export const Logo = ({
   link,
@@ -59,12 +60,7 @@ export function SiteHeader({
           />
         </div>
         <div className="flex items-center justify-end space-x-4">
-          <a
-            href="/creator"
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
-          >
-            手艺人中心
-          </a>
+          <CreatorButton />
           <AuthDropdown
             className={cn(theme === "product" ? "bg-transparent" : "")}
           />

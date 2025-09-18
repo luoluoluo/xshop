@@ -34,7 +34,6 @@ const DISALLOWED_SLUGS = [
   'admin-api',
   'creator-api',
   'store-api',
-  'creator-api',
 ];
 
 @Injectable()
