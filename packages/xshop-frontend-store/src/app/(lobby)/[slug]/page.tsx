@@ -71,7 +71,7 @@ export default async function Page({
       <SiteFooter className="mt-16 lg:lg-24" />
       <Wechat
         shareConfig={{
-          title: `${user.title} - ${user.title}`,
+          title: `${user.name} - ${user.title}`,
           desc: user.description || setting.description,
           imgUrl: user.avatar || `${u.origin}/images/logo.png`,
         }}
