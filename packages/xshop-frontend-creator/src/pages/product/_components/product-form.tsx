@@ -83,7 +83,7 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
         name={["stock"]}
         rules={[{ required: true }]}
       >
-        <Input />
+        <InputNumber />
       </Form.Item>
 
       <Form.Item

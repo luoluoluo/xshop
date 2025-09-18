@@ -158,11 +158,11 @@ export const LinkForm = ({ formProps }: { formProps: FormProps }) => {
         name={["name"]}
         rules={[{ required: true, message: "请输入平台名称" }]}
       >
-        <Input placeholder="请输入平台名称" />
+        <Input maxLength={80} showCount placeholder="请输入平台名称" />
       </Form.Item>
 
       <Form.Item label={t("link.fields.url")} name={["url"]}>
-        <Input placeholder="请输入主页地址/ID" />
+        <Input maxLength={200} showCount placeholder="请输入主页地址/ID" />
       </Form.Item>
 
       <Form.Item label={t("link.fields.qrcode")} name={["qrcode"]}>
