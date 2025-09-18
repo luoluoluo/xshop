@@ -34,6 +34,11 @@ const navigationItems = [
     icon: Icons.DollarOutlined,
     label: "提现管理",
   },
+  {
+    href: "https://xltzx.com/lyj",
+    icon: Icons.CustomerServiceOutlined,
+    label: "定制服务",
+  },
 ];
 
 const Dashboard = () => {
