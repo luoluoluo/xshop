@@ -59,8 +59,8 @@ const BasicSetting = ({
     >
       <Form.Item
         name="slug"
-        label="主页链接"
-        rules={[{ required: true, message: "请输入主页链接" }]}
+        label="专属主页链接"
+        rules={[{ required: true, message: "请输入专属主页链接" }]}
       >
         <Input
           prefix={
@@ -69,14 +69,14 @@ const BasicSetting = ({
               <span>https://xltzx.com/</span>
             </div>
           }
-          placeholder="请输入主页链接"
+          placeholder="请输入专属主页链接"
         />
       </Form.Item>
       <Form.Item
         name="avatar"
-        label="头像"
+        label="名片头像/照片"
         extra="建议尺寸：正方形"
-        rules={[{ required: true, message: "请上传头像" }]}
+        rules={[{ required: true, message: "请上传名片头像/照片" }]}
       >
         <CustomUpload />
       </Form.Item>
@@ -116,7 +116,7 @@ const BasicSetting = ({
 
       <Form.Item
         name="backgroundImage"
-        label="背景图"
+        label="名片背景图"
         extra="建议尺寸：1920*1080"
       >
         <CustomUpload />
