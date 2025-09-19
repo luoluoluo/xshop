@@ -34,12 +34,36 @@ const navigationItems = [
     icon: Icons.DollarOutlined,
     label: "提现管理",
   },
+];
+
+const toolItems = [
   {
-    href: "https://xltzx.com/lyj",
+    href: "https://xltzx.com/product/tool",
     icon: Icons.CustomerServiceOutlined,
-    label: "定制服务",
+    label: "99元定制工具",
   },
 ];
+
+const CardItem = ({
+  href,
+  icon,
+  label,
+}: {
+  href: string;
+  icon: React.ElementType;
+  label: string;
+}) => {
+  const IconComponent = icon;
+  return (
+    <Link
+      to={href}
+      className="flex flex-col items-center justify-center w-24 h-24 p-4 flex-grow flex-shrink rounded shadow text-gray-700"
+    >
+      <IconComponent className="text-[32px]" />
+      <div className="text-sm mt-1">{label}</div>
+    </Link>
+  );
+};
 
 const Dashboard = () => {
   const { data: me } = useGetIdentity<User>();
@@ -50,7 +74,7 @@ const Dashboard = () => {
       <Card title="我的主页链接">
         <div className="mt-4">
           <div className="flex flex-col gap-2 items-center">
-            {me?.slug === me?.id ? (
+            {!me?.slug ? (
               <div className="flex items-center gap-2">
                 <span className="text-red-500">还未配置名片，请先设置名片</span>
                 <Link to="/setting">去设置</Link>
@@ -101,16 +125,27 @@ const Dashboard = () => {
       <Card title="快捷导航">
         <div className="flex flex-wrap gap-2 w-auto">
           {navigationItems.map((item) => {
-            const IconComponent = item.icon;
             return (
-              <Link
+              <CardItem
                 key={item.href}
-                to={item.href}
-                className="flex flex-col items-center justify-center w-24 h-24 flex-grow flex-shrink rounded shadow text-gray-700"
-              >
-                <IconComponent className="text-[32px]" />
-                <div className="text-sm mt-1">{item.label}</div>
-              </Link>
+                href={item.href}
+                icon={item.icon}
+                label={item.label}
+              />
+            );
+          })}
+        </div>
+      </Card>
+      <Card title="手艺人工具箱">
+        <div className="flex flex-wrap gap-2 w-auto">
+          {toolItems.map((item) => {
+            return (
+              <CardItem
+                key={item.href}
+                href={item.href}
+                icon={item.icon}
+                label={item.label}
+              />
             );
           })}
         </div>

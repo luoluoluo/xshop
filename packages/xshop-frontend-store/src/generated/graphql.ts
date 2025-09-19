@@ -161,7 +161,7 @@ export type Order = {
   merchantId?: Maybe<Scalars['String']['output']>;
   note?: Maybe<Scalars['String']['output']>;
   paidAt?: Maybe<Scalars['DateTime']['output']>;
-  product?: Maybe<Array<Product>>;
+  product?: Maybe<Product>;
   productDescription?: Maybe<Scalars['String']['output']>;
   productId?: Maybe<Scalars['String']['output']>;
   productImage?: Maybe<Scalars['String']['output']>;
@@ -216,6 +216,7 @@ export type Product = {
   images?: Maybe<Array<Scalars['String']['output']>>;
   isActive?: Maybe<Scalars['Boolean']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
+  slug?: Maybe<Scalars['String']['output']>;
   sort?: Maybe<Scalars['Int']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;
   title?: Maybe<Scalars['String']['output']>;
@@ -284,6 +285,7 @@ export type QueryLinksArgs = {
 
 export type QueryOrderArgs = {
   id: Scalars['String']['input'];
+  isAffiliate?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -293,6 +295,7 @@ export type QueryOrderStatusArgs = {
 
 
 export type QueryOrdersArgs = {
+  isAffiliate?: InputMaybe<Scalars['Boolean']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: OrderWhereInput;

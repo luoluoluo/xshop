@@ -5,6 +5,7 @@ import {
   UpdateProductInput,
 } from "../../../generated/graphql";
 import { useTranslate } from "@refinedev/core";
+import { LinkOutlined } from "@ant-design/icons";
 
 export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
   const t = useTranslate();
@@ -30,6 +31,17 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
         rules={[{ required: true }]}
       >
         <CustomUpload max={20} />
+      </Form.Item>
+
+      <Form.Item name="slug" label="产品链接">
+        <Input
+          prefix={
+            <div className="flex items-center gap-1 text-gray-500">
+              <span>https://xltzx.com/product/</span>
+            </div>
+          }
+          placeholder="请输入产品链接"
+        />
       </Form.Item>
 
       <Form.Item

@@ -6,14 +6,13 @@ import {
   useTable,
 } from "@refinedev/antd";
 import { useTranslate, type BaseRecord } from "@refinedev/core";
-import { Button, message, Space, Table, Tooltip } from "antd";
+import { Button, message, Space, Table } from "antd";
 import { parse } from "graphql";
 import {
   DELETE_PRODUCT_MUTATION,
   PRODUCTS_QUERY,
 } from "../../requests/product.graphql";
 import { Product } from "../../generated/graphql";
-import { InfoCircleOutlined } from "@ant-design/icons";
 import { Clipboard } from "../../components/clipboard";
 
 export const ProductList = () => {
@@ -69,7 +68,9 @@ export const ProductList = () => {
           dataIndex="link"
           title={"链接"}
           render={(_, record: Product) => {
-            const link = `${window.location.origin}/product/${record.id}`;
+            const link = `${window.location.origin}/product/${
+              record.slug || record.id
+            }`;
             return (
               <div className="flex flex-col gap-2">
                 <Button type="link" size="small" href={link} target="_blank">

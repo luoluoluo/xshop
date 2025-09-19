@@ -43,10 +43,6 @@ const BasicSetting = ({
   const [form] = Form.useForm();
 
   useEffect(() => {
-    // 如果slug和id相同，则不显示slug
-    if (me?.slug && me?.slug === me?.id) {
-      me.slug = "";
-    }
     form.setFieldsValue(me);
   }, [me]);
 

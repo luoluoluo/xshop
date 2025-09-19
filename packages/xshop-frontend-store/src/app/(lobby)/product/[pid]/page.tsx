@@ -8,6 +8,7 @@ import { getLogger } from "@/utils/logger";
 import { getUser } from "@/requests/user.server";
 import { BusinessCard } from "@/components/business-card/business-card";
 import { ProductImages } from "@/components/product/product-images";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -56,7 +57,7 @@ export default async function Page({ params }: { params: { pid: string } }) {
     }
     return res.data?.product;
   });
-  if (!product) return null;
+  if (!product) return notFound();
   const user = await getUser({ id: product.userId! }).then((res) => {
     if (res.errors) {
       getLogger().error(res.errors, "getUser error");

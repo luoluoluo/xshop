@@ -21,6 +21,10 @@ export const ORDERS_QUERY = /* GraphQL */ `
         productPrice
         receiverName
         receiverPhone
+        product {
+          id
+          slug
+        }
       }
       total
     }
@@ -49,6 +53,10 @@ export const ORDER_QUERY = /* GraphQL */ `
       productPrice
       receiverName
       receiverPhone
+      product {
+        id
+        slug
+      }
     }
   }
 `;

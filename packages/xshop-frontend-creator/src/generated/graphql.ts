@@ -49,6 +49,7 @@ export type CreateProductInput = {
   images: Array<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   price: Scalars['Float']['input'];
+  slug?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['Int']['input']>;
   stock: Scalars['Int']['input'];
   title: Scalars['String']['input'];
@@ -102,6 +103,7 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  completeOrder: Order;
   createLink: Link;
   createProduct: Product;
   createUserWechatMerchant: User;
@@ -117,6 +119,11 @@ export type Mutation = {
   updateMeWechatOAuth: User;
   updateProduct: Product;
   wechatLogin: AuthToken;
+};
+
+
+export type MutationCompleteOrderArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -258,6 +265,7 @@ export type Product = {
   images?: Maybe<Array<Scalars['String']['output']>>;
   isActive?: Maybe<Scalars['Boolean']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
+  slug?: Maybe<Scalars['String']['output']>;
   sort?: Maybe<Scalars['Int']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;
   title?: Maybe<Scalars['String']['output']>;
@@ -450,6 +458,7 @@ export type UpdateProductInput = {
   images?: InputMaybe<Array<Scalars['String']['input']>>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['Int']['input']>;
   stock?: InputMaybe<Scalars['Int']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;

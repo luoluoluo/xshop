@@ -2,14 +2,15 @@ import { SiteFooter } from "@/components/layouts/site-footer";
 import { SiteHeader } from "@/components/layouts/site-header";
 import { Wechat } from "@/components/wechat";
 import { getLogger } from "@/utils/logger";
-import { GET_ARTICLE } from "@/requests/article.server";
+import { getArticle } from "@/requests/article.server";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
 }) {
-  const article = await GET_ARTICLE({
+  const article = await getArticle({
     slug: params.slug,
   }).then((res) => {
     if (res.errors) {
@@ -39,7 +40,7 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
-  const article = await GET_ARTICLE({
+  const article = await getArticle({
     slug: params.slug,
   }).then((res) => {
     if (res.errors) {
@@ -48,6 +49,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     }
     return res.data?.article;
   });
+  if (!article) return notFound();
   return (
     <div className="relative flex min-h-screen flex-col">
       <img src={`${article?.image}?w=960&h=960`} className="hidden" />

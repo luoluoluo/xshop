@@ -11,14 +11,8 @@ import { ClientType } from '@/types/client';
 @ObjectType()
 @Entity('user')
 export class User extends Base {
-  constructor() {
-    super();
-    if (!this.slug) {
-      this.slug = this.id;
-    }
-  }
   @Field({ nullable: true })
-  @Column({ name: 'slug', unique: true })
+  @Column({ name: 'slug', nullable: true })
   slug?: string;
 
   @Field({ nullable: true })

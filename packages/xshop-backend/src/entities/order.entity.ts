@@ -12,7 +12,7 @@ export class Order extends Base {
   @Column({ name: 'product_id' })
   productId: string;
 
-  @Field(() => [Product], { nullable: true })
+  @Field(() => Product, { nullable: true })
   @ManyToOne(() => Product)
   @JoinColumn({ name: 'product_id' })
   product: Product;

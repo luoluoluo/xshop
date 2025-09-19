@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const ProductItem = ({ product }: { product: Product }) => {
-  const detailUrl = `/product/${product.id}`;
+  const detailUrl = `/product/${product?.slug || product.id}`;
   return (
     <Link
       prefetch={false}

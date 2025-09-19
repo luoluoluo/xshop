@@ -26,6 +26,9 @@ export class CreateProductInput {
 
   @Field(() => Int, { nullable: true })
   sort?: number;
+
+  @Field({ nullable: true })
+  slug?: string;
 }
 
 @InputType()
@@ -53,6 +56,9 @@ export class UpdateProductInput {
 
   @Field(() => Int, { nullable: true })
   sort?: number;
+
+  @Field({ nullable: true })
+  slug?: string;
 }
 
 @InputType()

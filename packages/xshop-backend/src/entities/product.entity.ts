@@ -6,6 +6,10 @@ import { User } from './user.entity';
 @ObjectType()
 @Entity('product')
 export class Product extends Base {
+  @Field({ nullable: true })
+  @Column({ name: 'slug', nullable: true })
+  slug?: string;
+
   @Field(() => String, { nullable: true })
   @Column({ name: 'user_id', nullable: true })
   userId: string;

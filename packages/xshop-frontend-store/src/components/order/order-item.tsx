@@ -145,7 +145,7 @@ export const OrderItem = ({
                 <div>
                   <Link
                     prefetch={false}
-                    href={`/product/${order.productId}`}
+                    href={`/product/${order.product?.slug || order.productId}`}
                     className="font-bold w-full leading-6 inline-block overflow-hidden text-muted-foreground"
                   >
                     {order.productTitle}

@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, ILike, Repository } from 'typeorm';
 import { Product } from '@/entities/product.entity';
@@ -47,6 +42,7 @@ export class ProductService {
       skip,
       take,
       order,
+      relations: ['product'],
     });
 
     return {
@@ -57,7 +53,8 @@ export class ProductService {
 
   async findOne(id: string): Promise<Product> {
     const product = await this.productRepository.findOne({
-      where: { id },
+      where: [{ id }, { slug: id }],
+      relations: ['product'],
     });
     if (!product) {
       throw new NotFoundException(`產品ID ${id} 未找到`);

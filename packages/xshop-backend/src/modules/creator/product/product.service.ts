@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -62,7 +63,7 @@ export class ProductService {
 
   async findOne(id: string): Promise<Product> {
     const product = await this.productRepository.findOne({
-      where: { id },
+      where: [{ id }, { slug: id }],
     });
     if (!product) {
       throw new NotFoundException(`產品ID ${id} 未找到`);
@@ -74,9 +75,18 @@ export class ProductService {
   ): Promise<Product> {
     try {
       // 创建产品
+      if (createProductDto.slug) {
+        const existingProduct = await this.productRepository.findOne({
+          where: { slug: createProductDto.slug },
+        });
+        if (existingProduct) {
+          throw new ConflictException('产品链接重复，请修改产品链接');
+        }
+      }
       const product = this.productRepository.create({
         ...createProductDto,
       });
+
       return this.productRepository.save(product);
     } catch (err) {
       this.logger.error(`創建產品失敗`, {
@@ -101,6 +111,14 @@ export class ProductService {
 
     try {
       // 更新产品基本信息
+      if (updateProductDto.slug && updateProductDto.slug !== product.slug) {
+        const existingProduct = await this.productRepository.findOne({
+          where: { slug: updateProductDto.slug },
+        });
+        if (existingProduct) {
+          throw new ConflictException('产品链接重复，请修改产品链接');
+        }
+      }
       Object.assign(product, updateProductDto);
       console.log(product);
       return this.productRepository.save(product);

@@ -64,7 +64,7 @@ export const ProductPoster = ({
       ctx.fillRect(0, imageHeight - 100, imageWidth, 100);
 
       // 生成二维码
-      const productUrl = `${window.location.origin}/product/${product.id}`;
+      const productUrl = `${window.location.origin}/product/${product.slug || product.id}`;
       const qrCodeDataUrl = await QRCode.toDataURL(productUrl, {
         width: 200,
         margin: 2,
@@ -241,7 +241,7 @@ export const generateProductPosterUrl = async (
     ctx.fillRect(0, imageHeight - 100, imageWidth, 100);
 
     // 生成二维码
-    let productUrl = `${window.location.origin}/product/${product.id}`;
+    let productUrl = `${window.location.origin}/product/${product.slug || product.id}`;
     if (me) {
       productUrl = `${productUrl}?${AFFILIATE_ID_KEY}=${me.id}`;
     }

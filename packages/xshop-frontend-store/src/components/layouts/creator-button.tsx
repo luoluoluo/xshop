@@ -7,7 +7,7 @@ export const CreatorButton = () => {
   const { me } = useAuth();
   const [buttonText, setButtonText] = useState<string>();
   useEffect(() => {
-    if (me && me.id !== me.slug) {
+    if (me?.slug) {
       setButtonText("管理我的主页");
     } else {
       setButtonText("创建我的主页");
