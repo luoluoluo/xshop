@@ -25,6 +25,7 @@ export const USER_QUERY = /* GraphQL */ `
       }
       products {
         id
+        slug
         userId
         title
         description
