@@ -8,6 +8,7 @@ export const PRODUCTS_QUERY = /* GraphQL */ `
     products(where: $where, skip: $skip, take: $take, sorters: $sorters) {
       data {
         id
+        slug
         userId
         user {
           id
@@ -33,6 +34,7 @@ export const PRODUCT_QUERY = /* GraphQL */ `
   query product($id: String!) {
     product(id: $id) {
       id
+      slug
       userId
       user {
         id
