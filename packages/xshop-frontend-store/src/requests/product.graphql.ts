@@ -42,6 +42,7 @@ export const PRODUCT_QUERY = /* GraphQL */ `
       }
       title
       description
+      content
       images
       isActive
       createdAt

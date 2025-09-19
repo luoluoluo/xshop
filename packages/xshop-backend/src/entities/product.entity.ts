@@ -27,6 +27,10 @@ export class Product extends Base {
   @Column({ type: 'text', nullable: true })
   description?: string;
 
+  @Field({ nullable: true })
+  @Column({ type: 'text', nullable: true })
+  content?: string;
+
   @Field(() => [String], { nullable: true })
   @Column({ type: 'json', nullable: true })
   images?: string[];

@@ -6,6 +6,7 @@ import {
 } from "../../../generated/graphql";
 import { useTranslate } from "@refinedev/core";
 import { LinkOutlined } from "@ant-design/icons";
+import { CustomEditor } from "../../../components/custom-editor";
 
 export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
   const t = useTranslate();
@@ -54,6 +55,10 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
 
       <Form.Item label={t("product.fields.description")} name={["description"]}>
         <Input.TextArea maxLength={500} showCount />
+      </Form.Item>
+
+      <Form.Item label={t("product.fields.content")} name={["content"]}>
+        <CustomEditor />
       </Form.Item>
 
       <Form.Item

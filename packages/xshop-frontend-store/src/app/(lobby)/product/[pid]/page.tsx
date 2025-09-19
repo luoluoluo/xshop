@@ -96,9 +96,16 @@ export default async function Page({ params }: { params: { pid: string } }) {
                 <AmountFormat value={product.price!} size="lg"></AmountFormat>
               </div>
             </div>
-            <div className="mt-4 lg:mt-8 pt-4 lg:pt-8 border-t whitespace-pre-wrap">
-              {product.description}
-            </div>
+            {product.content ? (
+              <div
+                className="mt-4 lg:mt-8 pt-4 lg:pt-8 border-t"
+                dangerouslySetInnerHTML={{ __html: product.content }}
+              />
+            ) : (
+              <div className="mt-4 lg:mt-8 pt-4 lg:pt-8 border-t whitespace-pre-wrap">
+                {product.description}
+              </div>
+            )}
             <BuyCard product={product} />
           </div>
           <div className="w-full lg:w-[375px] flex-shrink-0 border-t mt-4 lg:mt-0 lg:border-none">

@@ -12,6 +12,9 @@ export class CreateProductInput {
   @Field({ nullable: true })
   description?: string;
 
+  @Field({ nullable: true })
+  content?: string;
+
   @Field(() => Float)
   price: number;
 
@@ -59,6 +62,9 @@ export class UpdateProductInput {
 
   @Field({ nullable: true })
   slug?: string;
+
+  @Field({ nullable: true })
+  content?: string;
 }
 
 @InputType()

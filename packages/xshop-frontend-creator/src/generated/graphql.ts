@@ -45,6 +45,7 @@ export type CreateLinkInput = {
 
 export type CreateProductInput = {
   commission: Scalars['Float']['input'];
+  content?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   images: Array<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
@@ -220,7 +221,7 @@ export type Order = {
   merchantId?: Maybe<Scalars['String']['output']>;
   note?: Maybe<Scalars['String']['output']>;
   paidAt?: Maybe<Scalars['DateTime']['output']>;
-  product?: Maybe<Array<Product>>;
+  product?: Maybe<Product>;
   productDescription?: Maybe<Scalars['String']['output']>;
   productId?: Maybe<Scalars['String']['output']>;
   productImage?: Maybe<Scalars['String']['output']>;
@@ -259,6 +260,7 @@ export type OrderWhereInput = {
 export type Product = {
   __typename?: 'Product';
   commission?: Maybe<Scalars['Float']['output']>;
+  content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
@@ -454,6 +456,7 @@ export type UpdateMeInput = {
 
 export type UpdateProductInput = {
   commission?: InputMaybe<Scalars['Float']['input']>;
+  content?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   images?: InputMaybe<Array<Scalars['String']['input']>>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;

@@ -210,6 +210,7 @@ export type Payment = {
 export type Product = {
   __typename?: 'Product';
   commission?: Maybe<Scalars['Float']['output']>;
+  content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
