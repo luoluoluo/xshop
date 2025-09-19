@@ -252,12 +252,11 @@ export const BusinessCard = function ({
           <div className="shadow mt-4 p-4 rounded relative">
             <div
               className={cn(
-                `w-full overflow-hidden transition-[max-height] ease-in-out duration-200 max-h-24 lg:max-h-fit whitespace-pre-wrap`,
+                `w-full overflow-hidden transition-[max-height] ease-in-out duration-200 max-h-24 mb-6 lg:max-h-fit whitespace-pre-wrap`,
                 expanded ? "max-h-fit" : "",
               )}
             >
               {user?.description}
-              <div className="h-6"></div>
             </div>
             <div
               className={cn(
