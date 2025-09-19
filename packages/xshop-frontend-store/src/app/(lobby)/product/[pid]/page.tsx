@@ -98,7 +98,7 @@ export default async function Page({ params }: { params: { pid: string } }) {
             </div>
             {product.content ? (
               <div
-                className="mt-4 lg:mt-8 pt-4 lg:pt-8 border-t"
+                className="mt-4 lg:mt-8 pt-4 lg:pt-8 border-t wysiwyg"
                 dangerouslySetInnerHTML={{ __html: product.content }}
               />
             ) : (

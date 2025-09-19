@@ -138,11 +138,11 @@ input[type=number] {
   background: none;
   font-size: 0.8rem;
 }
-/* .wysiwyg img {
+.wysiwyg img, .wysiwyg video {
   max-width: 100%;
   height: auto;
   margin: 0 auto;
-} */
+}
 .wysiwyg blockquote {
   padding-left: 1rem;
   border-left: 2px solid #000000;

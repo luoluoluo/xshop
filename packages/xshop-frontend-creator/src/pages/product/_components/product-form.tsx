@@ -72,10 +72,17 @@ export const ProductForm = ({ formProps }: { formProps: FormProps }) => {
       <Form.Item
         label={t("product.fields.commission")}
         name={["commission"]}
-        extra={`佣金比例不能大于30%，不能小于5%, 佣金比例为: ${(
-          ((commission ?? 0) / (price ?? 0)) *
-          100
-        ).toFixed(2)}%`}
+        extra={
+          <div>
+            <div>
+              1. 佣金比例不能大于30%，不能小于5%, 佣金比例为:
+              <span className="text-blue-500 ml-1">
+                {(((commission ?? 0) / (price ?? 0)) * 100).toFixed(2)}%
+              </span>
+            </div>
+            <div>2. 客户分享您的名片或商品即是帮你分销</div>
+          </div>
+        }
         rules={[
           { required: true },
           {
