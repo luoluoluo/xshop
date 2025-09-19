@@ -48,7 +48,7 @@ export default async function Page({
       <SiteHeader
         logoAttributes={{
           name: user?.name || undefined,
-          logo: user?.avatar || undefined,
+          logo: user?.avatar ? `${user.avatar}?w=375&h=375` : undefined,
           link: `/${user?.slug}`,
         }}
       />

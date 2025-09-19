@@ -137,7 +137,11 @@ export const Contact = ({
               }}
             >
               <Image
-                src={user?.avatar ? user.avatar : "/images/logo.png"}
+                src={
+                  user?.avatar
+                    ? `${user.avatar}?w=375&h=375`
+                    : "/images/logo.png"
+                }
                 alt={user?.name || ""}
                 width={200}
                 height={200}

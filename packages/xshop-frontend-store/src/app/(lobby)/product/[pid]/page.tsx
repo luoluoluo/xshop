@@ -73,7 +73,7 @@ export default async function Page({ params }: { params: { pid: string } }) {
         logoAttributes={{
           link: `/${user?.slug}`,
           name: user?.name || undefined,
-          logo: user?.avatar || undefined,
+          logo: user?.avatar ? `${user.avatar}?w=375&h=375` : undefined,
         }}
       />
       <main>

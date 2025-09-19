@@ -27,7 +27,11 @@ export async function generateMetadata({
     openGraph: {
       title: `${user.name} - ${user.title}`,
       description: user.description,
-      images: [user.avatar || `${u.origin}/images/logo.png`],
+      images: [
+        user.avatar
+          ? `${user.avatar}?w=375&h=375`
+          : `${u.origin}/images/logo.png`,
+      ],
     },
   };
 }
@@ -50,7 +54,7 @@ export default async function Page({
       <SiteHeader
         logoAttributes={{
           name: user?.name || undefined,
-          logo: user?.avatar || undefined,
+          logo: user?.avatar ? `${user.avatar}?w=375&h=375` : undefined,
           link: `/${params.slug}`,
         }}
       />
@@ -73,7 +77,9 @@ export default async function Page({
         shareConfig={{
           title: `${user.name} - ${user.title}`,
           desc: user.description || setting.description,
-          imgUrl: user.avatar || `${u.origin}/images/logo.png`,
+          imgUrl: user.avatar
+            ? `${user.avatar}?w=375&h=375`
+            : `${u.origin}/images/logo.png`,
         }}
       />
     </div>
