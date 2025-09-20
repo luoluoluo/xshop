@@ -327,6 +327,8 @@ export class WechatPayService {
       'Accept-Language': 'zh-CN',
       'Content-Type': 'application/json',
       'User-Agent': 'WechatPay-APIv3-NodeJS-SDK',
+      // todo: 测试
+      'Wechatpay-Serial': 'PUB_KEY_ID_0115840686812025091700181710001800',
       ...(init?.headers || {}),
     };
 
