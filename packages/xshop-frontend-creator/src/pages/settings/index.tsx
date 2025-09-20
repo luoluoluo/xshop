@@ -1,16 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  Form,
-  Input,
-  Button,
-  Card,
-  message,
-  Spin,
-  Alert,
-  Tabs,
-  Breadcrumb,
-} from "antd";
+import { Form, Input, Button, Card, message, Alert, Tabs } from "antd";
 import {
   ShopOutlined,
   BankOutlined,
@@ -395,15 +385,6 @@ export default function Setting() {
 
   return (
     <>
-      <Breadcrumb
-        className="!mb-4"
-        items={[
-          { title: "仪表盘", href: "/" },
-          {
-            title: items.find((item) => item.key === activeTab)?.label,
-          },
-        ]}
-      />
       <Card>
         <Tabs
           defaultActiveKey={activeTab}
