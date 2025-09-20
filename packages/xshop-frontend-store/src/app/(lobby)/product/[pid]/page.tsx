@@ -88,24 +88,28 @@ export default async function Page({ params }: { params: { pid: string } }) {
                 data={product.images || []}
                 className="flex-shrink-0 w-56 h-56 hidden lg:block lg:rounded object-cover object-center rounded-sm overflow-hidden"
               />
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col">
                 <div className="text-2xl font-bold lg:mt-0">
                   {/* <span className=" px-2 rounded border  inline-block mr-2">{product.category?.name}</span> */}
                   {product.title}
                 </div>
-                <AmountFormat value={product.price!} size="lg"></AmountFormat>
+                <div className="whitespace-pre-wrap text-gray-500 mt-1">
+                  {product.description || ""}
+                </div>
+                <AmountFormat
+                  value={product.price!}
+                  size="lg"
+                  className="mt-4"
+                ></AmountFormat>
               </div>
             </div>
+
             {product.content ? (
               <div
                 className="mt-4 lg:mt-8 pt-4 lg:pt-8 border-t wysiwyg"
                 dangerouslySetInnerHTML={{ __html: product.content }}
-              />
-            ) : (
-              <div className="mt-4 lg:mt-8 pt-4 lg:pt-8 border-t whitespace-pre-wrap">
-                {product.description}
-              </div>
-            )}
+              ></div>
+            ) : null}
             <BuyCard product={product} />
           </div>
           <div className="w-full lg:w-[375px] flex-shrink-0 border-t mt-4 lg:mt-0 lg:border-none">

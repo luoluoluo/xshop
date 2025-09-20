@@ -99,7 +99,7 @@ const BasicSetting = ({
         label="个人介绍"
         rules={[{ required: true, message: "请输入个人介绍" }]}
       >
-        <Input.TextArea rows={6} maxLength={500} showCount />
+        <Input.TextArea rows={4} maxLength={500} showCount />
       </Form.Item>
 
       <Form.Item
