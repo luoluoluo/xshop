@@ -161,7 +161,7 @@ export class OrderService {
         productImage: product.images?.[0],
         productDescription: product.description,
         productPrice: product.price,
-        wechatMerchantId: merchant.wechatMerchantId,
+        wechatMerchantId: creator.wechatMerchantId,
       });
 
       const createdOrder = await queryRunner.manager.save(order);
