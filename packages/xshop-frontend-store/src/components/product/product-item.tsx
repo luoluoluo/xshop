@@ -26,8 +26,8 @@ export const ProductItem = ({ product }: { product: Product }) => {
           {/* <span className="text-xs px-2 rounded border h-6 leading-6 inline-block mr-2">{product.category?.name}</span> */}
           {product.title}
         </div>
-        <div className="text-xs text-gray-500 truncate whitespace-pre-wrap mt-1">
-          {product.description?.slice(0, 100)}...
+        <div className="text-xs text-gray-500 truncate mt-1">
+          {product.description}
         </div>
         <div className="text-sm mt-2">
           <AmountFormat size="sm" value={product?.price || 0} />

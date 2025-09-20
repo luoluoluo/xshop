@@ -93,7 +93,7 @@ export default async function Page({ params }: { params: { pid: string } }) {
                   {/* <span className=" px-2 rounded border  inline-block mr-2">{product.category?.name}</span> */}
                   {product.title}
                 </div>
-                <div className="whitespace-pre-wrap text-gray-500 mt-1">
+                <div className="text-gray-500 mt-1">
                   {product.description || ""}
                 </div>
                 <AmountFormat
