@@ -108,12 +108,31 @@ export class OrderService {
         throw new BadRequestException(`库存不足`);
       }
 
-      const merchant = await queryRunner.manager.findOne(User, {
+      const creator = await queryRunner.manager.findOne(User, {
         where: { id: product.userId },
       });
 
-      if (!merchant) {
+      if (!creator) {
         throw new NotFoundException(`Creator ${product.userId} not found`);
+      }
+
+      if (data.affiliateId) {
+        // 如果推广人就是顾客，则默认推广人为商家
+        if (data.affiliateId === customerId) {
+          data.affiliateId = product.userId;
+        } else {
+          const affiliate = await queryRunner.manager.findOne(User, {
+            where: { id: data.affiliateId },
+          });
+
+          // 如果推广人不存在，则默认推广人为商家
+          if (!affiliate) {
+            data.affiliateId = product.userId;
+          }
+        }
+      } else {
+        // 如果未指定推广人，则默认推广人为商家
+        data.affiliateId = product.userId;
       }
 
       // 订单金额
@@ -127,7 +146,7 @@ export class OrderService {
 
       const order = queryRunner.manager.create(Order, {
         customerId: customerId,
-        affiliateId: data.affiliateId || product.userId,
+        affiliateId: data.affiliateId,
         quantity: data.quantity,
         amount,
         affiliateAmount,
