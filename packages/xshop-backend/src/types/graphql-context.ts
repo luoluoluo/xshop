@@ -14,3 +14,10 @@ export interface StoreContext {
   };
   clientType?: string;
 }
+
+export interface CreatorContext {
+  req: Request & {
+    user?: User;
+  };
+  clientType?: string;
+}

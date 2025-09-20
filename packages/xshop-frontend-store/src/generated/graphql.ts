@@ -94,6 +94,7 @@ export type Mutation = {
   refundOrder: Order;
   register: AuthToken;
   sendSmsCode: Scalars['Boolean']['output'];
+  trackView: View;
   updateMe: User;
   updateMeWechatOAuth: User;
   wechatLogin: AuthToken;
@@ -128,6 +129,11 @@ export type MutationRegisterArgs = {
 
 export type MutationSendSmsCodeArgs = {
   data: SendSmsCodeInput;
+};
+
+
+export type MutationTrackViewArgs = {
+  data: TrackViewInput;
 };
 
 
@@ -242,6 +248,8 @@ export type Query = {
   __typename?: 'Query';
   article: Article;
   articles: ArticlePagination;
+  getProductViews: Scalars['Float']['output'];
+  getUserPageViews: Scalars['Float']['output'];
   link: Link;
   links: LinkPagination;
   me: User;
@@ -268,6 +276,16 @@ export type QueryArticleArgs = {
 export type QueryArticlesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetProductViewsArgs = {
+  productId: Scalars['String']['input'];
+};
+
+
+export type QueryGetUserPageViewsArgs = {
+  userId: Scalars['String']['input'];
 };
 
 
@@ -397,6 +415,11 @@ export type SorterInput = {
   field: Scalars['String']['input'];
 };
 
+export type TrackViewInput = {
+  pageUrl: Scalars['String']['input'];
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateMeInput = {
   avatar?: InputMaybe<Scalars['String']['input']>;
   backgroundImage?: InputMaybe<Scalars['String']['input']>;
@@ -427,6 +450,26 @@ export type User = {
   updatedAt: Scalars['DateTime']['output'];
   wechatId?: Maybe<Scalars['String']['output']>;
   wechatOpenId?: Maybe<Scalars['String']['output']>;
+};
+
+export type View = {
+  __typename?: 'View';
+  article?: Maybe<Article>;
+  articleId?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  creator?: Maybe<User>;
+  creatorId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  ipAddress?: Maybe<Scalars['String']['output']>;
+  pageType?: Maybe<Scalars['String']['output']>;
+  pageUrl?: Maybe<Scalars['String']['output']>;
+  product?: Maybe<Product>;
+  productId?: Maybe<Scalars['String']['output']>;
+  referer?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  user?: Maybe<User>;
+  userAgent?: Maybe<Scalars['String']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type WechatAccessToken = {

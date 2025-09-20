@@ -17,6 +17,7 @@ import { ShortLinkModule } from '../_common/short-link/short-link.module';
 import { LinkModule } from './link/link.module';
 import { UserModule } from './user/user.module';
 import { FileModule } from '../_common/file/file.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 import { ClientType } from '@/types/client';
 
 const storeModules = [
@@ -30,6 +31,7 @@ const storeModules = [
   ShortLinkModule,
   LinkModule,
   UserModule,
+  AnalyticsModule,
 ];
 
 @Module({

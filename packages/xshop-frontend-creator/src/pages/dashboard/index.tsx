@@ -3,6 +3,7 @@
 import { Button, Card, message } from "antd";
 import * as Icons from "@ant-design/icons";
 import { Clipboard } from "../../components/clipboard";
+import AnalyticsCard from "../../components/analytics-card";
 import { User, WechatMerchantStatus } from "../../generated/graphql";
 import { useGetIdentity } from "@refinedev/core";
 import { Link } from "react-router";
@@ -36,13 +37,13 @@ const navigationItems = [
   },
 ];
 
-const toolItems = [
-  {
-    href: "https://xltzx.com/product/tool",
-    icon: Icons.CustomerServiceOutlined,
-    label: "99元定制工具",
-  },
-];
+// const toolItems = [
+//   {
+//     href: "https://xltzx.com/product/tool",
+//     icon: Icons.CustomerServiceOutlined,
+//     label: "99元定制工具",
+//   },
+// ];
 
 const CardItem = ({
   href,
@@ -136,20 +137,7 @@ const Dashboard = () => {
           })}
         </div>
       </Card>
-      <Card title="手艺人工具箱">
-        <div className="flex flex-wrap gap-2 w-auto">
-          {toolItems.map((item) => {
-            return (
-              <CardItem
-                key={item.href}
-                href={item.href}
-                icon={item.icon}
-                label={item.label}
-              />
-            );
-          })}
-        </div>
-      </Card>
+      <AnalyticsCard />
     </div>
   );
 };

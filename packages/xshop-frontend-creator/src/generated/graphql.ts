@@ -15,6 +15,19 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type AnalyticsStats = {
+  __typename?: 'AnalyticsStats';
+  orderAmount: Scalars['Float']['output'];
+  orderCount: Scalars['Int']['output'];
+  pv: Scalars['Int']['output'];
+  uv: Scalars['Int']['output'];
+};
+
+export type AnalyticsStatsWhereInput = {
+  endDate: Scalars['DateTime']['input'];
+  startDate: Scalars['DateTime']['input'];
+};
+
 export type Article = {
   __typename?: 'Article';
   content?: Maybe<Scalars['String']['output']>;
@@ -290,6 +303,7 @@ export type ProductWhereInput = {
 
 export type Query = {
   __typename?: 'Query';
+  getAnalyticsStats: AnalyticsStats;
   link: Link;
   links: LinkPagination;
   me: User;
@@ -305,6 +319,11 @@ export type Query = {
   wechatVerifySignature: Scalars['Boolean']['output'];
   withdrawal: Withdrawal;
   withdrawals: WithdrawalPagination;
+};
+
+
+export type QueryGetAnalyticsStatsArgs = {
+  where: AnalyticsStatsWhereInput;
 };
 
 

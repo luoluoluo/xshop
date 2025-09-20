@@ -17,6 +17,7 @@ import { WithdrawalModule } from './withdrawal/withdrawal.module';
 import { LinkModule } from './link/link.module';
 import { UserModule } from './user/user.module';
 import { FileModule } from '../_common/file/file.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 import { ClientType } from '@/types/client';
 
 const creatorModules = [
@@ -30,6 +31,7 @@ const creatorModules = [
   WithdrawalModule,
   LinkModule,
   UserModule,
+  AnalyticsModule,
 ];
 
 @Module({
