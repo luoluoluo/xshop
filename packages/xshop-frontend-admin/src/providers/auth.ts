@@ -2,12 +2,16 @@
 
 export const TOKEN_KEY = "adminToken";
 export const USER_KEY = "adminMe";
-import { User, AuthToken, LoginInput } from "../generated/graphql";
-// import { gql } from "../generated/gql";
+import { User, LoginInput } from "../generated/graphql";
 import { AuthProvider } from "@refinedev/core";
 import Cookies from "js-cookie";
 import dayjs from "dayjs";
 import { getMe, login } from "../requests/auth";
+
+// 防重复调用机制
+let checkPromise: Promise<any> | null = null;
+let lastCheckTime = 0;
+const CHECK_CACHE_DURATION = 5000; // 5秒内不重复调用
 
 export const authProvider: AuthProvider = {
   login: async ({ email, password }: LoginInput) => {
@@ -53,6 +57,9 @@ export const authProvider: AuthProvider = {
   logout: async () => {
     Cookies.remove(USER_KEY);
     Cookies.remove(TOKEN_KEY);
+    // 清理防重复调用状态
+    checkPromise = null;
+    lastCheckTime = 0;
     return new Promise((resolve) => {
       resolve({
         success: true,
@@ -68,22 +75,48 @@ export const authProvider: AuthProvider = {
       return { authenticated: false, redirectTo: "/login" };
     }
 
-    // 调用后端验证 token 并获取最新用户信息
-    const res = await getMe();
+    const now = Date.now();
 
-    if (res.errors) {
-      // Token 无效，清理数据
-      return { authenticated: false, redirectTo: "/login" };
+    // 如果正在请求中，直接返回正在进行的Promise
+    if (checkPromise) {
+      return checkPromise;
     }
 
-    // 更新用户信息缓存
-    if (res.data?.me) {
-      Cookies.set(USER_KEY, JSON.stringify(res.data.me), {
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      });
+    // 如果在缓存时间内，直接返回成功状态
+    if (now - lastCheckTime < CHECK_CACHE_DURATION) {
+      return { authenticated: true };
     }
 
-    return { authenticated: true };
+    // 创建新的检查Promise
+    checkPromise = (async () => {
+      try {
+        // 调用后端验证 token 并获取最新用户信息
+        const res = await getMe();
+
+        if (res.errors) {
+          // Token 无效，清理数据
+          checkPromise = null;
+          return { authenticated: false, redirectTo: "/login" };
+        }
+
+        // 更新用户信息缓存
+        if (res.data?.me) {
+          Cookies.set(USER_KEY, JSON.stringify(res.data.me), {
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+          });
+        }
+
+        lastCheckTime = now;
+        checkPromise = null;
+        return { authenticated: true };
+      } catch (error) {
+        checkPromise = null;
+        console.error("Auth check failed:", error);
+        return { authenticated: false, redirectTo: "/login" };
+      }
+    })();
+
+    return checkPromise;
   },
   getPermissions: async () => {
     const user = authProvider.getIdentity
