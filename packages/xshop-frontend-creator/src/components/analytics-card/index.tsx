@@ -4,6 +4,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 import { getAnalyticsStats } from "../../requests/analytics";
 import { getDateRange, formatDateRange } from "../../utils/date";
 import { AnalyticsStats } from "../../generated/graphql";
+import { Link } from "react-router";
 
 type TabType = "day" | "week" | "month";
 
@@ -115,7 +116,11 @@ const AnalyticsCard = () => {
   ];
 
   return (
-    <Card title="数据统计" className="mb-4">
+    <Card
+      title="数据统计"
+      className="mb-4"
+      extra={<Link to="/view">查看访问记录</Link>}
+    >
       <Tabs
         activeKey={activeTab}
         onChange={(key) => setActiveTab(key as TabType)}

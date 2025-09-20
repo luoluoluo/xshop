@@ -1,10 +1,16 @@
-import { Resolver, Query, Args, Context } from '@nestjs/graphql';
+import { Resolver, Query, Args, Context, Int } from '@nestjs/graphql';
 import { AnalyticsService } from './analytics.service';
 import { View } from '@/entities/view.entity';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { CreatorContext } from '@/types/graphql-context';
 import { UseGuards } from '@nestjs/common';
-import { AnalyticsStats, AnalyticsStatsWhereInput } from './analytics.dto';
+import {
+  AnalyticsStats,
+  AnalyticsStatsWhereInput,
+  ViewPagination,
+  ViewWhereInput,
+} from './analytics.dto';
+import { SorterInput } from '@/types/sorter';
 
 @Resolver(() => View)
 export class AnalyticsResolver {
@@ -22,5 +28,28 @@ export class AnalyticsResolver {
       where.startDate,
       where.endDate,
     );
+  }
+
+  @Query(() => ViewPagination)
+  @UseGuards(GqlAuthGuard)
+  async views(
+    @Context() ctx: CreatorContext,
+    @Args('skip', { type: () => Int, nullable: true }) skip: number,
+    @Args('take', { type: () => Int, nullable: true }) take: number,
+    @Args('where', { type: () => ViewWhereInput, nullable: true })
+    where?: ViewWhereInput,
+    @Args('sorters', { type: () => [SorterInput], nullable: true })
+    sorters?: SorterInput[],
+  ): Promise<ViewPagination> {
+    const creatorId = ctx.req.user!.id;
+    return await this.analyticsService.findAll({
+      skip,
+      take,
+      where: {
+        ...where,
+        creatorId,
+      },
+      sorters,
+    });
   }
 }

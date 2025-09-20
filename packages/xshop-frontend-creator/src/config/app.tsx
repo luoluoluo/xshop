@@ -7,6 +7,7 @@ import {
   ShoppingOutlined,
   LinkOutlined,
   DollarOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 export const getResources = (): ResourceProps[] => {
   return [
@@ -52,6 +53,13 @@ export const getResources = (): ResourceProps[] => {
       show: "/withdrawal/:id",
       meta: {
         icon: <DollarOutlined />,
+      },
+    },
+    {
+      name: "view",
+      list: "/view",
+      meta: {
+        icon: <EyeOutlined />,
       },
     },
     {

@@ -1,12 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
+import { Repository, Between, FindOptionsOrder, ILike } from 'typeorm';
 import { View } from '@/entities/view.entity';
 import { Product } from '@/entities/product.entity';
 import { User } from '@/entities/user.entity';
 import { Order } from '@/entities/order.entity';
-import { AnalyticsStats } from './analytics.dto';
+import {
+  AnalyticsStats,
+  ViewPagination,
+  ViewWhereInput,
+} from './analytics.dto';
 import { OrderStatus } from '@/types/order-status';
+import { SorterInput } from '@/types/sorter';
 
 @Injectable()
 export class AnalyticsService {
@@ -76,6 +81,49 @@ export class AnalyticsService {
       uv,
       orderCount,
       orderAmount,
+    };
+  }
+
+  async findAll({
+    skip,
+    take,
+    where,
+    sorters,
+  }: {
+    skip?: number;
+    take?: number;
+    where?: ViewWhereInput;
+    sorters?: SorterInput[];
+  }): Promise<ViewPagination> {
+    const order: FindOptionsOrder<View> = {};
+    if (sorters?.length) {
+      sorters.forEach((sorter) => {
+        order[sorter.field] = sorter.direction;
+      });
+    } else {
+      order.createdAt = 'desc';
+    }
+
+    const [items, total] = await this.viewRepository.findAndCount({
+      where: {
+        id: where?.id,
+        productId: where?.productId,
+        articleId: where?.articleId,
+        creatorId: where?.creatorId,
+        ipAddress: where?.ipAddress
+          ? ILike(`%${where?.ipAddress}%`)
+          : undefined,
+        pageType: where?.pageType,
+      },
+      skip,
+      take,
+      order,
+      relations: ['user', 'product', 'article', 'creator'],
+    });
+
+    return {
+      data: items,
+      total,
     };
   }
 }

@@ -313,6 +313,7 @@ export type Query = {
   products: ProductPagination;
   shortLink: ShortLink;
   signedFileUrl: SignedFileUrl;
+  views: ViewPagination;
   wechatAccessToken: WechatAccessToken;
   wechatJsConfig?: Maybe<WechatJsConfig>;
   wechatOauthUrl: Scalars['String']['output'];
@@ -372,6 +373,14 @@ export type QueryShortLinkArgs = {
 
 export type QuerySignedFileUrlArgs = {
   filename: Scalars['String']['input'];
+};
+
+
+export type QueryViewsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  sorters?: InputMaybe<Array<SorterInput>>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ViewWhereInput>;
 };
 
 
@@ -511,6 +520,41 @@ export type User = {
   wechatMerchantId?: Maybe<Scalars['String']['output']>;
   wechatMerchantStatus?: Maybe<WechatMerchantStatus>;
   wechatOpenId?: Maybe<Scalars['String']['output']>;
+};
+
+export type View = {
+  __typename?: 'View';
+  article?: Maybe<Article>;
+  articleId?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  creator?: Maybe<User>;
+  creatorId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  ipAddress?: Maybe<Scalars['String']['output']>;
+  pageType?: Maybe<Scalars['String']['output']>;
+  pageUrl?: Maybe<Scalars['String']['output']>;
+  product?: Maybe<Product>;
+  productId?: Maybe<Scalars['String']['output']>;
+  referer?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  user?: Maybe<User>;
+  userAgent?: Maybe<Scalars['String']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
+};
+
+export type ViewPagination = {
+  __typename?: 'ViewPagination';
+  data: Array<View>;
+  total: Scalars['Int']['output'];
+};
+
+export type ViewWhereInput = {
+  articleId?: InputMaybe<Scalars['String']['input']>;
+  creatorId?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  ipAddress?: InputMaybe<Scalars['String']['input']>;
+  pageType?: InputMaybe<Scalars['String']['input']>;
+  productId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type WechatAccessToken = {

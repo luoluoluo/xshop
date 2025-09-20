@@ -35,15 +35,12 @@ const navigationItems = [
     icon: Icons.DollarOutlined,
     label: "提现管理",
   },
+  {
+    href: "https://xltzx.com/lyj",
+    icon: Icons.CustomerServiceOutlined,
+    label: "技术支持服务",
+  },
 ];
-
-// const toolItems = [
-//   {
-//     href: "https://xltzx.com/product/tool",
-//     icon: Icons.CustomerServiceOutlined,
-//     label: "99元定制工具",
-//   },
-// ];
 
 const CardItem = ({
   href,
@@ -61,7 +58,7 @@ const CardItem = ({
       className="flex flex-col items-center justify-center w-24 h-24 p-4 flex-grow flex-shrink rounded shadow text-gray-700"
     >
       <IconComponent className="text-[32px]" />
-      <div className="text-sm mt-1">{label}</div>
+      <div className="text-sm mt-1 text-nowrap">{label}</div>
     </Link>
   );
 };
@@ -106,14 +103,14 @@ const Dashboard = () => {
                 <div className="flex flex-col items-center gap-2">
                   <div className="text-sm text-gray-500 flex flex-col items-center">
                     <span>
-                      配置微信支付后，客户支付资金将自动到您的微信商户号,
+                      开通微信支付后，客户支付资金将自动到您的微信商户号,
                       微信支付费率低至0.2%
                     </span>
                     <span className="text-red-500 text-sm">
-                      （未配置则由小驴通代收，提现将代扣6%税费）
+                      （未开通则由小驴通代收，提现将代扣6%税费）
                     </span>
                     <Link to="/setting?tab=payment" className="mt-2">
-                      立即配置
+                      立即开通
                     </Link>
                   </div>
                 </div>

@@ -875,6 +875,25 @@
       "updatedAt": "更新时间"
     }
   },
+  "view": {
+    "view": "访问记录",
+    "titles": {
+      "list": "访问记录",
+      "show": "访问详情"
+    },
+    "fields": {
+      "id": "编号",
+      "pageType": "页面类型",
+      "product": "商品",
+      "article": "文章",
+      "user": "用户",
+      "ipAddress": "IP地址",
+      "userAgent": "用户代理",
+      "referer": "来源页面",
+      "pageUrl": "页面URL",
+      "createdAt": "访问时间"
+    }
+  },
   "withdrawal": {
     "withdrawal": "提现",
     "titles": {
@@ -896,5 +915,13 @@
       "completedAt": "完成时间",
       "rejectedAt": "拒绝时间"
     }
+  },
+  "resources": {
+    "product": "商品",
+    "order": "订单",
+    "link": "链接",
+    "withdrawal": "提现",
+    "view": "访问记录",
+    "setting": "设置"
   }
 }

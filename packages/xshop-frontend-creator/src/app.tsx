@@ -46,6 +46,7 @@ import {
   WithdrawalCreate,
   WithdrawalShow,
 } from "./pages/withdrawal";
+import { ViewList } from "./pages/view";
 
 // Component to handle token extraction from URL params
 function TokenHandler() {
@@ -145,6 +146,9 @@ function App() {
                       <Route index element={<WithdrawalList />} />
                       <Route path="new" element={<WithdrawalCreate />} />
                       <Route path=":id" element={<WithdrawalShow />} />
+                    </Route>
+                    <Route path="/view">
+                      <Route index element={<ViewList />} />
                     </Route>
                     <Route path="/setting" element={<Setting />} />
 
