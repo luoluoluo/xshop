@@ -105,7 +105,7 @@ const BasicSetting = ({
       <Form.Item
         name="backgroundImage"
         label="名片背景图"
-        extra="建议尺寸：1920*1080"
+        extra="建议尺寸：900*540"
       >
         <CustomUpload />
       </Form.Item>
