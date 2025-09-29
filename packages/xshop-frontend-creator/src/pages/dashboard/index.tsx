@@ -38,7 +38,7 @@ const navigationItems = [
   {
     href: "https://xltzx.com/lyj",
     icon: Icons.CustomerServiceOutlined,
-    label: "技术支持服务",
+    label: "技术支持",
   },
 ];
 
