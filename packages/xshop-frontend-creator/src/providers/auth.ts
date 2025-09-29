@@ -63,6 +63,25 @@ export const authProvider: AuthProvider = {
   // 1. check 方法：负责验证和更新缓存
   check: async () => {
     const token = Cookies.get(TOKEN_KEY);
+    // 检查 URL 参数中是否有 code 和 state，如果有则自动登录
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+    const state = urlParams.get("state");
+
+    if (code && state) {
+      try {
+        // 自动调用登录
+        const loginResult = await authProvider.login({ code, state });
+        if (loginResult.success) {
+          return { authenticated: true };
+        } else {
+          return { authenticated: false, redirectTo: "/login" };
+        }
+      } catch (error) {
+        console.error("Auto login failed:", error);
+        return { authenticated: false, redirectTo: "/login" };
+      }
+    }
     if (!token) {
       // 清理认证数据
       return { authenticated: false, redirectTo: "/login" };
