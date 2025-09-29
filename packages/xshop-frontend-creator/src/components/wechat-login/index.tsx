@@ -28,7 +28,7 @@ export const WechatLogin = () => {
     // 还未获取到渠道，不进行请求
     if (isWechat === undefined) return;
 
-    const redirectUrl = `${window.location.origin}/creator/`;
+    const redirectUrl = window.location.href;
 
     // 微信登录回调
     if (code && state) {
