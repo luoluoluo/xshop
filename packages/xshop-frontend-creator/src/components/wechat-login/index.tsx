@@ -31,12 +31,7 @@ export const WechatLogin = () => {
     const redirectUrl = window.location.href;
 
     // 微信登录回调
-    if (code && state) {
-      login({
-        code,
-        state,
-      });
-    } else {
+    if (!code || !state) {
       const state = `wechat-state:${crypto.randomUUID()}`;
       getWechatOauthUrl({
         redirectUrl,

@@ -33,31 +33,7 @@ export const LoginForm = ({ className }: { className?: string }) => {
     const redirectUrl = decodeURIComponent(
       u.searchParams.get("url") || window.location.origin,
     );
-    // 微信登录回调
-    if (code && state) {
-      wechatLogin({
-        data: {
-          code,
-          state,
-        },
-      })
-        .then((res) => {
-          if (res.errors) {
-            toast({
-              title: res.errors[0].message,
-              variant: "destructive",
-            });
-            return;
-          }
-          if (res.data?.wechatLogin) {
-            setToken(res.data.wechatLogin.token);
-            window.location.href = redirectUrl;
-          }
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    } else {
+    if (!code || !state) {
       const state = `wechat-state:${crypto.randomUUID()}`;
       getWechatOauthUrl({
         // redirectUrl: "https://xltzx.com",

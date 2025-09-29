@@ -73,7 +73,7 @@ export const authProvider: AuthProvider = {
         // 自动调用登录
         const loginResult = await authProvider.login({ code, state });
         if (loginResult.success) {
-          return { authenticated: true };
+          return { authenticated: true, redirectTo: "/" };
         } else {
           return { authenticated: false, redirectTo: "/login" };
         }
