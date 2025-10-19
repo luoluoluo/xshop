@@ -1,12 +1,13 @@
-import { Resolver, Query, Mutation, Args, Context, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { OrderService } from './order.service';
 import { Order } from '@/entities/order.entity';
 import { UseGuards } from '@nestjs/common';
 import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
 import { OrderPagination, OrderWhereInput } from './order.dto';
-import { StoreContext } from '@/types/graphql-context';
 import { WechatPayService } from '@/modules/_common/wechat-pay/wechat-pay.service';
 import { CommonOrderService } from '@/modules/_common/order/order.service';
+import { UserSession } from '@/modules/_common/auth/decorators/user-session.decorator';
+import { User } from '@/entities/user.entity';
 
 @Resolver(() => Order)
 export class OrderResolver {
@@ -17,9 +18,8 @@ export class OrderResolver {
   ) {}
 
   @Query(() => OrderPagination)
-  @UseGuards(UserAuthGuard)
   async orders(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
     @Args('take', { type: () => Int, nullable: true }) take: number,
     @Args('where', { type: () => OrderWhereInput, nullable: true })
@@ -30,7 +30,7 @@ export class OrderResolver {
       skip,
       where: {
         ...where,
-        merchantId: ctx.req.user?.id,
+        merchantId: user.id,
       },
       relations: {
         customer: true,
@@ -43,12 +43,12 @@ export class OrderResolver {
   @Query(() => Order)
   @UseGuards(UserAuthGuard)
   async order(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('id') id: string,
   ): Promise<Order> {
     return this.orderService.findOne(id, {
       where: {
-        merchantId: ctx.req.user?.id,
+        merchantId: user.id,
       },
       relations: {
         customer: true,
@@ -61,13 +61,13 @@ export class OrderResolver {
   @Mutation(() => Order)
   @UseGuards(UserAuthGuard)
   async refundOrder(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('id') id: string,
     @Args('reason', { nullable: true }) reason?: string,
   ): Promise<Order> {
     return await this.commonOrderService.refund(id, {
       customValidation: (order) => {
-        if (ctx.req.user?.id && order.merchantId !== ctx.req.user?.id) {
+        if (user.id && order.merchantId !== user.id) {
           throw new Error(`Order ${id} not found`);
         }
       },
@@ -78,12 +78,12 @@ export class OrderResolver {
   @Mutation(() => Order)
   @UseGuards(UserAuthGuard)
   async completeOrder(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('id') id: string,
   ): Promise<Order> {
     return this.commonOrderService.complete(id, {
       customValidation: (order) => {
-        if (ctx.req.user?.id && order.merchantId !== ctx.req.user?.id) {
+        if (user.id && order.merchantId !== user.id) {
           throw new Error(`Order ${id} not found`);
         }
       },

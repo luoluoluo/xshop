@@ -1,11 +1,12 @@
-import { Resolver, Query, Args, Int, Context } from '@nestjs/graphql';
+import { Resolver, Query, Args, Int } from '@nestjs/graphql';
 import { Product } from '@/entities/product.entity';
 import { ProductService } from './product.service';
 import { ProductPagination, ProductWhereInput } from './product.dto';
 import { SorterInput } from '@/types/sorter';
 import { UseGuards } from '@nestjs/common';
 import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
-import { StoreContext } from '@/types/graphql-context';
+import { UserSession } from '@/modules/_common/auth/decorators/user-session.decorator';
+import { User } from '@/entities/user.entity';
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -14,7 +15,7 @@ export class ProductResolver {
   @Query(() => ProductPagination)
   @UseGuards(UserAuthGuard)
   async products(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
     @Args('take', { type: () => Int, nullable: true }) take: number,
     @Args('where', { type: () => ProductWhereInput, nullable: true })
@@ -27,7 +28,7 @@ export class ProductResolver {
       take,
       where: {
         ...where,
-        userId: ctx.req.user?.id,
+        userId: user.id,
       },
       sorters,
     });

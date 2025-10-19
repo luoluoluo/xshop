@@ -1,8 +1,9 @@
-import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { AnalyticsService } from './analytics.service';
 import { View } from '@/entities/view.entity';
 import { TrackViewInput } from './analytics.dto';
-import { StoreContext } from '@/types/graphql-context';
+import { Req } from '@nestjs/common';
+import { Request } from 'express';
 
 @Resolver(() => View)
 export class AnalyticsResolver {
@@ -10,10 +11,10 @@ export class AnalyticsResolver {
 
   @Mutation(() => View)
   async trackView(
+    @Req() request: Request,
     @Args('data') data: TrackViewInput,
-    @Context() context: StoreContext,
   ): Promise<View> {
-    return this.analyticsService.trackView(data, context.req);
+    return this.analyticsService.trackView(data, request);
   }
 
   @Query(() => Number)

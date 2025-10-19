@@ -9,17 +9,16 @@ import {
 } from './link.dto';
 import { SorterInput } from '@/types/sorter';
 import { UseGuards } from '@nestjs/common';
-import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
-import { StoreContext } from '@/types/graphql-context';
+import { UserSession } from '@/modules/_common/auth/decorators/user-session.decorator';
+import { User } from '@/entities/user.entity';
 
 @Resolver(() => Link)
 export class LinkResolver {
   constructor(private readonly linkService: LinkService) {}
 
   @Query(() => LinkPagination)
-  @UseGuards(UserAuthGuard)
   async links(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
     @Args('take', { type: () => Int, nullable: true }) take: number,
     @Args('where', { type: () => LinkWhereInput, nullable: true })
@@ -32,7 +31,7 @@ export class LinkResolver {
       take,
       where: {
         ...where,
-        userId: ctx.req.user?.id,
+        userId: user.id,
       },
       sorters,
     });
@@ -44,33 +43,30 @@ export class LinkResolver {
   }
 
   @Mutation(() => Link)
-  @UseGuards(UserAuthGuard)
   async createLink(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('data') data: CreateLinkInput,
   ): Promise<Link> {
     return await this.linkService.create({
       ...data,
-      userId: ctx.req.user?.id,
+      userId: user.id,
     });
   }
 
   @Mutation(() => Link)
-  @UseGuards(UserAuthGuard)
   async updateLink(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('id') id: string,
     @Args('data') data: UpdateLinkInput,
   ): Promise<Link> {
-    return await this.linkService.update(id, data, ctx.req.user?.id);
+    return await this.linkService.update(id, data, user.id);
   }
 
   @Mutation(() => Boolean)
-  @UseGuards(UserAuthGuard)
   async deleteLink(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('id') id: string,
   ): Promise<boolean> {
-    return await this.linkService.delete(id, ctx.req.user?.id);
+    return await this.linkService.delete(id, user.id);
   }
 }

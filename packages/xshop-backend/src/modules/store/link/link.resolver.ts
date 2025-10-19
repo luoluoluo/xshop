@@ -5,7 +5,8 @@ import { LinkPagination, LinkWhereInput } from './link.dto';
 import { SorterInput } from '@/types/sorter';
 import { UseGuards } from '@nestjs/common';
 import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
-import { StoreContext } from '@/types/graphql-context';
+import { UserSession } from '@/modules/_common/auth/decorators/user-session.decorator';
+import { User } from '@/entities/user.entity';
 
 @Resolver(() => Link)
 export class LinkResolver {
@@ -14,7 +15,7 @@ export class LinkResolver {
   @Query(() => LinkPagination)
   @UseGuards(UserAuthGuard)
   async links(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
     @Args('take', { type: () => Int, nullable: true }) take: number,
     @Args('where', { type: () => LinkWhereInput, defaultValue: {} })
@@ -27,7 +28,7 @@ export class LinkResolver {
       take,
       where: {
         ...where,
-        userId: ctx.req.user?.id,
+        userId: user.id,
       },
       sorters,
     });

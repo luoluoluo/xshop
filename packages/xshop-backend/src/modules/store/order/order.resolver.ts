@@ -9,11 +9,12 @@ import {
   OrderPagination,
   OrderWhereInput,
 } from './order.dto';
-import { StoreContext } from '@/types/graphql-context';
 import { WechatPayService } from '@/modules/_common/wechat-pay/wechat-pay.service';
 import { Payment } from '@/modules/_common/wechat-pay/wechat-pay.dto';
 import { CommonOrderService } from '@/modules/_common/order/order.service';
 import { OrderStatus } from '@/types/order-status';
+import { UserSession } from '@/modules/_common/auth/decorators/user-session.decorator';
+import { User } from '@/entities/user.entity';
 
 @Resolver(() => Order)
 export class OrderResolver {
@@ -26,7 +27,7 @@ export class OrderResolver {
   @Query(() => OrderPagination)
   @UseGuards(UserAuthGuard)
   async orders(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
     @Args('take', { type: () => Int, nullable: true }) take: number,
     @Args('where', { type: () => OrderWhereInput, defaultValue: {} })
@@ -39,8 +40,8 @@ export class OrderResolver {
       skip,
       where: {
         ...where,
-        customerId: isAffiliate ? undefined : ctx.req.user?.id,
-        affiliateId: isAffiliate ? ctx.req.user?.id : undefined,
+        customerId: isAffiliate ? undefined : user.id,
+        affiliateId: isAffiliate ? user.id : undefined,
       },
     });
   }
@@ -48,15 +49,15 @@ export class OrderResolver {
   @Query(() => Order)
   @UseGuards(UserAuthGuard)
   async order(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('id') id: string,
     @Args('isAffiliate', { type: () => Boolean, nullable: true })
     isAffiliate?: boolean,
   ): Promise<Order> {
     return this.orderService.findOne(id, {
       where: {
-        customerId: isAffiliate ? undefined : ctx.req.user?.id,
-        affiliateId: isAffiliate ? ctx.req.user?.id : undefined,
+        customerId: isAffiliate ? undefined : user.id,
+        affiliateId: isAffiliate ? user.id : undefined,
       },
     });
   }
@@ -64,10 +65,10 @@ export class OrderResolver {
   @Mutation(() => Order)
   @UseGuards(UserAuthGuard)
   async createOrder(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('data') data: CreateOrderInput,
   ): Promise<Order> {
-    return this.orderService.create(ctx.req.user!.id, data);
+    return this.orderService.create(user.id, data);
   }
 
   @Mutation(() => Payment)
@@ -88,13 +89,13 @@ export class OrderResolver {
   @Mutation(() => Order)
   @UseGuards(UserAuthGuard)
   async refundOrder(
-    @Context() ctx: StoreContext,
+    @UserSession() user: User,
     @Args('id') id: string,
     @Args('reason', { nullable: true }) reason?: string,
   ): Promise<Order> {
     return await this.commonOrderService.refund(id, {
       customValidation: (order) => {
-        if (ctx.req.user?.id && order.merchantId !== ctx.req.user?.id) {
+        if (user.id && order.merchantId !== user.id) {
           throw new Error(`Order ${id} not found`);
         }
       },
