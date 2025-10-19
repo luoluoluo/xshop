@@ -1,7 +1,7 @@
 import { Resolver, Query, Args, Context, Int } from '@nestjs/graphql';
 import { AnalyticsService } from './analytics.service';
 import { View } from '@/entities/view.entity';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
+import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
 import { CreatorContext } from '@/types/graphql-context';
 import { UseGuards } from '@nestjs/common';
 import {
@@ -17,7 +17,7 @@ export class AnalyticsResolver {
   constructor(private readonly analyticsService: AnalyticsService) {}
 
   @Query(() => AnalyticsStats)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async getAnalyticsStats(
     @Args('where') where: AnalyticsStatsWhereInput,
     @Context() ctx: CreatorContext,
@@ -31,7 +31,7 @@ export class AnalyticsResolver {
   }
 
   @Query(() => ViewPagination)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async views(
     @Context() ctx: CreatorContext,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,

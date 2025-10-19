@@ -45,7 +45,8 @@ const creatorModules = [
     ...creatorModules,
     GraphQLModule.forRoot<ApolloDriverConfig>(
       createGraphQLConfig({
-        path: '/creator',
+        path: '/',
+        endpoint: '/creator',
         schemaPath: './schemas/creator.gql',
         modules: creatorModules,
         clientType: ClientType.CREATOR,

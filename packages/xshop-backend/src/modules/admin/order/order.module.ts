@@ -3,9 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from '@/entities/order.entity';
 import { OrderService } from './order.service';
 import { OrderResolver } from './order.resolver';
-
+import { AuthModule } from '@/modules/_common/auth/auth.module';
 @Module({
-  imports: [TypeOrmModule.forFeature([Order])],
+  imports: [AuthModule, TypeOrmModule.forFeature([Order])],
   providers: [OrderService, OrderResolver],
   exports: [OrderService, OrderResolver],
 })

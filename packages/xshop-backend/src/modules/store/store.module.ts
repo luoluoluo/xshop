@@ -45,7 +45,8 @@ const storeModules = [
     ...storeModules,
     GraphQLModule.forRoot<ApolloDriverConfig>(
       createGraphQLConfig({
-        path: '/store',
+        path: '/',
+        endpoint: '/store',
         schemaPath: './schemas/store.gql',
         modules: storeModules,
         clientType: ClientType.STORE,

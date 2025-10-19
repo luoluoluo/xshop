@@ -40,7 +40,8 @@ const adminModules = [
     ...adminModules,
     GraphQLModule.forRoot<ApolloDriverConfig>(
       createGraphQLConfig({
-        path: '/admin',
+        path: '/',
+        endpoint: '/admin',
         schemaPath: './schemas/admin.gql',
         modules: adminModules,
         clientType: ClientType.ADMIN,

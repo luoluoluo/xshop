@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@/entities/user.entity';
 import { Role } from '@/entities/role.entity';
 import { WechatModule } from '@/modules/_common/wechat/wechat.module';
-
+import { AuthModule } from '@/modules/_common/auth/auth.module';
 @Module({
-  imports: [WechatModule, TypeOrmModule.forFeature([User, Role])],
+  imports: [AuthModule, WechatModule, TypeOrmModule.forFeature([User, Role])],
   providers: [UserService, UserResolver],
   exports: [UserService, UserResolver],
 })

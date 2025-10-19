@@ -6,11 +6,11 @@ import { User } from '@/entities/user.entity';
 import { Order } from '@/entities/order.entity';
 import { AnalyticsService } from './analytics.service';
 import { AnalyticsResolver } from './analytics.resolver';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
+import { AuthModule } from '@/modules/_common/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([View, Product, User, Order])],
-  providers: [AnalyticsService, AnalyticsResolver, GqlAuthGuard],
+  imports: [AuthModule, TypeOrmModule.forFeature([View, Product, User, Order])],
+  providers: [AnalyticsService, AnalyticsResolver],
   exports: [AnalyticsService],
 })
 export class AnalyticsModule {}

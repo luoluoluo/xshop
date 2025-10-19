@@ -2,21 +2,21 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { Article } from '@/entities/article.entity';
 import { ArticleService } from './article.service';
-import { GqlAuthGuard } from '../../auth/guards/gql-auth.guard';
 import {
   CreateArticleInput,
   UpdateArticleInput,
   ArticlePagination,
   ArticleWhereInput,
 } from './article.dto';
-import { RequirePermission } from '../../auth/decorators/require-permission.decorator';
+import { RequirePermission } from '@/modules/_common/auth/decorators/require-permission.decorator';
+import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
 
 @Resolver(() => Article)
 export class ArticleResolver {
   constructor(private readonly articleService: ArticleService) {}
 
   @Query(() => ArticlePagination)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('article.list')
   async articles(
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
@@ -31,14 +31,14 @@ export class ArticleResolver {
   }
 
   @Query(() => Article)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('article.show')
   async article(@Args('id') id: string): Promise<Article> {
     return await this.articleService.findOne(id);
   }
 
   @Mutation(() => Article)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('article.create')
   async createArticle(
     @Args('data') data: CreateArticleInput,
@@ -47,7 +47,7 @@ export class ArticleResolver {
   }
 
   @Mutation(() => Article)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('article.edit')
   async updateArticle(
     @Args('id') id: string,
@@ -57,7 +57,7 @@ export class ArticleResolver {
   }
 
   @Mutation(() => Boolean)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('article.delete')
   async deleteArticle(@Args('id') id: string): Promise<boolean> {
     return await this.articleService.delete(id);

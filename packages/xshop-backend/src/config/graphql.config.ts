@@ -12,6 +12,7 @@ import { CLIENT_TYPE_REGISTRY } from '@/decorators/client.decorator';
  */
 export function createGraphQLConfig(options: {
   path: string;
+  endpoint?: string; // playground 使用的完整端点路径
   schemaPath: string;
   modules: Type<any>[];
   clientType: string;
@@ -83,8 +84,9 @@ export function createGraphQLConfig(options: {
         clientType: options.clientType,
       };
     },
-    graphiql: true,
-    playground: true,
+    graphiql: {
+      url: options.endpoint || options.path,
+    },
     autoSchemaFile: schemaPath,
     path: options.path,
     debug: true,

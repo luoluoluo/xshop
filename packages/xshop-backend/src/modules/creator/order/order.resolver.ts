@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args, Context, Int } from '@nestjs/graphql';
 import { OrderService } from './order.service';
 import { Order } from '@/entities/order.entity';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
+import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
 import { OrderPagination, OrderWhereInput } from './order.dto';
 import { StoreContext } from '@/types/graphql-context';
 import { WechatPayService } from '@/modules/_common/wechat-pay/wechat-pay.service';
@@ -17,7 +17,7 @@ export class OrderResolver {
   ) {}
 
   @Query(() => OrderPagination)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async orders(
     @Context() ctx: StoreContext,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
@@ -41,7 +41,7 @@ export class OrderResolver {
   }
 
   @Query(() => Order)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async order(
     @Context() ctx: StoreContext,
     @Args('id') id: string,
@@ -59,7 +59,7 @@ export class OrderResolver {
   }
 
   @Mutation(() => Order)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async refundOrder(
     @Context() ctx: StoreContext,
     @Args('id') id: string,
@@ -76,7 +76,7 @@ export class OrderResolver {
   }
 
   @Mutation(() => Order)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async completeOrder(
     @Context() ctx: StoreContext,
     @Args('id') id: string,

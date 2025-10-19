@@ -9,7 +9,7 @@ import {
 } from './link.dto';
 import { SorterInput } from '@/types/sorter';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
+import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
 import { StoreContext } from '@/types/graphql-context';
 
 @Resolver(() => Link)
@@ -17,7 +17,7 @@ export class LinkResolver {
   constructor(private readonly linkService: LinkService) {}
 
   @Query(() => LinkPagination)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async links(
     @Context() ctx: StoreContext,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
@@ -44,7 +44,7 @@ export class LinkResolver {
   }
 
   @Mutation(() => Link)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async createLink(
     @Context() ctx: StoreContext,
     @Args('data') data: CreateLinkInput,
@@ -56,7 +56,7 @@ export class LinkResolver {
   }
 
   @Mutation(() => Link)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async updateLink(
     @Context() ctx: StoreContext,
     @Args('id') id: string,
@@ -66,7 +66,7 @@ export class LinkResolver {
   }
 
   @Mutation(() => Boolean)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async deleteLink(
     @Context() ctx: StoreContext,
     @Args('id') id: string,

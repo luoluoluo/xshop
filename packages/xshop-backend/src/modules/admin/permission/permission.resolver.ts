@@ -2,15 +2,15 @@ import { Resolver, Query } from '@nestjs/graphql';
 import { Permission } from './permission.dto';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { PermissionService } from './permission.service';
 import { camelCase } from 'lodash';
+import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
 
 @Resolver()
 export class PermissionResolver {
   constructor(private readonly permissionService: PermissionService) {}
   @Query(() => [Permission])
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   permissions(@I18n() i18n: I18nContext) {
     const permissions = ['*', ...this.permissionService.findAll()];
 

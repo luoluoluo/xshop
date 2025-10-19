@@ -2,7 +2,6 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { User } from '@/entities/user.entity';
 import { UserService } from './user.service';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import {
   CompleteUserWechatMerchantInput,
   CreateUserInput,
@@ -10,14 +9,15 @@ import {
   UserPagination,
   UserWhereInput,
 } from './user.dto';
-import { RequirePermission } from '../auth/decorators/require-permission.decorator';
+import { RequirePermission } from '@/modules/_common/auth/decorators/require-permission.decorator';
+import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
 
 @Resolver(() => User)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => UserPagination)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('user.list')
   async users(
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
@@ -37,21 +37,21 @@ export class UserResolver {
   }
 
   @Query(() => User)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('user.show')
   async user(@Args('id') id: string): Promise<User> {
     return await this.userService.findOne(id);
   }
 
   @Mutation(() => User)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('user.create')
   async createUser(@Args('data') data: CreateUserInput): Promise<User> {
     return await this.userService.create(data);
   }
 
   @Mutation(() => User)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('user.edit')
   async updateUser(
     @Args('id') id: string,
@@ -61,14 +61,14 @@ export class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('user.delete')
   async deleteUser(@Args('id') id: string): Promise<boolean> {
     return await this.userService.delete(id);
   }
 
   @Mutation(() => Boolean)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('user.completeUserWechatMerchant')
   async completeUserWechatMerchant(
     @Args('data') data: CompleteUserWechatMerchantInput,

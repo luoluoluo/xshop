@@ -4,7 +4,7 @@ import { ProductService } from './product.service';
 import { ProductPagination, ProductWhereInput } from './product.dto';
 import { SorterInput } from '@/types/sorter';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
+import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
 import { StoreContext } from '@/types/graphql-context';
 
 @Resolver(() => Product)
@@ -12,7 +12,7 @@ export class ProductResolver {
   constructor(private readonly productService: ProductService) {}
 
   @Query(() => ProductPagination)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async products(
     @Context() ctx: StoreContext,
     @Args('skip', { type: () => Int, nullable: true }) skip: number,

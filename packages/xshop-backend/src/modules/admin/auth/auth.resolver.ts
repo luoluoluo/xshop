@@ -1,10 +1,10 @@
-import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { AuthToken, LoginInput } from './auth.dto';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from './guards/gql-auth.guard';
+import { UserAuthGuard } from '../../_common/auth/guards/user-auth.guard';
 import { User } from '@/entities/user.entity';
-import { AdminContext } from '@/types/graphql-context';
+import { UserSession } from '@/modules/_common/auth/decorators/user-session.decorator';
 
 @Resolver()
 export class AuthResolver {
@@ -16,8 +16,8 @@ export class AuthResolver {
   }
 
   @Query(() => User)
-  @UseGuards(GqlAuthGuard)
-  me(@Context() ctx: AdminContext) {
-    return ctx.req.user;
+  @UseGuards(UserAuthGuard)
+  me(@UserSession() user: User) {
+    return user;
   }
 }

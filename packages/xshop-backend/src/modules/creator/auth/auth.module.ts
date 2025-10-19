@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { GqlAuthGuard } from './guards/gql-auth.guard';
 import { UserModule } from '../user/user.module';
 import { AuthResolver } from './auth.resolver';
 import { ConfigService } from '@nestjs/config';
@@ -27,7 +25,7 @@ import { WechatModule } from '../../_common/wechat/wechat.module';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, AuthResolver, JwtStrategy, GqlAuthGuard],
-  exports: [AuthService, GqlAuthGuard],
+  providers: [AuthService, AuthResolver],
+  exports: [AuthService],
 })
 export class AuthModule {}

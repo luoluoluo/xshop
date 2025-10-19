@@ -8,7 +8,7 @@ import {
   WithdrawalWhereInput,
   WithdrawalPagination,
 } from './withdrawal.dto';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
+import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
 import { StoreContext } from '@/types/graphql-context';
 
 @Resolver(() => Withdrawal)
@@ -16,7 +16,7 @@ export class WithdrawalResolver {
   constructor(private readonly withdrawalService: WithdrawalService) {}
 
   @Mutation(() => Withdrawal)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async createWithdrawal(
     @Context() ctx: StoreContext,
     @Args('data') data: CreateWithdrawalInput,
@@ -28,7 +28,7 @@ export class WithdrawalResolver {
   }
 
   @Query(() => WithdrawalPagination)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   async withdrawals(
     @Context() ctx: StoreContext,
     @Args('where', { nullable: true }) where: WithdrawalWhereInput,

@@ -2,21 +2,21 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { Product } from '@/entities/product.entity';
 import { ProductService } from './product.service';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import {
   CreateProductInput,
   UpdateProductInput,
   ProductPagination,
   ProductWhereInput,
 } from './product.dto';
-import { RequirePermission } from '../auth/decorators/require-permission.decorator';
+import { RequirePermission } from '@/modules/_common/auth/decorators/require-permission.decorator';
+import { UserAuthGuard } from '@/modules/_common/auth/guards/user-auth.guard';
 
 @Resolver(() => Product)
 export class ProductResolver {
   constructor(private readonly productService: ProductService) {}
 
   @Query(() => ProductPagination)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('product.list')
   async products(
     @Args('skip', { type: () => Int, nullable: true }) skip: number,
@@ -32,14 +32,14 @@ export class ProductResolver {
   }
 
   @Query(() => Product)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('product.show')
   async product(@Args('id') id: string): Promise<Product> {
     return await this.productService.findOne(id);
   }
 
   @Mutation(() => Product)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('product.create')
   async createProduct(
     @Args('data') data: CreateProductInput,
@@ -48,7 +48,7 @@ export class ProductResolver {
   }
 
   @Mutation(() => Product)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('product.edit')
   async updateProduct(
     @Args('id') id: string,
@@ -58,7 +58,7 @@ export class ProductResolver {
   }
 
   @Mutation(() => Boolean)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(UserAuthGuard)
   @RequirePermission('product.delete')
   async deleteProduct(@Args('id') id: string): Promise<boolean> {
     return await this.productService.delete(id);
